@@ -1,0 +1,77 @@
+{
+  "project_info": {
+    "project_number": "564116067764",
+    "firebase_url": "https://rocketchat-1b1dc-default-rtdb.europe-west1.firebasedatabase.app",
+    "project_id": "rocketchat-1b1dc",
+    "storage_bucket": "rocketchat-1b1dc.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:564116067764:android:f4c1d8cee82e2dd34e0ee1",
+        "android_client_info": {
+          "package_name": "com.pavellukyanov"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "564116067764-l67h93nbtaqg4ffl2tf3dr6sgo8jple8.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDRSjkcLt8Mvtnl3Q8vua1FsLIKzJTud3A"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "564116067764-l67h93nbtaqg4ffl2tf3dr6sgo8jple8.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:564116067764:android:c441e12d424b606a4e0ee1",
+        "android_client_info": {
+          "package_name": "com.pavellukyanov.rocketchat"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "564116067764-kjefl215uticje2t24n43uh207v73n55.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.pavellukyanov.rocketchat",
+            "certificate_hash": "9d77d4b3e882d63677fcf02caf029fda2cf135e7"
+          }
+        },
+        {
+          "client_id": "564116067764-l67h93nbtaqg4ffl2tf3dr6sgo8jple8.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDRSjkcLt8Mvtnl3Q8vua1FsLIKzJTud3A"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "564116067764-l67h93nbtaqg4ffl2tf3dr6sgo8jple8.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

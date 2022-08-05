@@ -1,0 +1,115 @@
+plugins {
+    id 'com.android.application'
+    id 'kotlin-android'
+    id 'org.jetbrains.kotlin.plugin.serialization'
+    id 'kotlin-kapt'
+    id("dagger.hilt.android.plugin")
+}
+
+apply plugin: 'com.android.application'
+apply plugin: 'com.google.gms.google-services'
+apply plugin: 'kotlin-parcelize'
+apply plugin: 'kotlinx-serialization'
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-kapt'
+
+android {
+    compileSdk 32
+
+    viewBinding {
+        enabled = true
+    }
+
+    defaultConfig {
+        applicationId "com.pavellukyanov.rocketchat"
+        minSdk 26
+        targetSdk 32
+        versionCode 1
+        versionName "1.0"
+
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+    kotlinOptions {
+        jvmTarget = '1.8'
+    }
+}
+
+dependencies {
+    //Android
+    implementation "org.jetbrains.kotlin:kotlin-reflect:$kotlin_reflect_version"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
+    implementation "androidx.lifecycle:lifecycle-livedata-ktx:$live_dada_version"
+    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$live_dada_version"
+    implementation "androidx.core:core-ktx:$ktx_version"
+    implementation "androidx.appcompat:appcompat:$appCompat_version"
+    implementation "com.google.android.material:material:$material_version"
+    implementation "androidx.constraintlayout:constraintlayout:$constraint_version"
+    implementation "androidx.fragment:fragment-ktx:$ktx_fragment_version"
+    implementation "androidx.recyclerview:recyclerview:$recycler_version"
+    implementation "androidx.cardview:cardview:$cardview_version"
+    coreLibraryDesugaring "com.android.tools:desugar_jdk_libs:$desugarVersion"
+
+    //Kotlin Coroutines
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutinesCore"
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutinesAndroid"
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-play-services:$coroutinesPlayService"
+
+    //Retrofit
+    implementation "com.squareup.retrofit2:retrofit:$retrofit_version"
+    implementation "com.squareup.retrofit2:converter-gson:$converter_gson_version"
+    implementation "com.squareup.okhttp3:logging-interceptor:$interceptor_version"
+    implementation "com.squareup.retrofit2:converter-scalars:$converter_scalars_version"
+    implementation "com.jakewharton.retrofit:retrofit2-kotlinx-serialization-converter:$serialization_version"
+
+    //Kotlin Serialization
+    implementation "org.jetbrains.kotlinx:kotlinx-serialization-core:$serial_json_version"
+    implementation "org.jetbrains.kotlinx:kotlinx-serialization-json:$serial_json_version"
+
+    //Glide
+    implementation "com.github.bumptech.glide:glide:$glide_version"
+    implementation 'androidx.lifecycle:lifecycle-extensions:2.2.0'
+    kapt "com.github.bumptech.glide:compiler:$glide_version"
+
+    //Room
+    implementation "androidx.room:room-runtime:$room_version"
+    implementation "androidx.room:room-ktx:$room_version"
+    kapt "androidx.room:room-compiler:$room_version"
+
+    //Hilt
+    implementation "com.google.dagger:hilt-android:$hilt_version"
+    kapt "com.google.dagger:hilt-android-compiler:$hilt_version"
+
+    //ViewBinding Delegate
+    implementation "com.github.kirich1409:viewbindingpropertydelegate-noreflection:$vb_delegate_version"
+
+    //Timber
+    implementation "com.jakewharton.timber:timber:$timber_version"
+
+    //FireBase
+    implementation platform("com.google.firebase:firebase-bom:$bom_version")
+    implementation 'com.google.firebase:firebase-auth'
+    implementation "com.google.firebase:firebase-database-ktx:$database_version"
+    implementation 'com.google.firebase:firebase-analytics-ktx'
+    implementation 'com.google.firebase:firebase-storage'
+
+    //FlexBoxLayout
+    implementation "com.google.android.flexbox:flexbox:$flexbox_version"
+
+    //Facebook Shimmer
+    implementation "com.facebook.shimmer:shimmer:$shimmerVersion"
+}
+
+kapt {
+    correctErrorTypes = true
+}

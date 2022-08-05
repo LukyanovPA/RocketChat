@@ -1,0 +1,69 @@
+// Top-level build file where you can add configuration options common to all sub-projects/modules.
+
+buildscript {
+    ext {
+        //Android
+        kotlin_version = '1.6.21'
+        serialization_version = '0.8.0'
+        serial_json_version = '1.3.1'
+        kotlin_reflect_version = '1.6.10'
+        ktx_version = '1.8.0'
+        appCompat_version = '1.4.2'
+        material_version = '1.6.1'
+        constraint_version = '2.1.4'
+        ktx_fragment_version = '1.5.1'
+        live_dada_version = '2.5.1'
+        recycler_version = '1.2.1'
+        cardview_version = '1.0.0'
+        desugarVersion = "1.1.5"
+        //Room
+        room_version = '2.4.3'
+        //Glide
+        glide_version = '4.12.0'
+        //Retrofit
+        retrofit_version = '2.9.0'
+        converter_gson_version = '2.9.0'
+        interceptor_version = '4.9.1'
+        rxjava_adapter_version = '2.9.0'
+        converter_scalars_version = '2.4.0'
+        //Hilt
+        hilt_version = '2.38.1'
+        //ViewBinding Delegate
+        vb_delegate_version = '1.5.6'
+        //Timber
+        timber_version = '5.0.0'
+        //FireBase
+        firebase_version = '4.3.13'
+        //Kotlin Coroutines
+        coroutinesCore = '1.5.1'
+        coroutinesAndroid = '1.5.2'
+        coroutinesPlayService = '1.3.5'
+        //FireBase
+        bom_version = '30.3.1'
+        database_version = '20.0.5'
+        //FlexBoxLayout
+        flexbox_version = '3.0.0'
+        //Facebook Shimmer
+        shimmerVersion = "0.5.0"
+    }
+
+    repositories {
+        google()
+        mavenCentral()
+    }
+
+    dependencies {
+        classpath 'com.android.tools.build:gradle:7.2.2'
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+        classpath "org.jetbrains.kotlin:kotlin-serialization:$kotlin_version"
+        classpath "com.google.gms:google-services:$firebase_version"
+        classpath "com.google.dagger:hilt-android-gradle-plugin:$hilt_version"
+
+        // NOTE: Do not place your application dependencies here; they belong
+        // in the individual module build.gradle files
+    }
+}
+
+task clean(type: Delete) {
+    delete rootProject.buildDir
+}

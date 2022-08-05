@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/reg_logo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/logo" />
+
+    <TextView
+        android:id="@+id/reg_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/registration_title"
+        android:textAppearance="@style/RocketChat.H1"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/reg_logo" />
+
+    <TextView
+        android:id="@+id/reg_nickname_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/margin_36"
+        android:layout_marginTop="@dimen/margin_26"
+        android:text="@string/nickname_title"
+        android:textAppearance="@style/RocketChat.H4.AllCaps"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/reg_title" />
+
+    <com.google.android.material.textfield.TextInputEditText
+        android:id="@+id/reg_input_nickname"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/margin_36"
+        android:layout_marginTop="@dimen/margin_8"
+        android:background="@drawable/bg_input_text"
+        android:elevation="@dimen/margin_8"
+        android:gravity="center_vertical"
+        android:hint="@string/nickname_title"
+        android:imeOptions="actionNext"
+        android:inputType="text"
+        android:padding="@dimen/margin_8"
+        android:textAppearance="@style/RocketChat.Body.LightGreen"
+        android:textColorHint="@color/light_gray_alpha"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/reg_nickname_title" />
+
+    <TextView
+        android:id="@+id/reg_email_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/margin_36"
+        android:layout_marginTop="@dimen/margin_16"
+        android:text="@string/e_mail_title"
+        android:textAppearance="@style/RocketChat.H4.AllCaps"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/reg_input_nickname" />
+
+    <com.google.android.material.textfield.TextInputEditText
+        android:id="@+id/reg_input_email"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/margin_36"
+        android:layout_marginTop="@dimen/margin_8"
+        android:background="@drawable/bg_input_text"
+        android:elevation="@dimen/margin_8"
+        android:gravity="center_vertical"
+        android:hint="@string/email_hint"
+        android:imeOptions="actionNext"
+        android:inputType="textEmailAddress"
+        android:padding="@dimen/margin_8"
+        android:textAppearance="@style/RocketChat.Body.LightGreen"
+        android:textColorHint="@color/light_gray_alpha"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/reg_email_title" />
+
+    <TextView
+        android:id="@+id/reg_password_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/margin_36"
+        android:layout_marginTop="@dimen/margin_16"
+        android:text="@string/password_title"
+        android:textAppearance="@style/RocketChat.H4.AllCaps"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/reg_input_email" />
+
+    <com.google.android.material.textfield.TextInputEditText
+        android:id="@+id/reg_input_password"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/margin_36"
+        android:layout_marginTop="@dimen/margin_8"
+        android:background="@drawable/bg_input_text"
+        android:elevation="@dimen/margin_8"
+        android:gravity="center_vertical"
+        android:hint="@string/password_hint"
+        android:imeOptions="actionDone"
+        android:inputType="textPassword"
+        android:padding="@dimen/margin_8"
+        android:textAppearance="@style/RocketChat.Body.LightGreen"
+        android:textColorHint="@color/light_gray_alpha"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/reg_password_title" />
+
+    <android.widget.Button
+        android:id="@+id/reg_button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/margin_36"
+        android:layout_marginTop="@dimen/margin_36"
+        android:background="@drawable/bg_button"
+        android:elevation="@dimen/margin_8"
+        android:text="@string/registration_button_text"
+        android:textAppearance="@style/RocketChat.Button"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/reg_input_password" />
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/margin_24"
+        android:gravity="center"
+        android:orientation="horizontal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/reg_button">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingHorizontal="@dimen/margin_4"
+            android:text="@string/sign_in_text"
+            android:textAppearance="@style/RocketChat.Body" />
+
+        <TextView
+            android:id="@+id/reg_sign_in_link"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingHorizontal="@dimen/margin_4"
+            android:text="@string/sign_in_link"
+            android:textAppearance="@style/RocketChat.Body.Link" />
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
