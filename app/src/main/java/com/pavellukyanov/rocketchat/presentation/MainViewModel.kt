@@ -30,5 +30,5 @@ class MainViewModel @Inject constructor(
         }
     }
 
-    fun testAuth(): LiveData<String> = nickname.asLiveData(viewModelScope.coroutineContext)
+    fun testAuth(): LiveData<String> = nickname.asLiveData()
 }

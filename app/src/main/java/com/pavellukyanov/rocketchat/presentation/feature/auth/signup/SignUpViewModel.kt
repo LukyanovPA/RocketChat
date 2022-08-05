@@ -2,8 +2,6 @@ package com.pavellukyanov.rocketchat.presentation.feature.auth.signup
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.asLiveData
-import androidx.lifecycle.viewModelScope
 import com.pavellukyanov.rocketchat.domain.usecase.auth.Registration
 import com.pavellukyanov.rocketchat.presentation.base.BaseViewModel
 import com.pavellukyanov.rocketchat.presentation.feature.auth.AuthNavigator
@@ -37,7 +35,7 @@ class SignUpViewModel @Inject constructor(
             .collect(buttonState::emit)
     }
 
-    fun buttonState(): LiveData<Boolean> = buttonState.asLiveData(viewModelScope.coroutineContext)
+    fun buttonState(): LiveData<Boolean> = buttonState.asLiveData()
 
     fun setEmail(value: String) = launchCPU {
         email.emit(value)

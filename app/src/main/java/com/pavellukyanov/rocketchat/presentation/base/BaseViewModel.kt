@@ -1,6 +1,8 @@
 package com.pavellukyanov.rocketchat.presentation.base
 
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
@@ -35,6 +37,9 @@ abstract class BaseViewModel<N : BaseNavigator>(protected val navigator: N) : Vi
             }
         }
     }
+
+    protected fun <T> MutableStateFlow<T>.asLiveData(): LiveData<T> =
+        asLiveData(viewModelScope.coroutineContext)
 
     companion object {
         private const val TAG = "ViewModelScopeError"
