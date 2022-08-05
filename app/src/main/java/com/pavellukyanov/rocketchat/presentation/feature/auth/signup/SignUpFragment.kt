@@ -4,12 +4,14 @@ import android.os.Bundle
 import android.view.View
 import android.widget.Toast
 import by.kirich1409.viewbindingdelegate.viewBinding
+import com.pavellukyanov.rocketchat.R
 import com.pavellukyanov.rocketchat.databinding.FragmentSignUpBinding
 import com.pavellukyanov.rocketchat.presentation.base.BaseFragment
 import com.pavellukyanov.rocketchat.presentation.helper.ext.setOnTextChangeListener
 
 class SignUpFragment : BaseFragment<SignUpViewModel>(
-    SignUpViewModel::class.java
+    SignUpViewModel::class.java,
+    R.layout.fragment_sign_up
 ) {
     private val binding by viewBinding(FragmentSignUpBinding::bind)
 

@@ -3,12 +3,14 @@ package com.pavellukyanov.rocketchat.presentation.feature.auth.signin
 import android.os.Bundle
 import android.view.View
 import by.kirich1409.viewbindingdelegate.viewBinding
+import com.pavellukyanov.rocketchat.R
 import com.pavellukyanov.rocketchat.databinding.FragmentSignInBinding
 import com.pavellukyanov.rocketchat.presentation.base.BaseFragment
 import com.pavellukyanov.rocketchat.presentation.helper.ext.setOnTextChangeListener
 
 class SignInFragment : BaseFragment<SignInViewModel>(
-    SignInViewModel::class.java
+    SignInViewModel::class.java,
+    R.layout.fragment_sign_in
 ) {
     private val binding by viewBinding(FragmentSignInBinding::bind)
 

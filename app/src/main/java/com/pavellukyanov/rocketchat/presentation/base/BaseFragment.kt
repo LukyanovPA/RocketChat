@@ -9,8 +9,9 @@ import dagger.android.support.AndroidSupportInjection
 import javax.inject.Inject
 
 abstract class BaseFragment<VM : BaseViewModel<*>>(
-    private val viewModelClass: Class<VM>
-) : Fragment() {
+    private val viewModelClass: Class<VM>,
+    private val layoutRes: Int
+) : Fragment(layoutRes) {
     private var shimmer: ShimmerFrameLayout? = null
 
     @Inject

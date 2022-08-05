@@ -7,7 +7,6 @@ import com.pavellukyanov.rocketchat.domain.usecase.auth.IsAuthorized
 import com.pavellukyanov.rocketchat.presentation.base.BaseViewModel
 import com.pavellukyanov.rocketchat.utils.Constants.EMPTY_STRING
 import kotlinx.coroutines.flow.MutableStateFlow
-import timber.log.Timber
 import javax.inject.Inject
 
 
@@ -19,8 +18,11 @@ class MainViewModel @Inject constructor(
 
     fun checkAuth() = launchIO {
         isAuthorized().collect { state ->
-            Timber.d("Smotrim $state")
-            if (state) nickname.emit("gogoggo") else navigator.forwardToSignIn()
+            if (state) {
+                nickname.emit("Логин заебиська!")
+            } else {
+                launchUI { navigator.forwardToSignIn() }
+            }
         }
     }
 

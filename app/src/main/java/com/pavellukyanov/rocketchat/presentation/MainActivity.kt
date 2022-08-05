@@ -35,7 +35,7 @@ class MainActivity : AppCompatActivity(), HasAndroidInjector {
 
     private fun testCheck(str: String) {
         if (str.isNotEmpty()) {
-            Toast.makeText(this, "Логин заебиська!", Toast.LENGTH_LONG).show()
+            Toast.makeText(this, str, Toast.LENGTH_LONG).show()
         }
     }
 
