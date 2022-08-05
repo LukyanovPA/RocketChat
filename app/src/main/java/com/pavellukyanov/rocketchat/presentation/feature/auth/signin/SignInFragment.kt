@@ -2,17 +2,15 @@ package com.pavellukyanov.rocketchat.presentation.feature.auth.signin
 
 import android.os.Bundle
 import android.view.View
-import androidx.fragment.app.viewModels
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.pavellukyanov.rocketchat.databinding.FragmentSignInBinding
 import com.pavellukyanov.rocketchat.presentation.base.BaseFragment
 import com.pavellukyanov.rocketchat.presentation.helper.ext.setOnTextChangeListener
-import dagger.hilt.android.AndroidEntryPoint
 
-@AndroidEntryPoint
-class SignInFragment : BaseFragment() {
+class SignInFragment : BaseFragment<SignInViewModel>(
+    SignInViewModel::class.java
+) {
     private val binding by viewBinding(FragmentSignInBinding::bind)
-    private val vm: SignInViewModel by viewModels()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)

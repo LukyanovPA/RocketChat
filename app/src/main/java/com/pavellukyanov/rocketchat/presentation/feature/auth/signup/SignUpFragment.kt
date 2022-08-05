@@ -3,17 +3,15 @@ package com.pavellukyanov.rocketchat.presentation.feature.auth.signup
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
-import androidx.fragment.app.viewModels
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.pavellukyanov.rocketchat.databinding.FragmentSignUpBinding
 import com.pavellukyanov.rocketchat.presentation.base.BaseFragment
 import com.pavellukyanov.rocketchat.presentation.helper.ext.setOnTextChangeListener
-import dagger.hilt.android.AndroidEntryPoint
 
-@AndroidEntryPoint
-class SignUpFragment : BaseFragment() {
+class SignUpFragment : BaseFragment<SignUpViewModel>(
+    SignUpViewModel::class.java
+) {
     private val binding by viewBinding(FragmentSignUpBinding::bind)
-    private val vm: SignUpViewModel by viewModels()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)

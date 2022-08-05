@@ -7,12 +7,10 @@ import com.pavellukyanov.rocketchat.domain.usecase.auth.Login
 import com.pavellukyanov.rocketchat.presentation.base.BaseViewModel
 import com.pavellukyanov.rocketchat.presentation.feature.auth.AuthNavigator
 import com.pavellukyanov.rocketchat.utils.Constants.EMPTY_STRING
-import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.combine
 import javax.inject.Inject
 
-@HiltViewModel
 class SignInViewModel @Inject constructor(
     navigator: AuthNavigator,
     private val login: Login

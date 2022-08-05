@@ -1,26 +1,13 @@
 package com.pavellukyanov.rocketchat.presentation.base
 
-import android.content.Context
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import com.pavellukyanov.rocketchat.R
-import com.pavellukyanov.rocketchat.presentation.MainActivity
-import dagger.hilt.android.qualifiers.ActivityContext
-import dagger.hilt.android.scopes.ActivityScoped
-import javax.inject.Inject
 
 abstract class BaseNavigator(
     val fragmentManager: FragmentManager
-//    @ActivityContext context: Context
 ) {
-
-//    private lateinit var fragmentManager: FragmentManager
-//
-//    init {
-////        val frag = (context as MainActivity).supportFragmentManager
-//        fragmentManager = (context as MainActivity).supportFragmentManager
-//    }
 
     protected fun add(fragment: Fragment, tag: String) {
         fragmentManager.beginTransaction()
