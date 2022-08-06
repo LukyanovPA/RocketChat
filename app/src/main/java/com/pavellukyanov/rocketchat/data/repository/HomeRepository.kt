@@ -22,7 +22,7 @@ class HomeRepository @Inject constructor(
     private val storageFirebase: StorageFirebase,
     private val networkMonitor: NetworkMonitor
 ) : Home {
-    override fun getMyAccount(): Flow<MyAccount> =
+    override suspend fun getMyAccount(): Flow<MyAccount> =
         networkMonitor.handleInternetConnection()
             .flatMapMerge {
                 getMyAvatar()
