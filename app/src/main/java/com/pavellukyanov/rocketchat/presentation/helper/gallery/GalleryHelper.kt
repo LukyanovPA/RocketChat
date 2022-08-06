@@ -77,6 +77,6 @@ class GalleryHelper @Inject constructor(
         const val PHOTO_WEIGHT_LIMIT_EXCEEDED = R.string.any_screen_show_images_weight_limit
         const val PICK_IMAGE_MULTIPLE = 1
         const val PICK_IMAGE_SINGLE = 2
-        const val PHOTO_SIZE_DIV_KB = 1000
+        const val PHOTO_SIZE_DIV_KB = 5000
     }
 }

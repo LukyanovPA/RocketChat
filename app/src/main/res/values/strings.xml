@@ -15,7 +15,7 @@
     <string name="sign_in_link">Sign In</string>
     <string name="search">Search…</string>
     <string name="any_screen_access_denied">Access denied</string>
-    <string name="any_screen_show_images_weight_limit">Size must be less than 1 mb</string>
+    <string name="any_screen_show_images_weight_limit">Size must be less than 5 mb</string>
 
     //Home
     <string name="home_header">Hi, %1$s!</string>
