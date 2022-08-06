@@ -6,4 +6,10 @@
     <dimen name="margin_36">36dp</dimen>
     <dimen name="margin_24">24dp</dimen>
     <dimen name="margin_4">4dp</dimen>
+    <dimen name="margin_45">45dp</dimen>
+    <dimen name="margin_34">34dp</dimen>
+    <dimen name="margin_50">50dp</dimen>
+    <dimen name="margin_10">10dp</dimen>
+    <dimen name="margin_40">40dp</dimen>
+    <dimen name="margin_0">0dp</dimen>
 </resources>

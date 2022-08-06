@@ -9,6 +9,6 @@ interface IsAuthorized : suspend () -> Flow<Boolean>
 class IsAuthorizedImpl @Inject constructor(
     private val repo: Auth
 ) : IsAuthorized {
-    override suspend fun invoke(): Flow<Boolean> =
+    override suspend operator fun invoke(): Flow<Boolean> =
         repo.isAuthorized()
 }

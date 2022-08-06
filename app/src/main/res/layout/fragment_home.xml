@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/main_avatar"
+        android:layout_width="@dimen/margin_45"
+        android:layout_height="@dimen/margin_45"
+        android:layout_marginStart="@dimen/margin_34"
+        android:layout_marginTop="@dimen/margin_50"
+        android:scaleType="centerCrop"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:src="@tools:sample/avatars" />
+
+    <TextView
+        android:id="@+id/main_header"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/margin_16"
+        android:textAppearance="@style/RocketChat.H1"
+        app:layout_constraintBottom_toBottomOf="@+id/main_avatar"
+        app:layout_constraintStart_toEndOf="@+id/main_avatar"
+        app:layout_constraintTop_toTopOf="@+id/main_avatar"
+        tools:text="Hi, luidgy" />
+
+    <androidx.cardview.widget.CardView
+        android:layout_width="@dimen/margin_0"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/margin_16"
+        android:layout_marginTop="@dimen/margin_16"
+        app:cardCornerRadius="@dimen/margin_10"
+        app:cardElevation="@dimen/margin_16"
+        app:layout_constraintEnd_toStartOf="@+id/create_chatroom_container"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/main_avatar">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/main_search"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/margin_40"
+            android:background="@drawable/bg_search"
+            android:drawableEnd="@drawable/ic_baseline_search_24"
+            android:gravity="center_vertical"
+            android:hint="@string/search"
+            android:imeOptions="actionDone"
+            android:inputType="text"
+            android:paddingHorizontal="@dimen/margin_16"
+            android:paddingVertical="@dimen/margin_8"
+            android:textAppearance="@style/RocketChat.Body"
+            android:textColorHint="@color/white" />
+    </androidx.cardview.widget.CardView>
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/create_chatroom_container"
+        android:layout_width="@dimen/margin_40"
+        android:layout_height="@dimen/margin_40"
+        android:backgroundTint="@color/light_blue"
+        android:layout_marginEnd="@dimen/margin_16"
+        android:layout_marginTop="@dimen/margin_16"
+        app:cardCornerRadius="@dimen/margin_10"
+        app:cardElevation="@dimen/margin_16"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/main_avatar">
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:src="@drawable/ic_cross"
+            android:background="@color/light_blue"/>
+
+    </androidx.cardview.widget.CardView>
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

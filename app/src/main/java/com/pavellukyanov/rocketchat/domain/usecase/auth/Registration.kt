@@ -9,7 +9,7 @@ interface Registration : suspend (String, String, String) -> Flow<Boolean>
 class RegistrationImpl @Inject constructor(
     private val repo: Auth
 ) : Registration {
-    override suspend fun invoke(
+    override suspend operator fun invoke(
         displayName: String,
         email: String,
         password: String

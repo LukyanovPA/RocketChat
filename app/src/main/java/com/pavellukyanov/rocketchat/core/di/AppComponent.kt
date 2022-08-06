@@ -3,7 +3,7 @@ package com.pavellukyanov.rocketchat.core.di
 import android.content.Context
 import com.pavellukyanov.rocketchat.core.app.App
 import com.pavellukyanov.rocketchat.core.di.module.AppModule
-import com.pavellukyanov.rocketchat.core.di.module.AuthModule
+import com.pavellukyanov.rocketchat.core.di.module.FirebaseModule
 import com.pavellukyanov.rocketchat.core.di.module.RepositoryModule
 import com.pavellukyanov.rocketchat.core.di.module.UseCaseModule
 import dagger.BindsInstance
@@ -19,7 +19,7 @@ import javax.inject.Singleton
         AppModule::class,
         RepositoryModule::class,
         UseCaseModule::class,
-        AuthModule::class
+        FirebaseModule::class
     ]
 )
 interface AppComponent : AndroidInjector<App> {

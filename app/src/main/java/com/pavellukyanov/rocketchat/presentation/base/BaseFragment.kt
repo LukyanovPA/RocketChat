@@ -2,9 +2,13 @@ package com.pavellukyanov.rocketchat.presentation.base
 
 import android.content.Context
 import android.os.Bundle
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.facebook.shimmer.ShimmerFrameLayout
+import com.pavellukyanov.rocketchat.presentation.helper.ResultWrapper
+import com.pavellukyanov.rocketchat.presentation.helper.gallery.PickFileContract
+import com.pavellukyanov.rocketchat.presentation.helper.gallery.PickImageContract
 import dagger.android.support.AndroidSupportInjection
 import javax.inject.Inject
 
@@ -18,6 +22,18 @@ abstract class BaseFragment<VM : BaseViewModel<*>>(
     protected lateinit var viewModelFactory: ViewModelFactory<VM>
 
     protected lateinit var vm: VM
+
+    val permissionLauncher =
+        ResultWrapper(
+            fragment = this,
+            contract = ActivityResultContracts.RequestMultiplePermissions()
+        )
+
+    val imageLauncher =
+        ResultWrapper(fragment = this, contract = PickImageContract())
+
+    val fileLauncher =
+        ResultWrapper(fragment = this, contract = PickFileContract())
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

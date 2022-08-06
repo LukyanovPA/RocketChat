@@ -15,7 +15,7 @@
     </style>
 
     <style name="RocketChat.Body">
-        <item name="android:textSize">12sp</item>
+        <item name="android:textSize">14sp</item>
     </style>
 
     <style name="RocketChat.Body.LightGreen">

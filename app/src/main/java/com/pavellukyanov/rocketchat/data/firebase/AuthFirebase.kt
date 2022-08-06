@@ -1,4 +1,4 @@
-package com.pavellukyanov.rocketchat.data.auth
+package com.pavellukyanov.rocketchat.data.firebase
 
 import com.google.firebase.auth.FirebaseAuth
 import javax.inject.Inject

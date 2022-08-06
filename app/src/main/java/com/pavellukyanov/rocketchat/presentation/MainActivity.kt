@@ -1,11 +1,12 @@
 package com.pavellukyanov.rocketchat.presentation
 
 import android.os.Bundle
-import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import com.pavellukyanov.rocketchat.R
 import com.pavellukyanov.rocketchat.presentation.base.ViewModelFactory
+import com.pavellukyanov.rocketchat.presentation.helper.ResultWrapper
 import dagger.android.AndroidInjection
 import dagger.android.AndroidInjector
 import dagger.android.DispatchingAndroidInjector
@@ -21,6 +22,12 @@ class MainActivity : AppCompatActivity(), HasAndroidInjector {
 
     lateinit var vm: MainViewModel
 
+    val permissionLauncher =
+        ResultWrapper(
+            activity = this,
+            contract = ActivityResultContracts.RequestMultiplePermissions()
+        )
+
     override fun onCreate(savedInstanceState: Bundle?) {
         AndroidInjection.inject(this)
         super.onCreate(savedInstanceState)
@@ -29,13 +36,6 @@ class MainActivity : AppCompatActivity(), HasAndroidInjector {
 
         if (savedInstanceState == null) {
             vm.checkAuth()
-            vm.testAuth().observe(this, ::testCheck)
-        }
-    }
-
-    private fun testCheck(str: String) {
-        if (str.isNotEmpty()) {
-            Toast.makeText(this, str, Toast.LENGTH_LONG).show()
         }
     }
 
