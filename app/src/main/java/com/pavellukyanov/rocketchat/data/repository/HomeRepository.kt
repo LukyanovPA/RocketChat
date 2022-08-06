@@ -41,11 +41,9 @@ class HomeRepository @Inject constructor(
         networkMonitor.handleInternetConnection()
             .flatMapMerge {
                 callbackFlow {
-                    val ref = storageFirebase().reference.child(
+                    storageFirebase().reference.child(
                         FBHelper.getUserImagesStorageReference(authFirebase().currentUser?.uid!!)
-                    )
-
-                    ref.downloadUrl
+                    ).downloadUrl
                         .addOnSuccessListener { uri -> trySend(uri) }
                         .addOnFailureListener { trySend(Uri.parse(AVATAR_PLACEHOLDER)) }
 
@@ -57,11 +55,9 @@ class HomeRepository @Inject constructor(
         networkMonitor.handleInternetConnection()
             .flatMapMerge {
                 callbackFlow {
-                    val ref = storageFirebase().reference.child(
+                    storageFirebase().reference.child(
                         FBHelper.getUserImagesStorageReference(authFirebase().currentUser?.uid!!)
-                    )
-
-                    ref.putFile(uri)
+                    ).putFile(uri)
                         .addOnSuccessListener { trySend(it.task.isSuccessful) }
                         .addOnFailureListener { throw it }
 
