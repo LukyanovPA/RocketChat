@@ -18,6 +18,10 @@
         <item name="android:textSize">14sp</item>
     </style>
 
+    <style name="RocketChat.SubTitle">
+        <item name="android:textSize">16sp</item>
+    </style>
+
     <style name="RocketChat.Body.LightGreen">
         <item name="android:textColor">@color/light_green</item>
     </style>

@@ -3,8 +3,8 @@ package com.pavellukyanov.rocketchat.core.di.module
 import com.pavellukyanov.rocketchat.domain.usecase.auth.*
 import com.pavellukyanov.rocketchat.domain.usecase.profile.ChangeAvatar
 import com.pavellukyanov.rocketchat.domain.usecase.profile.ChangeAvatarImpl
-import com.pavellukyanov.rocketchat.domain.usecase.profile.GetMyAvatar
-import com.pavellukyanov.rocketchat.domain.usecase.profile.GetMyAvatarImpl
+import com.pavellukyanov.rocketchat.domain.usecase.profile.GetMyAccount
+import com.pavellukyanov.rocketchat.domain.usecase.profile.GetMyAccountImpl
 import dagger.Binds
 import dagger.Module
 
@@ -23,5 +23,5 @@ abstract class UseCaseModule {
     abstract fun bindChangeAvatar(impl: ChangeAvatarImpl): ChangeAvatar
 
     @Binds
-    abstract fun bindGetMyAvatar(impl: GetMyAvatarImpl): GetMyAvatar
+    abstract fun bindGetMyAccount(impl: GetMyAccountImpl): GetMyAccount
 }

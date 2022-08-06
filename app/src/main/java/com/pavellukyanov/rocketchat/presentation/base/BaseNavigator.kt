@@ -39,13 +39,13 @@ abstract class BaseNavigator(
         )
     }
 
-//    fun showGlobalErrorDialog(text: String, titleRes: Int? = null) {
-//        showDialog(
-//            SimpleDialogFragment.newInstance(
-//                titleRes = titleRes ?: R.string.global_error_title,
-//                message = text,
-//                closeButtonRes = R.string.global_error_button_close
-//            ), SimpleDialogFragment.TAG
-//        )
-//    }
+    fun showGlobalErrorDialog(text: String, titleRes: Int? = null) {
+        showDialog(
+            SimpleDialogFragment.newInstance(
+                titleRes = titleRes ?: R.string.global_error_title,
+                message = text,
+                closeButtonRes = R.string.global_error_button_close
+            ), SimpleDialogFragment.TAG
+        )
+    }
 }

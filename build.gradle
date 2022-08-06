@@ -40,8 +40,6 @@ buildscript {
         coroutinesPlayService = '1.3.5'
         //FireBase
         bom_version = '30.3.1'
-        database_version = '20.0.5'
-        storage_ui_version = '7.2.0'
         //FlexBoxLayout
         flexbox_version = '3.0.0'
         //Facebook Shimmer

@@ -14,8 +14,8 @@ import timber.log.Timber
 abstract class BaseViewModel<N : BaseNavigator>(protected val navigator: N) : ViewModel() {
     protected val shimmerState = MutableStateFlow(false)
 
-    private fun onError(error: Throwable) = launchCPU {
-        Timber.tag(TAG).e(error)
+    private fun onError(error: Throwable) = launchUI {
+        error.message?.let { navigator.showGlobalErrorDialog(it) }
     }
 
     protected fun launchUI(action: suspend CoroutineScope.() -> Unit) =
@@ -32,7 +32,7 @@ abstract class BaseViewModel<N : BaseNavigator>(protected val navigator: N) : Vi
             try {
                 action()
             } catch (throwable: Throwable) {
-                Timber.e(throwable)
+                Timber.tag(TAG).e(throwable)
                 onError(throwable)
             }
         }

@@ -32,3 +32,6 @@ fun FragmentManager.setFragmentResult(requestKey: String, data: HashMap<String, 
         requestKey,
         Bundle().apply { putSerializable(FragmentResultHelper.RESULT_MAP_KEY, data) })
 }
+
+inline fun <F : Fragment> F.putArgs(argsBuilder: Bundle.() -> Unit): F =
+    this.apply { arguments = Bundle().apply(argsBuilder) }

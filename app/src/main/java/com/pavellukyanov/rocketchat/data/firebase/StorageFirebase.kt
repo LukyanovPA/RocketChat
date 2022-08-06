@@ -6,5 +6,5 @@ import javax.inject.Inject
 interface StorageFirebase : suspend () -> FirebaseStorage
 
 class StorageFirebaseImpl @Inject constructor() : StorageFirebase {
-    override suspend fun invoke(): FirebaseStorage = FirebaseStorage.getInstance()
+    override suspend operator fun invoke(): FirebaseStorage = FirebaseStorage.getInstance()
 }

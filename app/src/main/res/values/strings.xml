@@ -14,8 +14,13 @@
     <string name="sign_up_link">Sign Up</string>
     <string name="sign_in_link">Sign In</string>
     <string name="search">Search…</string>
+
+    //Common
     <string name="any_screen_access_denied">Access denied</string>
     <string name="any_screen_show_images_weight_limit">Size must be less than 5 mb</string>
+    <string name="any_screen_accept">Accept</string>
+    <string name="global_error_title">ERROR</string>
+    <string name="global_error_button_close">Close</string>
 
     //Home
     <string name="home_header">Hi, %1$s!</string>

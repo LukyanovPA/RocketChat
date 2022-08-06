@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="@dimen/margin_280"
+    android:layout_height="wrap_content"
+    android:minWidth="@dimen/margin_280"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/dialog_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingVertical="@dimen/margin_8"
+        android:paddingStart="@dimen/margin_16"
+        android:paddingEnd="@dimen/margin_24"
+        android:textAppearance="@style/RocketChat.SubTitle"
+        tools:text="Title" />
+
+    <TextView
+        android:id="@+id/dialog_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="fill"
+        android:minLines="@integer/int_5"
+        android:paddingHorizontal="@dimen/margin_16"
+        android:paddingVertical="@dimen/margin_8"
+        android:textAppearance="@style/RocketChat.Body"
+        android:textColorLink="?colorPrimary"
+        tools:text="Для того, чтобы отменить принятие условий Пользовательского соглашения вам неообходимо написать письменное заявление." />
+
+    <android.widget.Button
+        android:id="@+id/close_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end"
+        android:layout_marginEnd="@dimen/margin_8"
+        android:layout_marginBottom="@dimen/margin_8"
+        android:background="@drawable/bg_simple_dialog_button"
+        android:paddingStart="@dimen/margin_8"
+        android:paddingTop="@dimen/margin_8"
+        android:paddingEnd="@dimen/margin_8"
+        android:paddingBottom="@dimen/margin_8"
+        android:text="@string/any_screen_accept"
+        android:textAllCaps="true"
+        android:textAppearance="@style/RocketChat.H4.AllCaps" />
+
+</LinearLayout>

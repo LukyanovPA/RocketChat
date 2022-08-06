@@ -1,15 +1,13 @@
 package com.pavellukyanov.rocketchat.presentation.feature.home
 
-import android.net.Uri
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.pavellukyanov.rocketchat.data.firebase.AuthFirebase
+import com.pavellukyanov.rocketchat.domain.entity.home.MyAccount
 import com.pavellukyanov.rocketchat.domain.usecase.profile.ChangeAvatar
-import com.pavellukyanov.rocketchat.domain.usecase.profile.GetMyAvatar
+import com.pavellukyanov.rocketchat.domain.usecase.profile.GetMyAccount
 import com.pavellukyanov.rocketchat.presentation.base.BaseViewModel
 import com.pavellukyanov.rocketchat.presentation.helper.gallery.GalleryHelper
-import com.pavellukyanov.rocketchat.utils.Constants.EMPTY_STRING
-import kotlinx.coroutines.flow.MutableStateFlow
 import javax.inject.Inject
 
 class HomeViewModel @Inject constructor(
@@ -18,19 +16,15 @@ class HomeViewModel @Inject constructor(
     private val authFirebase: AuthFirebase,
     private val galleryHelper: GalleryHelper,
     private val changeAvatar: ChangeAvatar,
-    private val getMyAvatar: GetMyAvatar
+    private val getMyAccount: GetMyAccount
 ) : BaseViewModel<HomeNavigator>(navigator) {
-    private val _avatar = MutableLiveData<Uri>()
-    private val name = MutableStateFlow(EMPTY_STRING)
+    private val _myAccount = MutableLiveData<MyAccount>()
 
-    val avatar: LiveData<Uri> = _avatar
+    val myAccount: LiveData<MyAccount> = _myAccount
 
     init {
-        fetchName()
-        fetchMyAvatar()
+        fetchMyAccount()
     }
-
-    fun getName(): LiveData<String> = name.asLiveData()
 
     fun createNewChatRoom() = launchIO {
 //        authFirebase().currentUser?.photoUrl?.encodedPath
@@ -46,19 +40,14 @@ class HomeViewModel @Inject constructor(
                 launchIO {
                     changeAvatar(response.first().getPath())
                         .collect { state ->
-
+                            if (state) fetchMyAccount()
                         }
                 }
             }
         }
     }
 
-    private fun fetchMyAvatar() = launchIO {
-        getMyAvatar()
-            .collect(_avatar::postValue)
-    }
-
-    private fun fetchName() = launchIO {
-        name.emit(authFirebase().currentUser?.displayName!!)
+    private fun fetchMyAccount() = launchIO {
+        getMyAccount().collect(_myAccount::postValue)
     }
 }

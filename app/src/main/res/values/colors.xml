@@ -11,6 +11,7 @@
     //Common
     <color name="main_color">#292F3F</color>
     <color name="main_color_alpha">#D9292F3F</color>
+    <color name="light_light_gray">#565E70</color>
     <color name="light_gray">#C4C4C4</color>
     <color name="light_gray_alpha">#1AC4C4C4</color>
     <color name="black_alpha_25">#40000000</color>

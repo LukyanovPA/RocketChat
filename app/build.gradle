@@ -101,10 +101,9 @@ dependencies {
     //FireBase
     implementation platform("com.google.firebase:firebase-bom:$bom_version")
     implementation 'com.google.firebase:firebase-auth'
-    implementation "com.google.firebase:firebase-database-ktx:$database_version"
+    implementation 'com.google.firebase:firebase-database'
     implementation 'com.google.firebase:firebase-analytics-ktx'
     implementation 'com.google.firebase:firebase-storage'
-    implementation "com.firebaseui:firebase-ui-storage:$storage_ui_version"
 
     //FlexBoxLayout
     implementation "com.google.android.flexbox:flexbox:$flexbox_version"

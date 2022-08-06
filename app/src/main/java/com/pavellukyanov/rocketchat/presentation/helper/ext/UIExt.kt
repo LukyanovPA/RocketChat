@@ -14,7 +14,6 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.load.resource.bitmap.CenterCrop
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.google.android.material.textfield.TextInputEditText
-import com.pavellukyanov.rocketchat.R
 import com.pavellukyanov.rocketchat.utils.Constants.INT_ZERO
 
 fun Context.hideKeyboard(view: View) {

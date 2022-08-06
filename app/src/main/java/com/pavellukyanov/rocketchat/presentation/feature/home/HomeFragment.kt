@@ -5,6 +5,7 @@ import android.view.View
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.pavellukyanov.rocketchat.R
 import com.pavellukyanov.rocketchat.databinding.FragmentHomeBinding
+import com.pavellukyanov.rocketchat.domain.entity.home.MyAccount
 import com.pavellukyanov.rocketchat.presentation.base.BaseFragment
 import com.pavellukyanov.rocketchat.presentation.helper.ext.load
 
@@ -17,10 +18,7 @@ class HomeFragment : BaseFragment<HomeViewModel>(
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         bind()
-        vm.avatar.observe(viewLifecycleOwner) {
-            binding.mainAvatar.load(it, circleCrop = true)
-        }
-        vm.getName().observe(viewLifecycleOwner, ::setNameInHeader)
+        vm.myAccount.observe(viewLifecycleOwner, ::setMyAccountData)
     }
 
     private fun bind() = with(binding) {
@@ -28,8 +26,9 @@ class HomeFragment : BaseFragment<HomeViewModel>(
         mainAvatar.setOnClickListener { vm.changeAvatar() }
     }
 
-    private fun setNameInHeader(name: String) {
-        binding.mainHeader.text = getString(R.string.home_header, name)
+    private fun setMyAccountData(myAccount: MyAccount) = with(binding) {
+        mainAvatar.load(myAccount.avatar, circleCrop = true)
+        mainHeader.text = getString(R.string.home_header, myAccount.displayName)
     }
 
     companion object {
