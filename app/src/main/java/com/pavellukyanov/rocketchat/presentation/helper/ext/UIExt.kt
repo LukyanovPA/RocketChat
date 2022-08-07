@@ -14,6 +14,7 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.load.resource.bitmap.CenterCrop
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.google.android.material.textfield.TextInputEditText
+import com.pavellukyanov.rocketchat.utils.Constants.INT_TWENTY
 import com.pavellukyanov.rocketchat.utils.Constants.INT_ZERO
 
 fun Context.hideKeyboard(view: View) {
@@ -48,7 +49,7 @@ fun ImageView.load(
                 circleCrop()
             } else {
                 if (transform) {
-                    transform(CenterCrop(), RoundedCorners(20))
+                    transform(CenterCrop(), RoundedCorners(INT_TWENTY))
                 }
             }
         }
@@ -70,7 +71,7 @@ fun AppCompatImageView.load(
                 circleCrop()
             } else {
                 if (transform) {
-                    transform(CenterCrop(), RoundedCorners(20))
+                    transform(CenterCrop(), RoundedCorners(INT_TWENTY))
                 }
             }
         }

@@ -4,6 +4,7 @@ import androidx.fragment.app.FragmentManager
 import com.pavellukyanov.rocketchat.presentation.base.BaseNavigator
 import com.pavellukyanov.rocketchat.presentation.feature.auth.signin.SignInFragment
 import com.pavellukyanov.rocketchat.presentation.feature.auth.signup.SignUpFragment
+import com.pavellukyanov.rocketchat.presentation.feature.home.HomeFragment
 import javax.inject.Inject
 
 class AuthNavigator @Inject constructor(
@@ -16,5 +17,9 @@ class AuthNavigator @Inject constructor(
 
     fun forwardToSignIn() {
         forward(SignInFragment.newInstance(), SignInFragment.TAG)
+    }
+
+    fun forwardToHome() {
+        forward(HomeFragment.newInstance(), HomeFragment.TAG)
     }
 }

@@ -19,8 +19,6 @@ class SignUpViewModel @Inject constructor(
     private val nickname = MutableStateFlow(EMPTY_STRING)
     private val buttonState = MutableStateFlow(false)
 
-    val testStr = MutableLiveData<String>()
-
     init {
         observButtonState()
     }
@@ -51,8 +49,8 @@ class SignUpViewModel @Inject constructor(
 
     fun signUp() = launchIO {
         registration(nickname.value, email.value, password.value)
-            .collect {
-                if (it) testStr.postValue("Зарегались")
+            .collect { state ->
+                if (state) launchUI { navigator.forwardToHome() }
             }
     }
 

@@ -10,12 +10,10 @@ class MainViewModel @Inject constructor(
 ) : BaseViewModel<MainNavigator>(navigator) {
 
     fun checkAuth() = launchIO {
-        isAuthorized().collect { state ->
-            if (state) {
-                launchUI { navigator.forwardToHome() }
-            } else {
-                launchUI { navigator.forwardToSignIn() }
-            }
-        }
+        isAuthorized().collect(::authState)
+    }
+
+    private fun authState(state: Boolean) = launchUI {
+        if (state) navigator.forwardToHome() else navigator.forwardToSignIn()
     }
 }

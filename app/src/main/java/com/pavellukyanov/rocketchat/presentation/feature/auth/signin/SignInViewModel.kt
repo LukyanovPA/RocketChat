@@ -39,8 +39,8 @@ class SignInViewModel @Inject constructor(
 
     fun signIn() = launchIO {
         login(email.value, password.value)
-            .collect {
-
+            .collect { state ->
+                if (state) launchUI { navigator.forwardToHome() }
             }
     }
 

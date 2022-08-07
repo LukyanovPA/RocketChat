@@ -3,6 +3,7 @@ package com.pavellukyanov.rocketchat.presentation.base
 import android.content.Context
 import android.os.Bundle
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.facebook.shimmer.ShimmerFrameLayout
@@ -14,7 +15,7 @@ import javax.inject.Inject
 
 abstract class BaseFragment<VM : BaseViewModel<*>>(
     private val viewModelClass: Class<VM>,
-    private val layoutRes: Int
+    layoutRes: Int
 ) : Fragment(layoutRes) {
     private var shimmer: ShimmerFrameLayout? = null
 
@@ -38,6 +39,11 @@ abstract class BaseFragment<VM : BaseViewModel<*>>(
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         vm = ViewModelProvider(this, viewModelFactory)[viewModelClass]
+        vm.shimmerStateObserv().observe(viewLifecycleOwner, ::handleShimmerVisibility)
+    }
+
+    private fun handleShimmerVisibility(state: Boolean) {
+        shimmer?.isVisible = state
     }
 
     override fun onAttach(context: Context) {

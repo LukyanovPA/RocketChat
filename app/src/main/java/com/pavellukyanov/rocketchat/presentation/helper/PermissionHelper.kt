@@ -45,7 +45,6 @@ class PermissionHelper @Inject constructor() {
         } else {
             requestPermission(activity, permissions, onPermissionsGranted)
         }
-
     }
 
     private fun requestPermission(

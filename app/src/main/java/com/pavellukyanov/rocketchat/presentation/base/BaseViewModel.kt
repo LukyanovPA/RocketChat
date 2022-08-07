@@ -14,6 +14,8 @@ import timber.log.Timber
 abstract class BaseViewModel<N : BaseNavigator>(protected val navigator: N) : ViewModel() {
     protected val shimmerState = MutableStateFlow(false)
 
+    fun shimmerStateObserv(): LiveData<Boolean> = shimmerState.asLiveData()
+
     private fun onError(error: Throwable) = launchUI {
         error.message?.let { navigator.showGlobalErrorDialog(it) }
     }

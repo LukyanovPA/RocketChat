@@ -18,16 +18,12 @@ class AuthRepository @Inject constructor(
     private val authFirebase: AuthFirebase,
     private val networkMonitor: NetworkMonitor
 ) : Auth {
-    override suspend fun login(email: String, password: String): Flow<String> =
+    override suspend fun login(email: String, password: String): Flow<Boolean> =
         networkMonitor.handleInternetConnection()
             .flatMapMerge {
                 callbackFlow {
                     authFirebase().signInWithEmailAndPassword(email, password)
-                        .addOnCompleteListener { task ->
-                            if (task.isSuccessful) task.result.user?.displayName?.let {
-                                trySend(it)
-                            }
-                        }
+                        .addOnCompleteListener { state -> trySend(state.isSuccessful) }
                         .addOnFailureListener { throw it }
 
                     awaitClose { channel.close() }
@@ -43,9 +39,7 @@ class AuthRepository @Inject constructor(
             .flatMapMerge {
                 callbackFlow {
                     authFirebase().createUserWithEmailAndPassword(email, password)
-                        .addOnCompleteListener { state ->
-                            trySend(state.isSuccessful)
-                        }
+                        .addOnCompleteListener { state -> trySend(state.isSuccessful) }
                         .addOnFailureListener { throw it }
 
                     awaitClose { channel.close() }
@@ -65,9 +59,7 @@ class AuthRepository @Inject constructor(
 
                     authFirebase().currentUser?.let { fbUser ->
                         fbUser.updateProfile(user)
-                            .addOnCompleteListener { state ->
-                                trySend(state.isSuccessful)
-                            }
+                            .addOnCompleteListener { state -> trySend(state.isSuccessful) }
                             .addOnFailureListener { throw it }
                     }
 

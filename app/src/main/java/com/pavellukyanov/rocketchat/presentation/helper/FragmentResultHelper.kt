@@ -5,6 +5,7 @@ import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentResultListener
 import com.pavellukyanov.rocketchat.presentation.helper.ext.findFragment
 import com.pavellukyanov.rocketchat.presentation.helper.ext.setFragmentResult
+import com.pavellukyanov.rocketchat.utils.Constants.LONG_FIFTY
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -49,7 +50,7 @@ class FragmentResultHelper @Inject constructor(val fragmentManager: FragmentMana
     fun removeGlobalFragmentResultListener(requestKey: String) {
         Handler().postDelayed({
             fragmentManager.clearFragmentResultListener(requestKey)
-        }, 50)
+        }, LONG_FIFTY)
     }
 
     @Suppress("UNCHECKED_CAST")

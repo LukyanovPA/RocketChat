@@ -2,7 +2,6 @@ package com.pavellukyanov.rocketchat.presentation.feature.auth.signup
 
 import android.os.Bundle
 import android.view.View
-import android.widget.Toast
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.pavellukyanov.rocketchat.R
 import com.pavellukyanov.rocketchat.databinding.FragmentSignUpBinding
@@ -18,7 +17,6 @@ class SignUpFragment : BaseFragment<SignUpViewModel>(
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         vm.buttonState().observe(viewLifecycleOwner, ::handleButtonState)
-        vm.testStr.observe(viewLifecycleOwner, ::testReg)
         bind()
     }
 
@@ -32,10 +30,6 @@ class SignUpFragment : BaseFragment<SignUpViewModel>(
 
     private fun handleButtonState(state: Boolean) {
         binding.regButton.isEnabled = state
-    }
-
-    private fun testReg(str: String) {
-        Toast.makeText(requireContext(), str, Toast.LENGTH_LONG).show()
     }
 
     companion object {

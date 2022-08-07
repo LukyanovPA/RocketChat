@@ -1,8 +1,8 @@
 package com.pavellukyanov.rocketchat.presentation.feature.home
 
+import android.net.Uri
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import com.pavellukyanov.rocketchat.data.firebase.AuthFirebase
 import com.pavellukyanov.rocketchat.domain.entity.home.MyAccount
 import com.pavellukyanov.rocketchat.domain.usecase.profile.ChangeAvatar
 import com.pavellukyanov.rocketchat.domain.usecase.profile.GetMyAccount
@@ -12,8 +12,6 @@ import javax.inject.Inject
 
 class HomeViewModel @Inject constructor(
     navigator: HomeNavigator,
-    //TODO temp
-    private val authFirebase: AuthFirebase,
     private val galleryHelper: GalleryHelper,
     private val changeAvatar: ChangeAvatar,
     private val getMyAccount: GetMyAccount
@@ -27,7 +25,7 @@ class HomeViewModel @Inject constructor(
     }
 
     fun createNewChatRoom() = launchIO {
-//        authFirebase().currentUser?.photoUrl?.encodedPath
+        //TODO
     }
 
     fun changeAvatar() = launchCPU {
@@ -37,13 +35,14 @@ class HomeViewModel @Inject constructor(
             weightLimit = GalleryHelper.PHOTO_SIZE_DIV_KB
         ) { listFiles ->
             listFiles?.let { response ->
-                launchIO {
-                    changeAvatar(response.first().getPath())
-                        .collect { state ->
-                            if (state) fetchMyAccount()
-                        }
-                }
+                setAvatar(response.first().getPath())
             }
+        }
+    }
+
+    private fun setAvatar(uri: Uri) = launchIO {
+        changeAvatar(uri).collect { state ->
+            if (state) fetchMyAccount()
         }
     }
 
