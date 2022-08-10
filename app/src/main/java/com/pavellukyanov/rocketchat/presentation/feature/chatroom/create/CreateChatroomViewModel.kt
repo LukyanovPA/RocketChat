@@ -3,6 +3,7 @@ package com.pavellukyanov.rocketchat.presentation.feature.chatroom.create
 import android.net.Uri
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import com.pavellukyanov.rocketchat.domain.usecase.chatroom.ChatroomCreate
 import com.pavellukyanov.rocketchat.presentation.base.BaseViewModel
 import com.pavellukyanov.rocketchat.presentation.feature.chatroom.ChatroomNavigator
 import com.pavellukyanov.rocketchat.presentation.helper.gallery.GalleryHelper
@@ -12,7 +13,8 @@ import javax.inject.Inject
 
 class CreateChatroomViewModel @Inject constructor(
     navigator: ChatroomNavigator,
-    private val galleryHelper: GalleryHelper
+    private val galleryHelper: GalleryHelper,
+    private val chatroomCreate: ChatroomCreate
 ) : BaseViewModel<ChatroomNavigator>(navigator) {
     private val chatroomName = MutableStateFlow(EMPTY_STRING)
     private val chatroomDescription = MutableStateFlow(EMPTY_STRING)
@@ -39,11 +41,19 @@ class CreateChatroomViewModel @Inject constructor(
         chatroomDescription.emit(description)
     }
 
-    fun createChatroom() = launchIO {
+    fun createChatroom() {
         if (chatroomName.value.isEmpty()) {
             launchUI { navigator.showEmptyChatroomNameErrorDialog() }
         } else {
+            launchIO {
+                chatroomCreate(
+                    chatroomName.value,
+                    chatroomDescription.value,
+                    _chatroomImg.value
+                ).collect {
 
+                }
+            }
         }
     }
 

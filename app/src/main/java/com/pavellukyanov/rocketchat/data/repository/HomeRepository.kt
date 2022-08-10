@@ -4,7 +4,7 @@ import android.net.Uri
 import com.pavellukyanov.rocketchat.data.firebase.AuthFirebase
 import com.pavellukyanov.rocketchat.data.firebase.StorageFirebase
 import com.pavellukyanov.rocketchat.domain.entity.home.MyAccount
-import com.pavellukyanov.rocketchat.domain.repository.Home
+import com.pavellukyanov.rocketchat.domain.repository.IHome
 import com.pavellukyanov.rocketchat.presentation.helper.NetworkMonitor
 import com.pavellukyanov.rocketchat.presentation.helper.handleInternetConnection
 import com.pavellukyanov.rocketchat.utils.FBHelper
@@ -21,7 +21,7 @@ class HomeRepository @Inject constructor(
     private val authFirebase: AuthFirebase,
     private val storageFirebase: StorageFirebase,
     private val networkMonitor: NetworkMonitor
-) : Home {
+) : IHome {
     override suspend fun getMyAccount(): Flow<MyAccount> =
         networkMonitor.handleInternetConnection()
             .flatMapMerge {

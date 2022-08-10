@@ -2,7 +2,7 @@ package com.pavellukyanov.rocketchat.data.repository
 
 import com.google.firebase.auth.UserProfileChangeRequest
 import com.pavellukyanov.rocketchat.data.firebase.AuthFirebase
-import com.pavellukyanov.rocketchat.domain.repository.Auth
+import com.pavellukyanov.rocketchat.domain.repository.IAuth
 import com.pavellukyanov.rocketchat.presentation.helper.NetworkMonitor
 import com.pavellukyanov.rocketchat.presentation.helper.handleInternetConnection
 import kotlinx.coroutines.FlowPreview
@@ -17,7 +17,7 @@ import javax.inject.Inject
 class AuthRepository @Inject constructor(
     private val authFirebase: AuthFirebase,
     private val networkMonitor: NetworkMonitor
-) : Auth {
+) : IAuth {
     override suspend fun login(email: String, password: String): Flow<Boolean> =
         networkMonitor.handleInternetConnection()
             .flatMapMerge {
