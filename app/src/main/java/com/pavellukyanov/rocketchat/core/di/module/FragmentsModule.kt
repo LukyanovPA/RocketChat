@@ -2,6 +2,7 @@ package com.pavellukyanov.rocketchat.core.di.module
 
 import com.pavellukyanov.rocketchat.presentation.feature.auth.signin.SignInFragment
 import com.pavellukyanov.rocketchat.presentation.feature.auth.signup.SignUpFragment
+import com.pavellukyanov.rocketchat.presentation.feature.chatroom.create.CreateChatroomFragment
 import com.pavellukyanov.rocketchat.presentation.feature.home.HomeFragment
 import dagger.Module
 import dagger.android.ContributesAndroidInjector
@@ -16,4 +17,7 @@ abstract class FragmentsModule {
 
     @ContributesAndroidInjector
     abstract fun homeFragment(): HomeFragment
+
+    @ContributesAndroidInjector
+    abstract fun createChatroomFragment(): CreateChatroomFragment
 }

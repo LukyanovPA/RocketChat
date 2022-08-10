@@ -24,4 +24,11 @@
 
     //Home
     <string name="home_header">Hi, %1$s!</string>
+
+    //Chatroom
+    <string name="create_chatroom_empty_name_error">You have to come up with a name for your chatroom</string>
+    <string name="create_chatroom">Create Chatroom</string>
+    <string name="create_chatroom_name_hint">Chatroom name</string>
+    <string name="create_chatroom_description_hint">Description</string>
+    <string name="create_chatroom_description_sub">You can provide an optional description for your chatroom.</string>
 </resources>

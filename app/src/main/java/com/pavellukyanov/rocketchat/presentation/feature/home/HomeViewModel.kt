@@ -24,9 +24,7 @@ class HomeViewModel @Inject constructor(
         fetchMyAccount()
     }
 
-    fun createNewChatRoom() = launchIO {
-        //TODO
-    }
+    fun createNewChatRoom() = navigator.forwardToCreateChatroom()
 
     fun changeAvatar() = launchCPU {
         galleryHelper.pickImagesWithCheckPermission(

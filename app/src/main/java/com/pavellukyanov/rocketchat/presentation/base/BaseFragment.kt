@@ -2,6 +2,7 @@ package com.pavellukyanov.rocketchat.presentation.base
 
 import android.content.Context
 import android.os.Bundle
+import android.view.View
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
@@ -39,6 +40,10 @@ abstract class BaseFragment<VM : BaseViewModel<*>>(
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         vm = ViewModelProvider(this, viewModelFactory)[viewModelClass]
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
         vm.shimmerStateObserv().observe(viewLifecycleOwner, ::handleShimmerVisibility)
     }
 

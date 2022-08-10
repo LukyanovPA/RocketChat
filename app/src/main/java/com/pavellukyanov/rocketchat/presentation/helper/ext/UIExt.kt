@@ -6,6 +6,7 @@ import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.ImageView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.AppCompatEditText
 import androidx.appcompat.widget.AppCompatImageView
 import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.Fragment
@@ -30,6 +31,12 @@ fun Fragment.hideKeyboard() {
 }
 
 fun TextInputEditText.setOnTextChangeListener(onTextChanged: (String) -> Unit) {
+    doAfterTextChanged {
+        if (!it.isNullOrBlank()) onTextChanged(it.toString())
+    }
+}
+
+fun AppCompatEditText.setOnTextChangeListener(onTextChanged: (String) -> Unit) {
     doAfterTextChanged {
         if (!it.isNullOrBlank()) onTextChanged(it.toString())
     }
