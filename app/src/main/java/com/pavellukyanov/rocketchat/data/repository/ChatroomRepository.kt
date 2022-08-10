@@ -9,10 +9,12 @@ import com.pavellukyanov.rocketchat.domain.repository.IChatroom
 import com.pavellukyanov.rocketchat.presentation.helper.NetworkMonitor
 import com.pavellukyanov.rocketchat.presentation.helper.handleInternetConnection
 import com.pavellukyanov.rocketchat.utils.FBHelper
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.channels.awaitClose
-import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.callbackFlow
+import kotlinx.coroutines.flow.flatMapMerge
+import kotlinx.coroutines.flow.flowOf
 import java.util.*
 import javax.inject.Inject
 
@@ -23,7 +25,6 @@ class ChatroomRepository @Inject constructor(
     private val networkMonitor: NetworkMonitor,
     private val databaseFirebase: DatabaseFirebase
 ) : IChatroom {
-
     override suspend fun createChatroom(chatroomName: String, chatroomDescription: String, chatroomImg: Uri?): Flow<Boolean> =
         networkMonitor.handleInternetConnection()
             .flatMapMerge {
@@ -43,7 +44,7 @@ class ChatroomRepository @Inject constructor(
                                 )
                             }
                     }
-            }.flowOn(Dispatchers.IO)
+            }
 
     private suspend fun setChatroom(
         chatroomName: String,
@@ -61,9 +62,7 @@ class ChatroomRepository @Inject constructor(
                 chatroomImg = chatroomImg.toString()
             )
         )
-            .flowOn(Dispatchers.Default)
             .flatMapMerge { chatroom ->
-
                 callbackFlow {
                     databaseFirebase().reference.child(FBHelper.CHATROOMS)
                         .child(chatUid)
@@ -73,39 +72,33 @@ class ChatroomRepository @Inject constructor(
 
                     awaitClose { channel.close() }
                 }
-            }.flowOn(Dispatchers.IO)
+            }
 
     private suspend fun setChatroomImg(chatroomUid: String, uri: Uri?): Flow<Boolean> =
-        networkMonitor.handleInternetConnection()
-            .flatMapMerge {
-                callbackFlow {
-                    if (uri != null) {
-                        storageFirebase().reference.child(
-                            FBHelper.getChatroomImagesStorageReference(chatroomUid)
-                        ).putFile(uri)
-                            .addOnSuccessListener { trySend(it.task.isSuccessful) }
-                            .addOnFailureListener { throw it }
-                    } else {
-                        trySend(true)
-                    }
+        callbackFlow {
+            if (uri != null) {
+                storageFirebase().reference.child(
+                    FBHelper.getChatroomImagesStorageReference(chatroomUid)
+                ).putFile(uri)
+                    .addOnSuccessListener { trySend(it.task.isSuccessful) }
+                    .addOnFailureListener { throw it }
+            } else {
+                trySend(true)
+            }
 
-                    awaitClose { channel.close() }
-                }
-            }.flowOn(Dispatchers.IO)
+            awaitClose { channel.close() }
+        }
 
     private suspend fun getChatroomImg(chatroomUid: String): Flow<Uri> =
-        networkMonitor.handleInternetConnection()
-            .flatMapMerge {
-                callbackFlow {
-                    storageFirebase().reference.child(
-                        FBHelper.getChatroomImagesStorageReference(chatroomUid)
-                    ).downloadUrl
-                        .addOnSuccessListener { uri -> trySend(uri) }
-                        .addOnFailureListener { trySend(Uri.parse(CHATROOM_PLACEHOLDER)) }
+        callbackFlow {
+            storageFirebase().reference.child(
+                FBHelper.getChatroomImagesStorageReference(chatroomUid)
+            ).downloadUrl
+                .addOnSuccessListener { uri -> trySend(uri) }
+                .addOnFailureListener { trySend(Uri.parse(CHATROOM_PLACEHOLDER)) }
 
-                    awaitClose { channel.close() }
-                }
-            }.flowOn(Dispatchers.IO)
+            awaitClose { channel.close() }
+        }
 
     companion object {
         private const val CHATROOM_PLACEHOLDER =
