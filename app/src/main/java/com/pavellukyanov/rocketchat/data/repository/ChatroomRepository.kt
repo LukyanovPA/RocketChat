@@ -8,6 +8,7 @@ import com.pavellukyanov.rocketchat.domain.entity.chatroom.Chatroom
 import com.pavellukyanov.rocketchat.domain.repository.IChatroom
 import com.pavellukyanov.rocketchat.presentation.helper.NetworkMonitor
 import com.pavellukyanov.rocketchat.presentation.helper.handleInternetConnection
+import com.pavellukyanov.rocketchat.utils.DateUtil
 import com.pavellukyanov.rocketchat.utils.FBHelper
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.channels.awaitClose
@@ -15,6 +16,8 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.flow.flatMapMerge
 import kotlinx.coroutines.flow.flowOf
+import java.time.Instant
+import java.time.ZoneId
 import java.util.*
 import javax.inject.Inject
 
@@ -59,7 +62,9 @@ class ChatroomRepository @Inject constructor(
                 ownerUid = ownerUid,
                 description = chatroomDescription,
                 name = chatroomName,
-                chatroomImg = chatroomImg.toString()
+                chatroomImg = chatroomImg.toString(),
+                lastMessageTimeStamp = DateUtil.localDateToString(Instant.now().atZone(ZoneId.systemDefault()).toLocalDate()),
+                lastMessage = INITIAL_MESSAGE
             )
         )
             .flatMapMerge { chatroom ->
@@ -103,5 +108,6 @@ class ChatroomRepository @Inject constructor(
     companion object {
         private const val CHATROOM_PLACEHOLDER =
             "android.resource://com.pavellukyanov.rocketchat/drawable/ic_chatroom_placeholder"
+        private const val INITIAL_MESSAGE = "Chatroom created"
     }
 }

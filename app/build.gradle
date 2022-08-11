@@ -64,13 +64,6 @@ dependencies {
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutinesAndroid"
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-play-services:$coroutinesPlayService"
 
-    //Retrofit
-    implementation "com.squareup.retrofit2:retrofit:$retrofit_version"
-    implementation "com.squareup.retrofit2:converter-gson:$converter_gson_version"
-    implementation "com.squareup.okhttp3:logging-interceptor:$interceptor_version"
-    implementation "com.squareup.retrofit2:converter-scalars:$converter_scalars_version"
-    implementation "com.jakewharton.retrofit:retrofit2-kotlinx-serialization-converter:$serialization_version"
-
     //Kotlin Serialization
     implementation "org.jetbrains.kotlinx:kotlinx-serialization-core:$serial_json_version"
     implementation "org.jetbrains.kotlinx:kotlinx-serialization-json:$serial_json_version"

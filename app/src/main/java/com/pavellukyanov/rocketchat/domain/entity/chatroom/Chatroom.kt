@@ -9,6 +9,6 @@ data class Chatroom(
     val name: String? = null,
     val description: String? = null,
     val chatroomImg: String? = null,
-    val lastMessageTimeStamp: Long? = null,
+    val lastMessageTimeStamp: String? = null,
     val lastMessage: String? = null
 )

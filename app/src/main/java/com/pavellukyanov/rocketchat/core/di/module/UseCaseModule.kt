@@ -3,6 +3,8 @@ package com.pavellukyanov.rocketchat.core.di.module
 import com.pavellukyanov.rocketchat.domain.usecase.auth.*
 import com.pavellukyanov.rocketchat.domain.usecase.chatroom.ChatroomCreate
 import com.pavellukyanov.rocketchat.domain.usecase.chatroom.ChatroomCreateImpl
+import com.pavellukyanov.rocketchat.domain.usecase.home.GetChatRooms
+import com.pavellukyanov.rocketchat.domain.usecase.home.GetChatRoomsImpl
 import com.pavellukyanov.rocketchat.domain.usecase.profile.ChangeAvatar
 import com.pavellukyanov.rocketchat.domain.usecase.profile.ChangeAvatarImpl
 import com.pavellukyanov.rocketchat.domain.usecase.profile.GetMyAccount
@@ -29,4 +31,7 @@ abstract class UseCaseModule {
 
     @Binds
     abstract fun bindChatroomCreate(impl: ChatroomCreateImpl): ChatroomCreate
+
+    @Binds
+    abstract fun bindGetChatRooms(impl: GetChatRoomsImpl): GetChatRooms
 }

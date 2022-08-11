@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/chatroom_img"
+        android:layout_width="@dimen/margin_45"
+        android:layout_height="@dimen/margin_45"
+        android:layout_marginStart="@dimen/margin_26"
+        android:layout_marginTop="@dimen/margin_16"
+        android:scaleType="centerCrop"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:src="@tools:sample/avatars" />
+
+    <TextView
+        android:id="@+id/chatroom_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/margin_16"
+        android:layout_marginTop="@dimen/margin_16"
+        android:textAppearance="@style/RocketChat.SubTitle.Bold"
+        app:layout_constraintStart_toEndOf="@+id/chatroom_img"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="Chatroom name" />
+
+    <TextView
+        android:id="@+id/chatroom_last_message"
+        android:layout_width="@dimen/margin_0"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/margin_16"
+        android:layout_marginEnd="@dimen/margin_8"
+        android:maxLines="@integer/int_1"
+        android:textAppearance="@style/RocketChat.H4"
+        app:layout_constraintEnd_toStartOf="@+id/chatroom_last_message_timestamp"
+        app:layout_constraintStart_toEndOf="@+id/chatroom_img"
+        app:layout_constraintTop_toBottomOf="@+id/chatroom_name"
+        tools:text="This is last message in chatroom name..." />
+
+    <TextView
+        android:id="@+id/chatroom_last_message_timestamp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/margin_16"
+        android:layout_marginEnd="@dimen/margin_16"
+        android:textAppearance="@style/RocketChat.SubTitle.Bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="08:33" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

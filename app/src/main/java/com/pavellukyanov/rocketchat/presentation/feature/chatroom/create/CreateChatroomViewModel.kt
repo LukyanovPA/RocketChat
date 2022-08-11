@@ -28,7 +28,7 @@ class CreateChatroomViewModel @Inject constructor(
             weightLimit = GalleryHelper.PHOTO_SIZE_DIV_KB
         ) { listFiles ->
             listFiles?.let { response ->
-                _chatroomImg.postValue(response.first().getPath())
+                response.firstOrNull()?.getPath()?.let { _chatroomImg.postValue(it) }
             }
         }
     }
@@ -51,7 +51,7 @@ class CreateChatroomViewModel @Inject constructor(
                     chatroomDescription.value,
                     _chatroomImg.value
                 ).collect {
-
+                    if (it) navigator.back()
                 }
             }
         }
