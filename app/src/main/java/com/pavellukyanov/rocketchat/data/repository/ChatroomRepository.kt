@@ -8,7 +8,6 @@ import com.pavellukyanov.rocketchat.domain.entity.chatroom.Chatroom
 import com.pavellukyanov.rocketchat.domain.repository.IChatroom
 import com.pavellukyanov.rocketchat.presentation.helper.NetworkMonitor
 import com.pavellukyanov.rocketchat.presentation.helper.handleInternetConnection
-import com.pavellukyanov.rocketchat.utils.DateUtil
 import com.pavellukyanov.rocketchat.utils.FBHelper
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.channels.awaitClose
@@ -16,8 +15,6 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.flow.flatMapMerge
 import kotlinx.coroutines.flow.flowOf
-import java.time.Instant
-import java.time.ZoneId
 import java.util.*
 import javax.inject.Inject
 
@@ -63,7 +60,7 @@ class ChatroomRepository @Inject constructor(
                 description = chatroomDescription,
                 name = chatroomName,
                 chatroomImg = chatroomImg.toString(),
-                lastMessageTimeStamp = DateUtil.localDateToString(Instant.now().atZone(ZoneId.systemDefault()).toLocalDate()),
+                lastMessageTimeStamp = Calendar.getInstance().time.time,
                 lastMessage = INITIAL_MESSAGE
             )
         )

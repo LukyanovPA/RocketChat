@@ -23,5 +23,5 @@ fun Chatroom.map(): ChatroomLocal =
         description = description ?: EMPTY_STRING,
         chatroomImg = chatroomImg ?: EMPTY_STRING,
         lastMessage = lastMessage ?: EMPTY_STRING,
-        lastMessageTimeStamp = lastMessageTimeStamp ?: EMPTY_STRING
+        lastMessageTimeStamp = lastMessageTimeStamp ?: 0L
     )

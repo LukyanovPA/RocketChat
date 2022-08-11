@@ -7,6 +7,9 @@ import com.pavellukyanov.rocketchat.domain.entity.chatroom.Chatroom
 import com.pavellukyanov.rocketchat.presentation.base.BaseAdapter
 import com.pavellukyanov.rocketchat.presentation.base.BaseViewHolder
 import com.pavellukyanov.rocketchat.presentation.helper.ext.load
+import com.pavellukyanov.rocketchat.utils.DateUtil
+import java.time.Instant
+import java.time.ZoneId
 
 class ChatroomsAdapter(
     private val chatroomListener: ChatroomListener
@@ -32,7 +35,10 @@ class ChatroomViewHolder(override val binding: ListItemChatroomBinding) : BaseVi
                 chatroomImg.load(item.chatroomImg, circleCrop = true)
                 chatroomName.text = item.name
                 chatroomLastMessage.text = item.lastMessage
-                chatroomLastMessageTimestamp.text = item.lastMessageTimeStamp
+                val date =
+                    Instant.ofEpochMilli(item.lastMessageTimeStamp!!).atZone(ZoneId.systemDefault()).toLocalDate()
+
+                chatroomLastMessageTimestamp.text = DateUtil.localDateToString(date)
             }
         }
     }

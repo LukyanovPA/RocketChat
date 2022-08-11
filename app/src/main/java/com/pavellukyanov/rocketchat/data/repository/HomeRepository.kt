@@ -108,12 +108,8 @@ class HomeRepository @Inject constructor(
 
     override suspend fun getChatrooms(): Flow<List<Chatroom>> =
         cache.chatroomsDao().getChatrooms()
-            .map { localCache ->
-                localCache.map { it.map() }
-            }
-            .flatMapMerge { oldList ->
-                flowOf(chatrooms.compareAndSet(chatrooms.value, oldList))
-            }
+            .map { localCache -> localCache.map { it.map() } }
+            .flatMapMerge { oldList -> flowOf(chatrooms.compareAndSet(chatrooms.value, oldList)) }
             .flatMapMerge { chatrooms }
 
     private suspend fun updateCache(newList: List<Chatroom>, oldList: List<Chatroom>): Flow<Unit> =

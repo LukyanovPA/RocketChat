@@ -11,6 +11,6 @@ data class ChatroomLocal(
     val name: String,
     val description: String,
     val chatroomImg: String,
-    val lastMessageTimeStamp: String,
+    val lastMessageTimeStamp: Long,
     val lastMessage: String
 )
