@@ -1,6 +1,7 @@
 package com.pavellukyanov.rocketchat.data.repository
 
 import android.net.Uri
+import com.google.firebase.auth.UserProfileChangeRequest
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.ValueEventListener
@@ -41,16 +42,13 @@ class HomeRepository @Inject constructor(
     override suspend fun getMyAccount(): Flow<MyAccount> =
         networkMonitor.handleInternetConnection()
             .flatMapMerge {
-                getMyAvatar()
-                    .flatMapMerge { uri ->
-                        flowOf(
-                            MyAccount(
-                                uid = authFirebase().currentUser?.uid!!,
-                                displayName = authFirebase().currentUser?.displayName!!,
-                                avatar = uri
-                            )
-                        )
-                    }
+                flowOf(
+                    MyAccount(
+                        uid = authFirebase().currentUser?.uid!!,
+                        displayName = authFirebase().currentUser?.displayName!!,
+                        avatar = authFirebase().currentUser?.photoUrl ?: Uri.parse(AVATAR_PLACEHOLDER)
+                    )
+                )
             }
 
     private suspend fun getMyAvatar(): Flow<Uri> =
@@ -76,6 +74,28 @@ class HomeRepository @Inject constructor(
                     ).putFile(uri)
                         .addOnSuccessListener { trySend(it.task.isSuccessful) }
                         .addOnFailureListener { throw it }
+
+                    awaitClose { channel.close() }
+                }
+            }
+            .flatMapMerge {
+                getMyAvatar()
+                    .flatMapMerge { setAvatarInAuth(it) }
+            }
+
+    private suspend fun setAvatarInAuth(uri: Uri?): Flow<Boolean> =
+        networkMonitor.handleInternetConnection()
+            .flatMapMerge {
+                callbackFlow {
+                    val user = UserProfileChangeRequest.Builder()
+                        .setPhotoUri(uri)
+                        .build()
+
+                    authFirebase().currentUser?.let { fbUser ->
+                        fbUser.updateProfile(user)
+                            .addOnCompleteListener { trySend(true) }
+                            .addOnFailureListener { throw it }
+                    }
 
                     awaitClose { channel.close() }
                 }
