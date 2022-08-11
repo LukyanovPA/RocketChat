@@ -10,6 +10,7 @@ import com.pavellukyanov.rocketchat.domain.entity.chatroom.Chatroom
 import com.pavellukyanov.rocketchat.domain.entity.home.MyAccount
 import com.pavellukyanov.rocketchat.presentation.base.BaseFragment
 import com.pavellukyanov.rocketchat.presentation.helper.ext.load
+import com.pavellukyanov.rocketchat.presentation.helper.ext.setOnTextChangeListener
 
 class HomeFragment : ChatroomsAdapter.ChatroomListener, BaseFragment<HomeViewModel>(
     HomeViewModel::class.java,
@@ -32,6 +33,7 @@ class HomeFragment : ChatroomsAdapter.ChatroomListener, BaseFragment<HomeViewMod
         }
         createChatroomContainer.setOnClickListener { vm.createNewChatRoom() }
         mainAvatar.setOnClickListener { vm.changeAvatar() }
+        mainSearch.setOnTextChangeListener { vm.search(it) }
     }
 
     private fun setMyAccountData(myAccount: MyAccount) = with(binding) {

@@ -30,8 +30,10 @@ class HomeRepository @Inject constructor(
     private val chatrooms = MutableStateFlow(listOf<Chatroom>())
     private val chatroomsListener = object : ValueEventListener {
         override fun onDataChange(dataSnapshot: DataSnapshot) {
-            val rooms = dataSnapshot.getValue<HashMap<String, Chatroom>>()
-            rooms?.values?.toList()?.let { setChatrooms(it) }
+            val response = dataSnapshot.getValue<HashMap<String, Chatroom>>()
+            response?.values?.toList()?.let { rooms ->
+                chatrooms.compareAndSet(chatrooms.value, rooms)
+            }
         }
 
         override fun onCancelled(databaseError: DatabaseError) {
@@ -104,14 +106,12 @@ class HomeRepository @Inject constructor(
     override suspend fun getChatrooms(): Flow<List<Chatroom>> =
         networkMonitor.handleInternetConnection()
             .flatMapMerge {
-                databaseFirebase().reference.child(FBHelper.CHATROOMS)
-                    .addValueEventListener(chatroomsListener)
-                chatrooms
+                flowOf(
+                    databaseFirebase().reference.child(FBHelper.CHATROOMS)
+                        .addValueEventListener(chatroomsListener)
+                )
+                    .flatMapMerge { chatrooms }
             }
-
-    private fun setChatrooms(chatrooms: List<Chatroom>) {
-        this.chatrooms.compareAndSet(this.chatrooms.value, chatrooms)
-    }
 
     companion object {
         private const val AVATAR_PLACEHOLDER =

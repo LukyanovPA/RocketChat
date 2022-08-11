@@ -10,6 +10,10 @@ import com.pavellukyanov.rocketchat.domain.usecase.profile.ChangeAvatar
 import com.pavellukyanov.rocketchat.domain.usecase.profile.GetMyAccount
 import com.pavellukyanov.rocketchat.presentation.base.BaseViewModel
 import com.pavellukyanov.rocketchat.presentation.helper.gallery.GalleryHelper
+import com.pavellukyanov.rocketchat.utils.Constants.EMPTY_STRING
+import kotlinx.coroutines.FlowPreview
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.flatMapMerge
 import javax.inject.Inject
 
 class HomeViewModel @Inject constructor(
@@ -19,6 +23,7 @@ class HomeViewModel @Inject constructor(
     private val getMyAccount: GetMyAccount,
     private val getChatrooms: GetChatRooms
 ) : BaseViewModel<HomeNavigator>(navigator) {
+    private val searchQuery = MutableStateFlow(EMPTY_STRING)
     private val _myAccount = MutableLiveData<MyAccount>()
     private val _chatrooms = MutableLiveData<List<Chatroom>>()
     val myAccount: LiveData<MyAccount> = _myAccount
@@ -27,6 +32,10 @@ class HomeViewModel @Inject constructor(
     init {
         fetchChatrooms()
         fetchMyAccount()
+    }
+
+    fun search(query: String) = launchCPU {
+        searchQuery.compareAndSet(searchQuery.value, query)
     }
 
     fun createNewChatRoom() = navigator.forwardToCreateChatroom()
@@ -57,7 +66,10 @@ class HomeViewModel @Inject constructor(
         getMyAccount().collect(_myAccount::postValue)
     }
 
+    @OptIn(FlowPreview::class)
     private fun fetchChatrooms() = launchIO {
-        getChatrooms().collect(_chatrooms::postValue)
+        searchQuery.flatMapMerge { query ->
+            getChatrooms(query)
+        }.collect(_chatrooms::postValue)
     }
 }
