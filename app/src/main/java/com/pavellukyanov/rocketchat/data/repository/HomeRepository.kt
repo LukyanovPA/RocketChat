@@ -6,9 +6,11 @@ import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.ktx.getValue
+import com.pavellukyanov.rocketchat.data.cache.LocalDatabase
 import com.pavellukyanov.rocketchat.data.firebase.AuthFirebase
 import com.pavellukyanov.rocketchat.data.firebase.DatabaseFirebase
 import com.pavellukyanov.rocketchat.data.firebase.StorageFirebase
+import com.pavellukyanov.rocketchat.data.map
 import com.pavellukyanov.rocketchat.domain.entity.chatroom.Chatroom
 import com.pavellukyanov.rocketchat.domain.entity.home.MyAccount
 import com.pavellukyanov.rocketchat.domain.repository.IHome
@@ -25,7 +27,8 @@ class HomeRepository @Inject constructor(
     private val authFirebase: AuthFirebase,
     private val storageFirebase: StorageFirebase,
     private val networkMonitor: NetworkMonitor,
-    private val databaseFirebase: DatabaseFirebase
+    private val databaseFirebase: DatabaseFirebase,
+    private val cache: LocalDatabase
 ) : IHome {
     private val chatrooms = MutableStateFlow(listOf<Chatroom>())
     private val chatroomsListener = object : ValueEventListener {
@@ -104,13 +107,35 @@ class HomeRepository @Inject constructor(
             }
 
     override suspend fun getChatrooms(): Flow<List<Chatroom>> =
+        cache.chatroomsDao().getChatrooms()
+            .map { localCache ->
+                localCache.map { it.map() }
+            }
+            .flatMapMerge { oldList ->
+                flowOf(chatrooms.compareAndSet(chatrooms.value, oldList))
+            }
+            .flatMapMerge { chatrooms }
+
+    private suspend fun updateCache(newList: List<Chatroom>, oldList: List<Chatroom>): Flow<Unit> =
+        flow {
+            cache.chatroomsDao().delete(oldList.map { it.map() })
+            cache.chatroomsDao().insert(newList.map { it.map() })
+            emit(Unit)
+        }
+
+    override suspend fun refreshCache(oldList: List<Chatroom>): Flow<Unit> =
         networkMonitor.handleInternetConnection()
             .flatMapMerge {
-                flowOf(
-                    databaseFirebase().reference.child(FBHelper.CHATROOMS)
-                        .addValueEventListener(chatroomsListener)
-                )
+                flow {
+                    emit(
+                        databaseFirebase().reference.child(FBHelper.CHATROOMS)
+                            .addValueEventListener(chatroomsListener)
+                    )
+                }
                     .flatMapMerge { chatrooms }
+                    .flatMapMerge { newList ->
+                        updateCache(newList, oldList)
+                    }
             }
 
     companion object {

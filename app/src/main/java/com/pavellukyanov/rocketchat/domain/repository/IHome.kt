@@ -9,4 +9,5 @@ interface IHome {
     suspend fun getMyAccount(): Flow<MyAccount>
     suspend fun changeAvatar(uri: Uri): Flow<Boolean>
     suspend fun getChatrooms(): Flow<List<Chatroom>>
+    suspend fun refreshCache(oldList: List<Chatroom>): Flow<Unit>
 }

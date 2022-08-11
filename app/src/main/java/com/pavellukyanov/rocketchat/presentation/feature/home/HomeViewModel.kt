@@ -6,6 +6,7 @@ import androidx.lifecycle.MutableLiveData
 import com.pavellukyanov.rocketchat.domain.entity.chatroom.Chatroom
 import com.pavellukyanov.rocketchat.domain.entity.home.MyAccount
 import com.pavellukyanov.rocketchat.domain.usecase.home.GetChatRooms
+import com.pavellukyanov.rocketchat.domain.usecase.home.RefreshChatroomsCache
 import com.pavellukyanov.rocketchat.domain.usecase.profile.ChangeAvatar
 import com.pavellukyanov.rocketchat.domain.usecase.profile.GetMyAccount
 import com.pavellukyanov.rocketchat.presentation.base.BaseViewModel
@@ -21,7 +22,8 @@ class HomeViewModel @Inject constructor(
     private val galleryHelper: GalleryHelper,
     private val changeAvatar: ChangeAvatar,
     private val getMyAccount: GetMyAccount,
-    private val getChatrooms: GetChatRooms
+    private val getChatrooms: GetChatRooms,
+    private val refreshChatroomsCache: RefreshChatroomsCache
 ) : BaseViewModel<HomeNavigator>(navigator) {
     private val searchQuery = MutableStateFlow(EMPTY_STRING)
     private val _myAccount = MutableLiveData<MyAccount>()
@@ -70,6 +72,13 @@ class HomeViewModel @Inject constructor(
     private fun fetchChatrooms() = launchIO {
         searchQuery.flatMapMerge { query ->
             getChatrooms(query)
-        }.collect(_chatrooms::postValue)
+        }.collect { list ->
+            _chatrooms.postValue(list)
+            refreshCache(list)
+        }
+    }
+
+    private fun refreshCache(oldList: List<Chatroom>) = launchIO {
+        refreshChatroomsCache(oldList).collect {}
     }
 }
