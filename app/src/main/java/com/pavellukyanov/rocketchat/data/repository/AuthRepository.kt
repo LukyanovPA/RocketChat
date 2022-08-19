@@ -14,7 +14,10 @@ import com.pavellukyanov.rocketchat.presentation.helper.NetworkMonitor
 import com.pavellukyanov.rocketchat.presentation.helper.handleInternetConnection
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.channels.awaitClose
-import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.callbackFlow
+import kotlinx.coroutines.flow.flatMapMerge
+import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
 
 @OptIn(FlowPreview::class)
@@ -110,7 +113,12 @@ class AuthRepository @Inject constructor(
     override suspend fun getCurrentUser(): Flow<User> =
         networkMonitor.handleInternetConnection()
             .flatMapMerge {
-                flowOf(api.getCurrentUser().asData())
+                flow {
+                    api.getCurrentUser().asData().also {
+                        userStorage.user = it
+                        emit(it)
+                    }
+                }
             }
 
     override fun updateToken() {
