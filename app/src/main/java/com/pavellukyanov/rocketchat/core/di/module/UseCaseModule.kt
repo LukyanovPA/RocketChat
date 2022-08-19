@@ -1,6 +1,9 @@
 package com.pavellukyanov.rocketchat.core.di.module
 
-import com.pavellukyanov.rocketchat.domain.usecase.auth.*
+import com.pavellukyanov.rocketchat.domain.usecase.auth.Login
+import com.pavellukyanov.rocketchat.domain.usecase.auth.LoginImpl
+import com.pavellukyanov.rocketchat.domain.usecase.auth.Registration
+import com.pavellukyanov.rocketchat.domain.usecase.auth.RegistrationImpl
 import com.pavellukyanov.rocketchat.domain.usecase.chatroom.ChatroomCreate
 import com.pavellukyanov.rocketchat.domain.usecase.chatroom.ChatroomCreateImpl
 import com.pavellukyanov.rocketchat.domain.usecase.home.GetChatRooms
@@ -21,9 +24,6 @@ abstract class UseCaseModule {
 
     @Binds
     abstract fun bindRegistration(impl: RegistrationImpl): Registration
-
-    @Binds
-    abstract fun bindIsAuthorized(impl: IsAuthorizedImpl): IsAuthorized
 
     @Binds
     abstract fun bindChangeAvatar(impl: ChangeAvatarImpl): ChangeAvatar

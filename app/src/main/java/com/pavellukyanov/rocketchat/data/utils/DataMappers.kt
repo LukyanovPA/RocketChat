@@ -1,4 +1,4 @@
-package com.pavellukyanov.rocketchat.data
+package com.pavellukyanov.rocketchat.data.utils
 
 import com.pavellukyanov.rocketchat.data.cache.entity.ChatroomLocal
 import com.pavellukyanov.rocketchat.domain.entity.chatroom.Chatroom

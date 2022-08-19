@@ -38,7 +38,7 @@ class HomeFragment : ChatroomsAdapter.ChatroomListener, BaseFragment<HomeViewMod
 
     private fun setMyAccountData(myAccount: MyAccount) = with(binding) {
         mainAvatar.load(myAccount.avatar, circleCrop = true)
-        mainHeader.text = getString(R.string.home_header, myAccount.displayName)
+        mainHeader.text = getString(R.string.home_header, myAccount.username)
     }
 
     private fun handleChatroomList(listChatroom: List<Chatroom>) {

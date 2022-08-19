@@ -6,11 +6,13 @@ import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.ktx.getValue
+import com.pavellukyanov.rocketchat.data.api.AuthApi
 import com.pavellukyanov.rocketchat.data.cache.LocalDatabase
 import com.pavellukyanov.rocketchat.data.firebase.AuthFirebase
 import com.pavellukyanov.rocketchat.data.firebase.DatabaseFirebase
 import com.pavellukyanov.rocketchat.data.firebase.StorageFirebase
-import com.pavellukyanov.rocketchat.data.map
+import com.pavellukyanov.rocketchat.data.utils.map
+import com.pavellukyanov.rocketchat.data.utils.asData
 import com.pavellukyanov.rocketchat.domain.entity.chatroom.Chatroom
 import com.pavellukyanov.rocketchat.domain.entity.home.MyAccount
 import com.pavellukyanov.rocketchat.domain.repository.IHome
@@ -28,7 +30,8 @@ class HomeRepository @Inject constructor(
     private val storageFirebase: StorageFirebase,
     private val networkMonitor: NetworkMonitor,
     private val databaseFirebase: DatabaseFirebase,
-    private val cache: LocalDatabase
+    private val cache: LocalDatabase,
+    private val api: AuthApi
 ) : IHome {
     private val chatrooms = MutableStateFlow(listOf<Chatroom>())
     private val chatroomsListener = object : ValueEventListener {
@@ -47,13 +50,16 @@ class HomeRepository @Inject constructor(
     override suspend fun getMyAccount(): Flow<MyAccount> =
         networkMonitor.handleInternetConnection()
             .flatMapMerge {
-                flowOf(
-                    MyAccount(
-                        uid = authFirebase().currentUser?.uid!!,
-                        displayName = authFirebase().currentUser?.displayName!!,
-                        avatar = authFirebase().currentUser?.photoUrl ?: Uri.parse(AVATAR_PLACEHOLDER)
+                flow {
+                    val currentUser = api.getCurrentUser().asData()
+                    emit(
+                        MyAccount(
+                            uuid = currentUser.uuid,
+                            username = currentUser.username,
+                            avatar = Uri.parse(currentUser.avatar ?: AVATAR_PLACEHOLDER)
+                        )
                     )
-                )
+                }
             }
 
     private suspend fun getMyAvatar(): Flow<Uri> =

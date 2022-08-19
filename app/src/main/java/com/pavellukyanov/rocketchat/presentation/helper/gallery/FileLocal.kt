@@ -3,8 +3,7 @@ package com.pavellukyanov.rocketchat.presentation.helper.gallery
 import android.content.Context
 import android.net.Uri
 import android.provider.OpenableColumns
-import kotlinx.serialization.SerialName
-import kotlinx.serialization.Serializable
+import com.google.gson.annotations.SerializedName
 import kotlin.properties.Delegates
 
 interface File {
@@ -58,9 +57,8 @@ fun FileLocal.getFileName(context: Context): String {
     throw IllegalStateException("Something goes wrong")
 }
 
-@Serializable
 enum class MimeType {
-    @SerialName("image/jpeg") IMAGE_JPEG,
-    @SerialName("image/png") IMAGE_PNG,
-    @SerialName("none") NONE
+    @SerializedName("image/jpeg") IMAGE_JPEG,
+    @SerializedName("image/png") IMAGE_PNG,
+    @SerializedName("none") NONE
 }
