@@ -4,10 +4,8 @@ import com.google.firebase.auth.UserProfileChangeRequest
 import com.pavellukyanov.rocketchat.data.api.AuthApi
 import com.pavellukyanov.rocketchat.data.firebase.AuthFirebase
 import com.pavellukyanov.rocketchat.data.utils.asData
-import com.pavellukyanov.rocketchat.data.utils.asObjectResponse
 import com.pavellukyanov.rocketchat.domain.entity.auth.SignInRequest
 import com.pavellukyanov.rocketchat.domain.entity.auth.SignUpRequest
-import com.pavellukyanov.rocketchat.domain.entity.users.User
 import com.pavellukyanov.rocketchat.domain.repository.IAuth
 import com.pavellukyanov.rocketchat.domain.utils.UserInfo
 import com.pavellukyanov.rocketchat.presentation.helper.NetworkMonitor
@@ -38,9 +36,9 @@ class AuthRepository @Inject constructor(
 
     private suspend fun loginInApi(email: String, password: String): Flow<Boolean> =
         flow {
-            api.signIn(SignInRequest(email, password)).asObjectResponse().also {
-                if (it.success) userStorage.tokens = it.data
-                emit(it.success)
+            api.signIn(SignInRequest(email, password)).asData().also {
+                userStorage.tokens = it
+                emit(true)
             }
         }
 
@@ -72,9 +70,9 @@ class AuthRepository @Inject constructor(
     private suspend fun registrationInApi(displayName: String, email: String, password: String): Flow<Boolean> =
         flow {
             api.signUp(SignUpRequest(username = displayName, password = password, email = email))
-                .asObjectResponse().also {
-                    if (it.success) userStorage.tokens = it.data
-                    emit(it.success)
+                .asData().also {
+                    userStorage.tokens = it
+                    emit(true)
                 }
         }
 
@@ -110,17 +108,6 @@ class AuthRepository @Inject constructor(
             awaitClose { channel.close() }
         }
 
-    override suspend fun getCurrentUser(): Flow<User> =
-        networkMonitor.handleInternetConnection()
-            .flatMapMerge {
-                flow {
-                    api.getCurrentUser().asData().also {
-                        userStorage.user = it
-                        emit(it)
-                    }
-                }
-            }
-
     override fun updateToken() {
         api.updateToken(userStorage.tokens?.refreshToken).asData().also {
             userStorage.tokens = it
@@ -130,4 +117,15 @@ class AuthRepository @Inject constructor(
     override fun clearData() {
         userStorage.tokens = null
     }
+
+    override suspend fun logout(): Flow<Unit> =
+        networkMonitor.handleInternetConnection()
+            .flatMapMerge {
+                flow {
+                    api.logout().asData().also {
+                        userStorage.tokens = null
+                        emit(authFirebase().signOut())
+                    }
+                }
+            }
 }

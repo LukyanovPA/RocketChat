@@ -3,6 +3,7 @@ package com.pavellukyanov.rocketchat.data.utils
 import com.google.gson.Gson
 import com.pavellukyanov.rocketchat.data.api.AuthApi
 import com.pavellukyanov.rocketchat.data.utils.errors.ApiException
+import com.pavellukyanov.rocketchat.domain.entity.auth.TokenResponse
 import com.pavellukyanov.rocketchat.domain.repository.IAuth
 import com.pavellukyanov.rocketchat.domain.utils.UserInfo
 import okhttp3.Interceptor
@@ -68,8 +69,8 @@ class HttpInterceptor @Inject constructor(
             initialResponse.code,
             gson.fromJson(
                 initialResponse.body?.string(),
-                ObjectResponse::class.java
-            ).error.orEmpty()
+                TokenResponse::class.java
+            ).message.orEmpty()
         )
 
     private fun requestWithHeaders(request: Request): Request {

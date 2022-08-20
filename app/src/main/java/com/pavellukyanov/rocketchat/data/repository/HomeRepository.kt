@@ -1,18 +1,17 @@
 package com.pavellukyanov.rocketchat.data.repository
 
 import android.net.Uri
-import com.google.firebase.auth.UserProfileChangeRequest
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.ktx.getValue
-import com.pavellukyanov.rocketchat.data.api.AuthApi
+import com.pavellukyanov.rocketchat.data.api.UsersApi
 import com.pavellukyanov.rocketchat.data.cache.LocalDatabase
 import com.pavellukyanov.rocketchat.data.firebase.AuthFirebase
 import com.pavellukyanov.rocketchat.data.firebase.DatabaseFirebase
 import com.pavellukyanov.rocketchat.data.firebase.StorageFirebase
-import com.pavellukyanov.rocketchat.data.utils.map
 import com.pavellukyanov.rocketchat.data.utils.asData
+import com.pavellukyanov.rocketchat.data.utils.map
 import com.pavellukyanov.rocketchat.domain.entity.chatroom.Chatroom
 import com.pavellukyanov.rocketchat.domain.entity.home.MyAccount
 import com.pavellukyanov.rocketchat.domain.repository.IHome
@@ -31,7 +30,7 @@ class HomeRepository @Inject constructor(
     private val networkMonitor: NetworkMonitor,
     private val databaseFirebase: DatabaseFirebase,
     private val cache: LocalDatabase,
-    private val api: AuthApi
+    private val api: UsersApi
 ) : IHome {
     private val chatrooms = MutableStateFlow(listOf<Chatroom>())
     private val chatroomsListener = object : ValueEventListener {
@@ -63,18 +62,15 @@ class HomeRepository @Inject constructor(
             }
 
     private suspend fun getMyAvatar(): Flow<Uri> =
-        networkMonitor.handleInternetConnection()
-            .flatMapMerge {
-                callbackFlow {
-                    storageFirebase().reference.child(
-                        FBHelper.getUserImagesStorageReference(authFirebase().currentUser?.uid!!)
-                    ).downloadUrl
-                        .addOnSuccessListener { uri -> trySend(uri) }
-                        .addOnFailureListener { trySend(Uri.parse(AVATAR_PLACEHOLDER)) }
+        callbackFlow {
+            storageFirebase().reference.child(
+                FBHelper.getUserImagesStorageReference(authFirebase().currentUser?.uid!!)
+            ).downloadUrl
+                .addOnSuccessListener { uri -> trySend(uri) }
+                .addOnFailureListener { trySend(Uri.parse(AVATAR_PLACEHOLDER)) }
 
-                    awaitClose { channel.close() }
-                }
-            }
+            awaitClose { channel.close() }
+        }
 
     override suspend fun changeAvatar(uri: Uri): Flow<Boolean> =
         networkMonitor.handleInternetConnection()
@@ -91,26 +87,13 @@ class HomeRepository @Inject constructor(
             }
             .flatMapMerge {
                 getMyAvatar()
-                    .flatMapMerge { setAvatarInAuth(it) }
+                    .flatMapMerge { setAvatarInApi(it) }
             }
 
-    private suspend fun setAvatarInAuth(uri: Uri?): Flow<Boolean> =
-        networkMonitor.handleInternetConnection()
-            .flatMapMerge {
-                callbackFlow {
-                    val user = UserProfileChangeRequest.Builder()
-                        .setPhotoUri(uri)
-                        .build()
-
-                    authFirebase().currentUser?.let { fbUser ->
-                        fbUser.updateProfile(user)
-                            .addOnCompleteListener { trySend(true) }
-                            .addOnFailureListener { throw it }
-                    }
-
-                    awaitClose { channel.close() }
-                }
-            }
+    private suspend fun setAvatarInApi(uri: Uri?): Flow<Boolean> =
+        flow {
+            emit(api.changeAvatar(uri.toString()).asData())
+        }
 
     override suspend fun getChatrooms(): Flow<List<Chatroom>> =
         cache.chatroomsDao().getChatrooms()
@@ -143,5 +126,6 @@ class HomeRepository @Inject constructor(
     companion object {
         private const val AVATAR_PLACEHOLDER =
             "android.resource://com.pavellukyanov.rocketchat/drawable/ic_avatar_placeholder"
+        private const val FIREBASE_URL = "https://firebasestorage.googleapis.com"
     }
 }
