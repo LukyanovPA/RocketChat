@@ -126,6 +126,5 @@ class HomeRepository @Inject constructor(
     companion object {
         private const val AVATAR_PLACEHOLDER =
             "android.resource://com.pavellukyanov.rocketchat/drawable/ic_avatar_placeholder"
-        private const val FIREBASE_URL = "https://firebasestorage.googleapis.com"
     }
 }
