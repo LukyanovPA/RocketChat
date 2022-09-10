@@ -3,6 +3,7 @@ package com.pavellukyanov.rocketchat.core.di.module
 import com.google.gson.GsonBuilder
 import com.pavellukyanov.rocketchat.BuildConfig
 import com.pavellukyanov.rocketchat.data.api.AuthApi
+import com.pavellukyanov.rocketchat.data.api.ChatroomApi
 import com.pavellukyanov.rocketchat.data.api.UsersApi
 import com.pavellukyanov.rocketchat.data.utils.RetrofitClient
 import com.pavellukyanov.rocketchat.data.utils.networkadapter.NetworkResponseAdapterFactory
@@ -32,4 +33,8 @@ class ApiModule {
     @Singleton
     @Provides
     fun provideUsersApi(retrofit: Retrofit): UsersApi = retrofit.create(UsersApi::class.java)
+
+    @Singleton
+    @Provides
+    fun provideChatroomApi(retrofit: Retrofit): ChatroomApi = retrofit.create(ChatroomApi::class.java)
 }

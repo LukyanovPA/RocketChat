@@ -5,8 +5,8 @@ object FBHelper {
     fun getUserImagesStorageReference(uid: String): String =
         "users/avatars/$uid"
 
-    fun getChatroomImagesStorageReference(chatroomUid: String): String =
-        "chatrooms/images/$chatroomUid"
+    fun getChatroomImagesStorageReference(chatroomName: String): String =
+        "chatrooms/images/$chatroomName"
 
     const val CHATROOMS = "chatrooms"
 }
