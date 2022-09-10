@@ -1,6 +1,7 @@
 package com.pavellukyanov.rocketchat.core.di.module
 
 import com.google.gson.GsonBuilder
+import com.pavellukyanov.rocketchat.BuildConfig
 import com.pavellukyanov.rocketchat.data.api.AuthApi
 import com.pavellukyanov.rocketchat.data.api.UsersApi
 import com.pavellukyanov.rocketchat.data.utils.RetrofitClient
@@ -20,7 +21,7 @@ class ApiModule {
         Retrofit.Builder()
             .addCallAdapterFactory(NetworkResponseAdapterFactory())
             .addConverterFactory(GsonConverterFactory.create(GsonBuilder().create()))
-            .baseUrl(BASE_URL)
+            .baseUrl(BuildConfig.API_ENDPOINT)
             .client(client.createLoggedHttpClient())
             .build()
 
@@ -31,8 +32,4 @@ class ApiModule {
     @Singleton
     @Provides
     fun provideUsersApi(retrofit: Retrofit): UsersApi = retrofit.create(UsersApi::class.java)
-
-    companion object {
-        private const val BASE_URL = "https://rocket-chat-api.herokuapp.com/api/"
-    }
 }

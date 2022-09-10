@@ -1,14 +1,8 @@
-plugins {
-    id 'com.android.application'
-    id 'kotlin-android'
-    id 'kotlin-kapt'
-}
-
 apply plugin: 'com.android.application'
-apply plugin: 'com.google.gms.google-services'
 apply plugin: 'kotlin-parcelize'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-kapt'
+apply plugin: 'com.google.gms.google-services'
 
 android {
     compileSdk 32
@@ -39,6 +33,29 @@ android {
     }
     kotlinOptions {
         jvmTarget = '1.8'
+    }
+
+    flavorDimensions "serverType"
+
+    productFlavors {
+
+        def apiUrl
+
+        dev {
+            dimension "serverType"
+
+            apiUrl = '"http://10.0.2.2:8080/api/"'
+            buildConfigField 'String', 'API_ENDPOINT', apiUrl
+            signingConfig signingConfigs.debug
+        }
+
+        prod {
+            dimension "serverType"
+
+            apiUrl = '"https://rocket-chat-api.herokuapp.com/api/"'
+            buildConfigField 'String', 'API_ENDPOINT', apiUrl
+            signingConfig signingConfigs.debug
+        }
     }
 }
 
