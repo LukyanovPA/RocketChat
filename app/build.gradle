@@ -52,7 +52,7 @@ android {
         prod {
             dimension "serverType"
 
-            apiUrl = '"https://rocket-chat-api.herokuapp.com/api/"'
+            apiUrl = '"http://78.40.216.136:8080/api/"'
             buildConfigField 'String', 'API_ENDPOINT', apiUrl
             signingConfig signingConfigs.debug
         }

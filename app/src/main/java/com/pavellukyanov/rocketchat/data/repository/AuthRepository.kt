@@ -30,9 +30,9 @@ class AuthRepository @Inject constructor(
             .flatMapMerge {
                 loginInApi(email, password)
             }
-            .flatMapMerge { state ->
-                loginInFirebase(state, email, password)
-            }
+//            .flatMapMerge { state ->
+//                loginInFirebase(state, email, password)
+//            }
 
     private suspend fun loginInApi(email: String, password: String): Flow<Boolean> =
         flow {
@@ -60,12 +60,12 @@ class AuthRepository @Inject constructor(
             .flatMapMerge {
                 registrationInApi(displayName, email, password)
             }
-            .flatMapMerge { state ->
-                registrationInFirebase(state, email, password)
-            }
-            .flatMapMerge { state ->
-                setDisplayNameInFirebase(state, displayName)
-            }
+//            .flatMapMerge { state ->
+//                registrationInFirebase(state, email, password)
+//            }
+//            .flatMapMerge { state ->
+//                setDisplayNameInFirebase(state, displayName)
+//            }
 
     private suspend fun registrationInApi(displayName: String, email: String, password: String): Flow<Boolean> =
         flow {

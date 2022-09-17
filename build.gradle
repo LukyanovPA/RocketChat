@@ -44,7 +44,7 @@ buildscript {
         interceptor_version = '4.9.1'
         converter_scalars_version = '2.4.0'
         //Crypto
-        cryptoVersion = '1.1.0-alpha03'
+        cryptoVersion = '1.1.0-alpha01'
     }
 
     repositories {

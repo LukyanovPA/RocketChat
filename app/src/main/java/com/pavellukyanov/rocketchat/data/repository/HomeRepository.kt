@@ -42,7 +42,7 @@ class HomeRepository @Inject constructor(
         }
 
         override fun onCancelled(databaseError: DatabaseError) {
-            throw databaseError.toException()
+//            throw databaseError.toException()
         }
     }
 
