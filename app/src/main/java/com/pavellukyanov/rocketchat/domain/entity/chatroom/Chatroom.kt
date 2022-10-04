@@ -1,18 +1,19 @@
 package com.pavellukyanov.rocketchat.domain.entity.chatroom
 
-import com.google.firebase.database.IgnoreExtraProperties
+import android.os.Parcelable
 import com.pavellukyanov.rocketchat.utils.SameItem
+import kotlinx.parcelize.Parcelize
 
-@IgnoreExtraProperties
+@Parcelize
 data class Chatroom(
-    val chatroomUid: String? = null,
-    val ownerUid: String? = null,
-    val name: String? = null,
-    val description: String? = null,
-    val chatroomImg: String? = null,
-    val lastMessageTimeStamp: Long? = null,
-    val lastMessage: String? = null
-) : SameItem {
+    val id: String,
+    val ownerId: String,
+    val name: String,
+    val description: String,
+    val chatroomImg: String,
+    val lastMessageTimeStamp: Long,
+    val lastMessage: String
+) : Parcelable, SameItem {
     override fun isSame(item: SameItem): Boolean =
-        item is Chatroom && chatroomUid == item.chatroomUid && lastMessageTimeStamp == item.lastMessageTimeStamp
+        item is Chatroom && id == item.id && lastMessageTimeStamp == item.lastMessageTimeStamp
 }

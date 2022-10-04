@@ -32,6 +32,7 @@ class HomeViewModel @Inject constructor(
     val chatrooms: LiveData<List<Chatroom>> = _chatrooms
 
     init {
+        refreshCache()
         fetchChatrooms()
         fetchMyAccount()
     }
@@ -72,13 +73,10 @@ class HomeViewModel @Inject constructor(
     private fun fetchChatrooms() = launchIO {
         searchQuery.flatMapMerge { query ->
             getChatrooms(query)
-        }.collect { list ->
-            _chatrooms.postValue(list)
-            refreshCache(list)
-        }
+        }.collect(_chatrooms::postValue)
     }
 
-    private fun refreshCache(oldList: List<Chatroom>) = launchIO {
-        refreshChatroomsCache(oldList).collect {}
+    private fun refreshCache() = launchIO {
+        refreshChatroomsCache().collect {}
     }
 }

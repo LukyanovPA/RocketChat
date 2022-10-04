@@ -123,7 +123,7 @@ class AuthRepository @Inject constructor(
             .flatMapMerge {
                 flow {
                     api.logout().asData().also {
-                        userStorage.tokens = null
+                        clearData()
                         emit(authFirebase().signOut())
                     }
                 }

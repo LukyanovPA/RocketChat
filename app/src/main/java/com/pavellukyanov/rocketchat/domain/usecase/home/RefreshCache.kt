@@ -1,15 +1,14 @@
 package com.pavellukyanov.rocketchat.domain.usecase.home
 
-import com.pavellukyanov.rocketchat.domain.entity.chatroom.Chatroom
-import com.pavellukyanov.rocketchat.domain.repository.IHome
+import com.pavellukyanov.rocketchat.domain.repository.IChatroom
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
-interface RefreshChatroomsCache : suspend (List<Chatroom>) -> Flow<Unit>
+interface RefreshChatroomsCache : suspend () -> Flow<Unit>
 
 class RefreshChatroomsCacheImpl @Inject constructor(
-    private val home: IHome
+    private val repo: IChatroom
 ) : RefreshChatroomsCache {
-    override suspend operator fun invoke(oldList: List<Chatroom>): Flow<Unit> =
-        home.refreshCache(oldList)
+    override suspend operator fun invoke(): Flow<Unit> =
+        repo.updateCache()
 }

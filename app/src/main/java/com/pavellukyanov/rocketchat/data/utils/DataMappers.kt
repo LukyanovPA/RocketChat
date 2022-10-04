@@ -6,8 +6,8 @@ import com.pavellukyanov.rocketchat.utils.Constants.EMPTY_STRING
 
 fun ChatroomLocal.map(): Chatroom =
     Chatroom(
-        chatroomUid = chatroomUid,
-        ownerUid = ownerUid,
+        id = chatroomId,
+        ownerId = ownerId,
         name = name,
         description = description,
         chatroomImg = chatroomImg,
@@ -17,8 +17,8 @@ fun ChatroomLocal.map(): Chatroom =
 
 fun Chatroom.map(): ChatroomLocal =
     ChatroomLocal(
-        chatroomUid = chatroomUid ?: EMPTY_STRING,
-        ownerUid = ownerUid ?: EMPTY_STRING,
+        chatroomId = id ?: EMPTY_STRING,
+        ownerId = ownerId ?: EMPTY_STRING,
         name = name ?: EMPTY_STRING,
         description = description ?: EMPTY_STRING,
         chatroomImg = chatroomImg ?: EMPTY_STRING,

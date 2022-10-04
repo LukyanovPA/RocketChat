@@ -6,8 +6,8 @@ import androidx.room.PrimaryKey
 @Entity(tableName = "chatrooms")
 data class ChatroomLocal(
     @PrimaryKey
-    val chatroomUid: String,
-    val ownerUid: String,
+    val chatroomId: String,
+    val ownerId: String,
     val name: String,
     val description: String,
     val chatroomImg: String,

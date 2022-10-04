@@ -11,6 +11,8 @@ import com.pavellukyanov.rocketchat.data.firebase.AuthFirebase
 import com.pavellukyanov.rocketchat.data.firebase.DatabaseFirebase
 import com.pavellukyanov.rocketchat.data.firebase.StorageFirebase
 import com.pavellukyanov.rocketchat.data.utils.asData
+import com.pavellukyanov.rocketchat.data.utils.file.FileInfoHelper
+import com.pavellukyanov.rocketchat.data.utils.file.RequestHelper
 import com.pavellukyanov.rocketchat.data.utils.map
 import com.pavellukyanov.rocketchat.domain.entity.chatroom.Chatroom
 import com.pavellukyanov.rocketchat.domain.entity.home.MyAccount
@@ -21,10 +23,13 @@ import com.pavellukyanov.rocketchat.utils.FBHelper
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.*
+import okhttp3.MultipartBody
 import javax.inject.Inject
 
 @OptIn(FlowPreview::class)
 class HomeRepository @Inject constructor(
+    private val fileInfoHelper: FileInfoHelper,
+    private val fileRequestHelper: RequestHelper,
     private val authFirebase: AuthFirebase,
     private val storageFirebase: StorageFirebase,
     private val networkMonitor: NetworkMonitor,
@@ -75,24 +80,34 @@ class HomeRepository @Inject constructor(
     override suspend fun changeAvatar(uri: Uri): Flow<Boolean> =
         networkMonitor.handleInternetConnection()
             .flatMapMerge {
-                callbackFlow {
-                    storageFirebase().reference.child(
-                        FBHelper.getUserImagesStorageReference(authFirebase().currentUser?.uid!!)
-                    ).putFile(uri)
-                        .addOnSuccessListener { trySend(it.task.isSuccessful) }
-                        .addOnFailureListener { throw it }
-
-                    awaitClose { channel.close() }
+                flow {
+                    val fileRequestBody = fileRequestHelper.generateRequestBody(uri)
+                    val fileName = fileInfoHelper.getFileName(uri)
+                    val body: MultipartBody.Part? =
+                        fileRequestBody?.let {
+                            MultipartBody.Part.createFormData("avatar", fileName, it)
+                        }
+                    api.changeAvatar(body).asData()
+                    emit(true)
                 }
-            }
-            .flatMapMerge {
-                getMyAvatar()
-                    .flatMapMerge { setAvatarInApi(it) }
+//                callbackFlow {
+//                    storageFirebase().reference.child(
+//                        FBHelper.getUserImagesStorageReference(authFirebase().currentUser?.uid!!)
+//                    ).putFile(uri)
+//                        .addOnSuccessListener { trySend(it.task.isSuccessful) }
+//                        .addOnFailureListener { throw it }
+//
+//                    awaitClose { channel.close() }
+//                }
+//            }
+//            .flatMapMerge {
+//                getMyAvatar()
+//                    .flatMapMerge { setAvatarInApi(it) }
             }
 
     private suspend fun setAvatarInApi(uri: Uri?): Flow<Boolean> =
         flow {
-            emit(api.changeAvatar(uri.toString()).asData())
+//            emit(api.changeAvatar(uri.toString()).asData())
         }
 
     override suspend fun getChatrooms(): Flow<List<Chatroom>> =
