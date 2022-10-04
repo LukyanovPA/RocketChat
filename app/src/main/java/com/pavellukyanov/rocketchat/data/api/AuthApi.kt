@@ -14,10 +14,10 @@ import retrofit2.http.Query
 
 interface AuthApi {
 
-    @POST("auth/signUp")
+    @POST("auth/signup")
     suspend fun signUp(@Body signUpRequest: SignUpRequest): NetworkResponse<TokenResponse>
 
-    @POST("auth/signIn")
+    @POST("auth/signin")
     suspend fun signIn(@Body signInRequest: SignInRequest): NetworkResponse<TokenResponse>
 
     @POST("auth/updateToken")

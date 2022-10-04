@@ -1,7 +1,6 @@
 package com.pavellukyanov.rocketchat.core.di.module
 
 import com.google.gson.GsonBuilder
-import com.pavellukyanov.rocketchat.BuildConfig
 import com.pavellukyanov.rocketchat.data.api.AuthApi
 import com.pavellukyanov.rocketchat.data.api.ChatroomApi
 import com.pavellukyanov.rocketchat.data.api.UsersApi
@@ -15,6 +14,9 @@ import javax.inject.Singleton
 
 @Module
 class ApiModule {
+    companion object {
+        private const val BASE_URL = "http://188.225.9.194:8080/api/"
+    }
 
     @Singleton
     @Provides
@@ -22,7 +24,7 @@ class ApiModule {
         Retrofit.Builder()
             .addCallAdapterFactory(NetworkResponseAdapterFactory())
             .addConverterFactory(GsonConverterFactory.create(GsonBuilder().create()))
-            .baseUrl(BuildConfig.API_ENDPOINT)
+            .baseUrl(BASE_URL)
             .client(client.createLoggedHttpClient())
             .build()
 
