@@ -4,7 +4,6 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.view.View
 import android.view.inputmethod.InputMethodManager
-import android.widget.ImageView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.AppCompatEditText
 import androidx.appcompat.widget.AppCompatImageView
@@ -40,28 +39,6 @@ fun AppCompatEditText.setOnTextChangeListener(onTextChanged: (String) -> Unit) {
     doAfterTextChanged {
         if (!it.isNullOrBlank()) onTextChanged(it.toString())
     }
-}
-
-@SuppressLint("CheckResult")
-fun ImageView.load(
-    value: Any?,
-    circleCrop: Boolean = false,
-    transform: Boolean = false
-) {
-    Glide.with(this)
-        .asBitmap()
-        .load(value)
-        .apply {
-            if (circleCrop) {
-                circleCrop()
-            } else {
-                if (transform) {
-                    transform(CenterCrop(), RoundedCorners(INT_TWENTY))
-                }
-            }
-        }
-        .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC)
-        .into(this)
 }
 
 @SuppressLint("CheckResult")

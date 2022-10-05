@@ -15,7 +15,6 @@ import com.pavellukyanov.rocketchat.presentation.helper.gallery.GalleryHelper
 import com.pavellukyanov.rocketchat.utils.Constants.EMPTY_STRING
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.flatMapMerge
 import javax.inject.Inject
 
@@ -81,8 +80,12 @@ class HomeViewModel @Inject constructor(
     @OptIn(FlowPreview::class)
     private fun fetchChatrooms() = launchIO {
         searchQuery.flatMapMerge { query ->
+            setShimmerState(true)
             getChatrooms(query)
-        }.collect(_chatrooms::postValue)
+        }.collect {
+            _chatrooms.postValue(it)
+            setShimmerState(false)
+        }
     }
 
     private fun refreshCache() = launchIO {

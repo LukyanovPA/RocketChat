@@ -8,6 +8,7 @@ import com.pavellukyanov.rocketchat.data.utils.file.FileInfoHelper
 import com.pavellukyanov.rocketchat.data.utils.file.RequestHelper
 import com.pavellukyanov.rocketchat.domain.entity.home.MyAccount
 import com.pavellukyanov.rocketchat.domain.repository.IHome
+import com.pavellukyanov.rocketchat.domain.utils.UserInfo
 import com.pavellukyanov.rocketchat.presentation.helper.NetworkMonitor
 import com.pavellukyanov.rocketchat.presentation.helper.handleInternetConnection
 import kotlinx.coroutines.FlowPreview
@@ -24,9 +25,9 @@ class HomeRepository @Inject constructor(
     private val fileInfoHelper: FileInfoHelper,
     private val fileRequestHelper: RequestHelper,
     private val networkMonitor: NetworkMonitor,
-    private val api: UsersApi
+    private val api: UsersApi,
+    private val userStorage: UserInfo
 ) : IHome {
-
     override suspend fun getMyAccount(): Flow<MyAccount> =
         cache.myAccountDao().getMyAccount()
             .map { it.firstOrNull() }
@@ -54,12 +55,14 @@ class HomeRepository @Inject constructor(
         networkMonitor.handleInternetConnection()
             .flatMapMerge {
                 flow {
-                    val currentUser = api.getCurrentUser().asData()
+                    api.getCurrentUser().asData().also {
+                        userStorage.user = it
+                    }
                     cache.myAccountDao().insert(
                         MyAccount(
-                            uuid = currentUser.uuid,
-                            username = currentUser.username,
-                            avatar = Uri.parse(currentUser.avatar ?: AVATAR_PLACEHOLDER)
+                            uuid = userStorage.user?.uuid!!,
+                            username = userStorage.user?.username!!,
+                            avatar = Uri.parse(userStorage.user?.avatar ?: AVATAR_PLACEHOLDER)
                         )
                     )
                     emit(Unit)
