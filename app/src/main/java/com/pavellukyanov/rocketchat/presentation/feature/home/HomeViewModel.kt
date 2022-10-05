@@ -5,6 +5,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.pavellukyanov.rocketchat.domain.entity.chatroom.Chatroom
 import com.pavellukyanov.rocketchat.domain.entity.home.MyAccount
+import com.pavellukyanov.rocketchat.domain.usecase.auth.LogOut
 import com.pavellukyanov.rocketchat.domain.usecase.home.GetChatRooms
 import com.pavellukyanov.rocketchat.domain.usecase.home.RefreshCache
 import com.pavellukyanov.rocketchat.domain.usecase.profile.ChangeAvatar
@@ -14,6 +15,7 @@ import com.pavellukyanov.rocketchat.presentation.helper.gallery.GalleryHelper
 import com.pavellukyanov.rocketchat.utils.Constants.EMPTY_STRING
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.flatMapMerge
 import javax.inject.Inject
 
@@ -23,7 +25,8 @@ class HomeViewModel @Inject constructor(
     private val changeAvatar: ChangeAvatar,
     private val getMyAccount: GetMyAccount,
     private val getChatrooms: GetChatRooms,
-    private val refreshCache: RefreshCache
+    private val refreshCache: RefreshCache,
+    private val logOut: LogOut
 ) : BaseViewModel<HomeNavigator>(navigator) {
     private val searchQuery = MutableStateFlow(EMPTY_STRING)
     private val _myAccount = MutableLiveData<MyAccount>()
@@ -57,6 +60,12 @@ class HomeViewModel @Inject constructor(
 
     fun forwardToChatroom(chatroom: Chatroom) = launchIO {
 
+    }
+
+    fun onClickLogOut() = launchIO {
+        logOut().collect {
+            launchUI { navigator.forwardToSignIn() }
+        }
     }
 
     private fun setAvatar(uri: Uri) = launchIO {

@@ -35,10 +35,7 @@ class ChatroomViewHolder(override val binding: ListItemChatroomBinding) : BaseVi
                 chatroomImg.load(item.chatroomImg, circleCrop = true)
                 chatroomName.text = item.name
                 chatroomLastMessage.text = item.lastMessage
-                val date =
-                    Instant.ofEpochMilli(item.lastMessageTimeStamp!!).atZone(ZoneId.systemDefault()).toLocalDate()
-
-                chatroomLastMessageTimestamp.text = DateUtil.localDateToString(date)
+                chatroomLastMessageTimestamp.text = DateUtil.longToDateString(item.lastMessageTimeStamp)
             }
         }
     }

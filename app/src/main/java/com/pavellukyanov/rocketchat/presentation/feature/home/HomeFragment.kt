@@ -34,6 +34,7 @@ class HomeFragment : ChatroomsAdapter.ChatroomListener, BaseFragment<HomeViewMod
         createChatroomContainer.setOnClickListener { vm.createNewChatRoom() }
         mainAvatar.setOnClickListener { vm.changeAvatar() }
         mainSearch.setOnTextChangeListener { vm.search(it) }
+        mainLogout.setOnClickListener { vm.onClickLogOut() }
     }
 
     private fun setMyAccountData(myAccount: MyAccount) = with(binding) {
