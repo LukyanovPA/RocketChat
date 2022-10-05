@@ -24,7 +24,7 @@ interface AuthApi {
     fun updateToken(@Query(ApiParams.REFRESH_TOKEN) refreshToken: String?): Call<TokenResponse>
 
     @GET("auth/logout")
-    suspend fun logout(): NetworkResponse<Unit>
+    suspend fun logout(): NetworkResponse<Boolean>
 
     companion object {
         const val REFRESH_URL = "auth/updateToken"

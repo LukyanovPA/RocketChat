@@ -26,14 +26,10 @@ buildscript {
         vb_delegate_version = '1.5.6'
         //Timber
         timber_version = '5.0.1'
-        //FireBase
-        firebase_version = '4.3.13'
         //Kotlin Coroutines
         coroutinesCore = '1.5.1'
         coroutinesAndroid = '1.6.4'
         coroutinesPlayService = '1.3.5'
-        //FireBase
-        bom_version = '30.3.1'
         //FlexBoxLayout
         flexbox_version = '3.0.0'
         //Facebook Shimmer
@@ -55,7 +51,6 @@ buildscript {
     dependencies {
         classpath 'com.android.tools.build:gradle:7.2.2'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
-        classpath "com.google.gms:google-services:$firebase_version"
 
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files

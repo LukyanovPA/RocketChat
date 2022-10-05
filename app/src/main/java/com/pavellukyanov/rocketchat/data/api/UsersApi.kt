@@ -14,5 +14,5 @@ interface UsersApi {
 
     @Multipart
     @POST("users/changeAvatar")
-    suspend fun changeAvatar(@Part file: MultipartBody.Part?): NetworkResponse<String>
+    suspend fun changeAvatar(@Part file: MultipartBody.Part?): NetworkResponse<Boolean>
 }

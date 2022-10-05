@@ -16,7 +16,6 @@ import javax.inject.Singleton
         AppModule::class,
         RepositoryModule::class,
         UseCaseModule::class,
-        FirebaseModule::class,
         LocalBaseModule::class,
         ApiModule::class,
         GsonModule::class
