@@ -12,7 +12,7 @@ import com.pavellukyanov.rocketchat.presentation.base.BaseFragment
 import com.pavellukyanov.rocketchat.presentation.helper.ext.load
 import com.pavellukyanov.rocketchat.presentation.helper.ext.setOnTextChangeListener
 
-class HomeFragment : ChatroomsAdapter.ChatroomListener, BaseFragment<HomeViewModel>(
+class HomeFragment : ChatroomsAdapter.ChatRoomListener, BaseFragment<HomeViewModel>(
     HomeViewModel::class.java,
     R.layout.fragment_home
 ) {
@@ -37,6 +37,10 @@ class HomeFragment : ChatroomsAdapter.ChatroomListener, BaseFragment<HomeViewMod
         mainLogout.setOnClickListener { vm.onClickLogOut() }
     }
 
+    override fun onItemClicked(item: Chatroom) {
+        vm.forwardToChatroom(item)
+    }
+
     private fun setMyAccountData(myAccount: MyAccount) = with(binding) {
         mainAvatar.load(myAccount.avatar, circleCrop = true)
         mainHeader.text = getString(R.string.home_header, myAccount.username)
@@ -44,10 +48,6 @@ class HomeFragment : ChatroomsAdapter.ChatroomListener, BaseFragment<HomeViewMod
 
     private fun handleChatroomList(listChatroom: List<Chatroom>) {
         chatroomAdapter.data = listChatroom
-    }
-
-    override fun onItemClicked(item: Chatroom) {
-        vm.forwardToChatroom(item)
     }
 
     companion object {

@@ -8,6 +8,7 @@ import com.pavellukyanov.rocketchat.data.utils.file.FileInfoHelper
 import com.pavellukyanov.rocketchat.data.utils.file.RequestHelper
 import com.pavellukyanov.rocketchat.data.utils.map
 import com.pavellukyanov.rocketchat.domain.entity.chatroom.Chatroom
+import com.pavellukyanov.rocketchat.domain.entity.chatroom.chat.ChatMessage
 import com.pavellukyanov.rocketchat.domain.repository.IChatroom
 import com.pavellukyanov.rocketchat.presentation.helper.NetworkMonitor
 import com.pavellukyanov.rocketchat.presentation.helper.handleInternetConnection

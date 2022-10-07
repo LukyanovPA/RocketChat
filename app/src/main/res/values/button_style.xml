@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="MaterialButton.Send" parent="Widget.MaterialComponents.Button">
+        <item name="backgroundTint">@color/button_selector_green</item>
+    </style>
+</resources>

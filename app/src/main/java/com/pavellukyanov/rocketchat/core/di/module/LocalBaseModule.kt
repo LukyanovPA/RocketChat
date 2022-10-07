@@ -4,6 +4,7 @@ import android.content.Context
 import androidx.room.Room
 import com.pavellukyanov.rocketchat.data.cache.LocalDatabase
 import com.pavellukyanov.rocketchat.data.cache.dao.ChatroomsDao
+import com.pavellukyanov.rocketchat.data.cache.dao.MessagesDao
 import com.pavellukyanov.rocketchat.data.cache.dao.MyAccountDao
 import dagger.Module
 import dagger.Provides
@@ -33,4 +34,9 @@ class LocalBaseModule {
     @Singleton
     fun provideMyAccountDao(database: LocalDatabase): MyAccountDao =
         database.myAccountDao()
+
+    @Provides
+    @Singleton
+    fun provideMessagesDao(database: LocalDatabase): MessagesDao =
+        database.messages()
 }

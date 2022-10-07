@@ -2,18 +2,24 @@ package com.pavellukyanov.rocketchat.presentation.helper.ext
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
+import androidx.annotation.LayoutRes
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.AppCompatEditText
 import androidx.appcompat.widget.AppCompatImageView
 import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.Fragment
+import androidx.viewbinding.ViewBinding
+import androidx.viewbinding.ViewBindings
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.load.resource.bitmap.CenterCrop
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.google.android.material.textfield.TextInputEditText
+import com.pavellukyanov.rocketchat.databinding.ActivityMainBinding.inflate
 import com.pavellukyanov.rocketchat.utils.Constants.INT_TWENTY
 import com.pavellukyanov.rocketchat.utils.Constants.INT_ZERO
 

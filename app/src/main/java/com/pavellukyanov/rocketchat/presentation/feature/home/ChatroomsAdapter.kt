@@ -8,34 +8,25 @@ import com.pavellukyanov.rocketchat.presentation.base.BaseAdapter
 import com.pavellukyanov.rocketchat.presentation.base.BaseViewHolder
 import com.pavellukyanov.rocketchat.presentation.helper.ext.load
 import com.pavellukyanov.rocketchat.utils.DateUtil
-import java.time.Instant
-import java.time.ZoneId
 
 class ChatroomsAdapter(
-    private val chatroomListener: ChatroomListener
-) : BaseAdapter<Chatroom>() {
+    chatRoomListener: ChatRoomListener
+) : BaseAdapter<Chatroom>(chatRoomListener) {
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BaseViewHolder {
-        val binding =
-            ListItemChatroomBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-        return ChatroomViewHolder(binding)
-    }
+    interface ChatRoomListener : BaseAdapterListener<Chatroom>
 
-    override fun getListener(holder: BaseViewHolder, position: Int): BaseAdapterListener = chatroomListener
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BaseViewHolder =
+        ChatroomViewHolder(ListItemChatroomBinding.inflate(LayoutInflater.from(parent.context), parent, false))
 
-    interface ChatroomListener : BaseAdapterListener {
-        fun onItemClicked(item: Chatroom)
-    }
-}
-
-class ChatroomViewHolder(override val binding: ListItemChatroomBinding) : BaseViewHolder(binding) {
-    override fun bind(item: Any, listener: BaseAdapter.BaseAdapterListener?) {
-        if (item is Chatroom) {
-            with(binding) {
-                chatroomImg.load(item.chatroomImg, circleCrop = true)
-                chatroomName.text = item.name
-                chatroomLastMessage.text = item.lastMessage
-                chatroomLastMessageTimestamp.text = DateUtil.longToDateString(item.lastMessageTimeStamp)
+    class ChatroomViewHolder(override val binding: ListItemChatroomBinding) : BaseViewHolder(binding) {
+        override fun bind(item: Any) {
+            if (item is Chatroom) {
+                with(binding) {
+                    chatroomImg.load(item.chatroomImg, circleCrop = true)
+                    chatroomName.text = item.name
+                    chatroomLastMessage.text = item.lastMessage
+                    chatroomLastMessageTimestamp.text = DateUtil.longToDateString(item.lastMessageTimeStamp)
+                }
             }
         }
     }

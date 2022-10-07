@@ -1,7 +1,7 @@
 package com.pavellukyanov.rocketchat.domain.entity.chatroom
 
 import android.os.Parcelable
-import com.pavellukyanov.rocketchat.utils.SameItem
+import com.pavellukyanov.rocketchat.presentation.widget.SameItem
 import kotlinx.parcelize.Parcelize
 
 @Parcelize

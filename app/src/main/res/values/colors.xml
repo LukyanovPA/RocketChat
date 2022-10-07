@@ -19,4 +19,6 @@
     <color name="black_alpha_5">#0D000000</color>
     <color name="light_green">#00AC83</color>
     <color name="light_blue">#03A9F1</color>
+    <color name="back_dark">#272A35</color>
+    <color name="back_light">#373E4E</color>
 </resources>

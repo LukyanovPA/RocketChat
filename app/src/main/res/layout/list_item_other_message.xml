@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <TextView
+        android:id="@+id/other_message"
+        android:layout_width="@dimen/margin_0"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/margin_100"
+        android:layout_marginVertical="@dimen/margin_8"
+        android:background="@drawable/bg_other_message"
+        android:padding="@dimen/margin_16"
+        android:textAppearance="@style/RocketChat.H4"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/sender_avatar"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="This is our new manager, She will join chat. Her name is Ola." />
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/sender_avatar"
+        android:layout_width="@dimen/margin_28"
+        android:layout_height="@dimen/margin_28"
+        android:scaleType="centerCrop"
+        android:layout_marginHorizontal="@dimen/margin_8"
+        app:layout_constraintEnd_toStartOf="@+id/other_message"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toBottomOf="@+id/other_message"
+        tools:src="@tools:sample/avatars" />
+
+    <TextView
+        android:id="@+id/sender_username"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/margin_16"
+        android:layout_marginBottom="@dimen/margin_8"
+        android:textColor="@color/light_green"
+        app:layout_constraintEnd_toEndOf="@+id/other_message"
+        app:layout_constraintBottom_toBottomOf="@+id/other_message"
+        android:textAppearance="@style/RocketChat.H4.Bold"
+        tools:text="pupa"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -15,4 +15,10 @@
     <dimen name="margin_40">40dp</dimen>
     <dimen name="margin_0">0dp</dimen>
     <dimen name="margin_280">280dp</dimen>
+    <dimen name="margin_20">20dp</dimen>
+    <dimen name="margin_28">28dp</dimen>
+    <dimen name="margin_100">100dp</dimen>
+
+    <dimen name="minus_margin_8">-8dp</dimen>
+    <dimen name="margin_48">48dp</dimen>
 </resources>

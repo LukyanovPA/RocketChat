@@ -31,4 +31,7 @@
     <string name="create_chatroom_name_hint">Chatroom name</string>
     <string name="create_chatroom_description_hint">Description</string>
     <string name="create_chatroom_description_sub">You can provide an optional description for your chatroom.</string>
+
+    //Chat
+    <string name="chat_send_hint">Message…</string>
 </resources>

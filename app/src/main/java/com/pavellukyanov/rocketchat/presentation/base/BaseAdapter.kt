@@ -4,9 +4,11 @@ import android.annotation.SuppressLint
 import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
-import com.pavellukyanov.rocketchat.utils.SameItem
+import com.pavellukyanov.rocketchat.presentation.widget.SameItem
 
-abstract class BaseAdapter<D : Any> : RecyclerView.Adapter<BaseViewHolder>() {
+abstract class BaseAdapter<D : Any>(
+    private val listener: BaseAdapterListener<D>? = null
+) : RecyclerView.Adapter<BaseViewHolder>() {
 
     open var data: List<D>
         get() = differ.currentList
@@ -31,14 +33,17 @@ abstract class BaseAdapter<D : Any> : RecyclerView.Adapter<BaseViewHolder>() {
     private val differ: AsyncListDiffer<D> = AsyncListDiffer(this, differCallback)
 
     override fun onBindViewHolder(holder: BaseViewHolder, position: Int) {
-        holder.bind(getItem(holder, position), getListener(holder, position))
+        holder.bind(getItem(holder, position))
+        holder.itemView.setOnClickListener {
+            listener?.onItemClicked(data[position])
+        }
     }
 
     override fun getItemCount() = data.size
 
     open fun getItem(holder: BaseViewHolder, position: Int): Any = data[position]
 
-    abstract fun getListener(holder: BaseViewHolder, position: Int): BaseAdapterListener?
-
-    interface BaseAdapterListener
+    interface BaseAdapterListener<D> {
+        fun onItemClicked(item: D)
+    }
 }

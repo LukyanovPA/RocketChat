@@ -2,6 +2,7 @@ package com.pavellukyanov.rocketchat.domain.repository
 
 import android.net.Uri
 import com.pavellukyanov.rocketchat.domain.entity.chatroom.Chatroom
+import com.pavellukyanov.rocketchat.domain.entity.chatroom.chat.ChatMessage
 import kotlinx.coroutines.flow.Flow
 
 interface IChatroom {

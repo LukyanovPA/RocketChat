@@ -1,6 +1,7 @@
 package com.pavellukyanov.rocketchat.data.repository
 
 import com.pavellukyanov.rocketchat.data.api.AuthApi
+import com.pavellukyanov.rocketchat.data.cache.LocalDatabase
 import com.pavellukyanov.rocketchat.data.utils.asData
 import com.pavellukyanov.rocketchat.domain.entity.auth.SignInRequest
 import com.pavellukyanov.rocketchat.domain.entity.auth.SignUpRequest
@@ -16,6 +17,7 @@ import javax.inject.Inject
 
 @OptIn(FlowPreview::class)
 class AuthRepository @Inject constructor(
+    private val cache: LocalDatabase,
     private val networkMonitor: NetworkMonitor,
     private val api: AuthApi,
     private val userStorage: UserInfo
@@ -51,6 +53,7 @@ class AuthRepository @Inject constructor(
 
     override fun clearData() {
         userStorage.tokens = null
+        userStorage.user = null
     }
 
     override suspend fun logout(): Flow<Unit> =
@@ -58,7 +61,10 @@ class AuthRepository @Inject constructor(
             .flatMapMerge {
                 flow {
                     api.logout().asData().also { state ->
-                        if (state) clearData()
+                        if (state) {
+                            clearData()
+                            cache.myAccountDao().delete()
+                        }
                         emit(Unit)
                     }
                 }

@@ -4,6 +4,7 @@ import androidx.fragment.app.FragmentManager
 import com.pavellukyanov.rocketchat.R
 import com.pavellukyanov.rocketchat.presentation.base.BaseNavigator
 import com.pavellukyanov.rocketchat.presentation.base.SimpleDialogFragment
+import com.pavellukyanov.rocketchat.presentation.feature.chatroom.chat.ChatFragment
 import javax.inject.Inject
 
 class ChatroomNavigator @Inject constructor(

@@ -6,4 +6,6 @@ object ApiParams {
     const val NAME = "name"
     const val DESCRIPTION = "description"
     const val IMG = "img"
+    const val CHAT_ROOM_ID = "chatroomId"
+    const val MESSAGE = "message"
 }

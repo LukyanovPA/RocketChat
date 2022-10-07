@@ -3,6 +3,7 @@ package com.pavellukyanov.rocketchat.presentation.feature.home
 import androidx.fragment.app.FragmentManager
 import com.pavellukyanov.rocketchat.presentation.base.BaseNavigator
 import com.pavellukyanov.rocketchat.presentation.feature.auth.signin.SignInFragment
+import com.pavellukyanov.rocketchat.presentation.feature.chatroom.chat.ChatFragment
 import com.pavellukyanov.rocketchat.presentation.feature.chatroom.create.CreateChatroomFragment
 import javax.inject.Inject
 
@@ -15,5 +16,9 @@ class HomeNavigator @Inject constructor(
 
     fun forwardToSignIn() {
         replace(SignInFragment.newInstance(), SignInFragment.TAG)
+    }
+
+    fun forwardToChat(chatroomId: String) {
+        forward(ChatFragment.newInstance(chatroomId), ChatFragment.TAG)
     }
 }

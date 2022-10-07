@@ -1,6 +1,9 @@
 package com.pavellukyanov.rocketchat.data.cache.dao
 
-import androidx.room.*
+import androidx.room.Dao
+import androidx.room.Insert
+import androidx.room.OnConflictStrategy
+import androidx.room.Query
 import com.pavellukyanov.rocketchat.domain.entity.home.MyAccount
 import kotlinx.coroutines.flow.Flow
 
@@ -12,6 +15,6 @@ interface MyAccountDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insert(myAccount: MyAccount)
 
-    @Delete
-    fun delete(myAccount: MyAccount)
+    @Query("DELETE FROM my_account")
+    fun delete()
 }

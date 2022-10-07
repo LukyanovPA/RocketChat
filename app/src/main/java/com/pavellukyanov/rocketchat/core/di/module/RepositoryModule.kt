@@ -1,13 +1,7 @@
 package com.pavellukyanov.rocketchat.core.di.module
 
-import com.pavellukyanov.rocketchat.data.repository.AuthRepository
-import com.pavellukyanov.rocketchat.data.repository.ChatroomRepository
-import com.pavellukyanov.rocketchat.data.repository.HomeRepository
-import com.pavellukyanov.rocketchat.data.repository.UsersRepository
-import com.pavellukyanov.rocketchat.domain.repository.IAuth
-import com.pavellukyanov.rocketchat.domain.repository.IChatroom
-import com.pavellukyanov.rocketchat.domain.repository.IHome
-import com.pavellukyanov.rocketchat.domain.repository.IUsers
+import com.pavellukyanov.rocketchat.data.repository.*
+import com.pavellukyanov.rocketchat.domain.repository.*
 import dagger.Binds
 import dagger.Module
 
@@ -24,4 +18,7 @@ abstract class RepositoryModule {
 
     @Binds
     abstract fun bindUsers(impl: UsersRepository): IUsers
+
+    @Binds
+    abstract fun bindChat(impl: ChatRepository): IChat
 }

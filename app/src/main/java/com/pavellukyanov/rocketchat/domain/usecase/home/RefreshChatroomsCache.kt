@@ -7,12 +7,12 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flatMapMerge
 import javax.inject.Inject
 
-interface RefreshCache : suspend () -> Flow<Unit>
+interface RefreshChatroomsCache : suspend () -> Flow<Unit>
 
-class RefreshCacheImpl @Inject constructor(
+class RefreshChatroomsCacheImpl @Inject constructor(
     private val iChatroom: IChatroom,
     private val iHome: IHome
-) : RefreshCache {
+) : RefreshChatroomsCache {
     @OptIn(FlowPreview::class)
     override suspend operator fun invoke(): Flow<Unit> =
         iHome.refreshCache()

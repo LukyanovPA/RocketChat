@@ -11,6 +11,7 @@ import com.pavellukyanov.rocketchat.domain.repository.IHome
 import com.pavellukyanov.rocketchat.domain.utils.UserInfo
 import com.pavellukyanov.rocketchat.presentation.helper.NetworkMonitor
 import com.pavellukyanov.rocketchat.presentation.helper.handleInternetConnection
+import com.pavellukyanov.rocketchat.utils.Constants.AVATAR_PLACEHOLDER
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flatMapMerge
@@ -68,9 +69,4 @@ class HomeRepository @Inject constructor(
                     emit(Unit)
                 }
             }
-
-    companion object {
-        private const val AVATAR_PLACEHOLDER =
-            "android.resource://com.pavellukyanov.rocketchat/drawable/ic_avatar_placeholder"
-    }
 }
