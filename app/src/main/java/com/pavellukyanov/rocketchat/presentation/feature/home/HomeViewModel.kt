@@ -34,13 +34,12 @@ class HomeViewModel @Inject constructor(
     val chatrooms: LiveData<List<Chatroom>> = _chatrooms
 
     init {
-        refreshCache()
         fetchChatrooms()
         fetchMyAccount()
     }
 
     fun search(query: String) = launchCPU {
-        searchQuery.compareAndSet(searchQuery.value, query)
+        searchQuery.emit(query)
     }
 
     fun createNewChatRoom() = navigator.forwardToCreateChatroom()
@@ -58,7 +57,7 @@ class HomeViewModel @Inject constructor(
     }
 
     fun forwardToChatroom(chatroom: Chatroom) = launchIO {
-        navigator.forwardToChat(chatroom.id)
+        navigator.forwardToChat(chatroom)
     }
 
     fun onClickLogOut() = launchIO {
@@ -88,7 +87,7 @@ class HomeViewModel @Inject constructor(
         }
     }
 
-    private fun refreshCache() = launchIO {
+    fun refreshCache() = launchIO {
         refreshChatroomsCache.invoke().collect {}
     }
 }

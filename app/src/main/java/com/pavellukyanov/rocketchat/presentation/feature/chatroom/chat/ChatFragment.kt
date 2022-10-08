@@ -6,7 +6,12 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.pavellukyanov.rocketchat.R
 import com.pavellukyanov.rocketchat.databinding.FragmentChatBinding
+import com.pavellukyanov.rocketchat.domain.entity.chatroom.Chatroom
 import com.pavellukyanov.rocketchat.presentation.base.BaseFragment
+import com.pavellukyanov.rocketchat.presentation.feature.chatroom.chat.adapters.ChatAdapter
+import com.pavellukyanov.rocketchat.presentation.feature.chatroom.chat.adapters.ChatUsersAdapter
+import com.pavellukyanov.rocketchat.presentation.feature.chatroom.chat.item.ChatItem
+import com.pavellukyanov.rocketchat.presentation.feature.chatroom.chat.item.ChatUserItem
 import com.pavellukyanov.rocketchat.presentation.helper.ext.hideKeyboard
 import com.pavellukyanov.rocketchat.presentation.helper.ext.putArgs
 import com.pavellukyanov.rocketchat.presentation.helper.ext.setOnTextChangeListener
@@ -18,12 +23,15 @@ class ChatFragment : BaseFragment<ChatViewModel>(
 ) {
     private val binding by viewBinding(FragmentChatBinding::bind)
     private val chatAdapter by lazy(LazyThreadSafetyMode.NONE) { ChatAdapter() }
+    private val chatUsersAdapter by lazy(LazyThreadSafetyMode.NONE) { ChatUsersAdapter() }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         bind()
         vm.messages.observe(viewLifecycleOwner, ::handleMessagesList)
         vm.buttonIsEnable().observe(viewLifecycleOwner, ::handleButtonSendState)
+        vm.chatroomValue.observe(viewLifecycleOwner, ::handleChatroomValue)
+        vm.users.observe(viewLifecycleOwner, ::handleUsersAvatars)
     }
 
     private fun bind() = with(binding) {
@@ -37,6 +45,14 @@ class ChatFragment : BaseFragment<ChatViewModel>(
                 stackFromEnd = true
             }
         }
+        chatUsersList.apply {
+            adapter = chatUsersAdapter
+            layoutManager = LinearLayoutManager(
+                context,
+                LinearLayoutManager.HORIZONTAL,
+                false
+            )
+        }
         chatArrowBack.setOnClickListener { vm.back() }
         sendMessageEdtx.setOnTextChangeListener(vm::writeMessage)
         chatButtonSend.setOnClickListener {
@@ -44,6 +60,7 @@ class ChatFragment : BaseFragment<ChatViewModel>(
             hideKeyboard()
             binding.sendMessageEdtx.text?.clear()
         }
+        chatRefresh.setOnClickListener { vm.refreshCache() }
     }
 
     private fun handleMessagesList(messages: List<ChatItem>) {
@@ -51,13 +68,21 @@ class ChatFragment : BaseFragment<ChatViewModel>(
         binding.messagesList.smoothScrollToPosition(messages.lastIndex + INT_ONE)
     }
 
+    private fun handleUsersAvatars(users: List<ChatUserItem>) {
+        chatUsersAdapter.data = users
+    }
+
     private fun handleButtonSendState(state: Boolean) {
         binding.chatButtonSend.isEnabled = state
     }
 
+    private fun handleChatroomValue(chatroom: Chatroom) = with(binding) {
+        chatName.text = chatroom.name
+    }
+
     companion object {
-        fun newInstance(chatroomId: String): ChatFragment = ChatFragment().putArgs {
-            putString(CHAT_ROOM_ID_ARG, chatroomId)
+        fun newInstance(chatroom: Chatroom? = null): ChatFragment = ChatFragment().putArgs {
+            putParcelable(CHAT_ROOM_ID_ARG, chatroom)
         }
 
         val TAG = ChatFragment::class.java.simpleName

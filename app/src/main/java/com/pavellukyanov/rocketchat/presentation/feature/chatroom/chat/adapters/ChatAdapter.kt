@@ -1,4 +1,4 @@
-package com.pavellukyanov.rocketchat.presentation.feature.chatroom.chat
+package com.pavellukyanov.rocketchat.presentation.feature.chatroom.chat.adapters
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -6,6 +6,7 @@ import com.pavellukyanov.rocketchat.R
 import com.pavellukyanov.rocketchat.databinding.ListItemMyMessageBinding
 import com.pavellukyanov.rocketchat.databinding.ListItemOtherMessageBinding
 import com.pavellukyanov.rocketchat.presentation.base.BaseViewHolder
+import com.pavellukyanov.rocketchat.presentation.feature.chatroom.chat.item.ChatItem
 import com.pavellukyanov.rocketchat.presentation.helper.ext.load
 import com.pavellukyanov.rocketchat.presentation.widget.CompositeAdapter
 import com.pavellukyanov.rocketchat.utils.Constants.AVATAR_PLACEHOLDER

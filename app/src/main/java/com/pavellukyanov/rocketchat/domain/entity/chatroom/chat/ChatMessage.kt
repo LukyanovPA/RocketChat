@@ -12,6 +12,6 @@ data class ChatMessage(
     @SerializedName("messageTimeStamp") val messageTimeStamp: Long,
     @SerializedName("ownerId") val ownerId: String,
     @SerializedName("ownerUsername") val ownerUsername: String,
-    @SerializedName("ownerAvatar") val ownerAvatar: String?,
+    @SerializedName("ownerAvatar") val ownerAvatar: String,
     @SerializedName("message") val message: String
 )

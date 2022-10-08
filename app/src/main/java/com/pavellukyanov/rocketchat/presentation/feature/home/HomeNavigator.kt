@@ -1,6 +1,7 @@
 package com.pavellukyanov.rocketchat.presentation.feature.home
 
 import androidx.fragment.app.FragmentManager
+import com.pavellukyanov.rocketchat.domain.entity.chatroom.Chatroom
 import com.pavellukyanov.rocketchat.presentation.base.BaseNavigator
 import com.pavellukyanov.rocketchat.presentation.feature.auth.signin.SignInFragment
 import com.pavellukyanov.rocketchat.presentation.feature.chatroom.chat.ChatFragment
@@ -18,7 +19,7 @@ class HomeNavigator @Inject constructor(
         replace(SignInFragment.newInstance(), SignInFragment.TAG)
     }
 
-    fun forwardToChat(chatroomId: String) {
-        forward(ChatFragment.newInstance(chatroomId), ChatFragment.TAG)
+    fun forwardToChat(chatroom: Chatroom) {
+        forward(ChatFragment.newInstance(chatroom), ChatFragment.TAG)
     }
 }

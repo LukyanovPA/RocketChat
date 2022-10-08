@@ -22,6 +22,7 @@ class HomeFragment : ChatroomsAdapter.ChatRoomListener, BaseFragment<HomeViewMod
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         bind()
+        vm.refreshCache()
         vm.myAccount.observe(viewLifecycleOwner, ::setMyAccountData)
         vm.chatrooms.observe(viewLifecycleOwner, ::handleChatroomList)
     }
