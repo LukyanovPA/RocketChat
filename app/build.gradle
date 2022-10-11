@@ -3,6 +3,9 @@ apply plugin: 'kotlin-parcelize'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-kapt'
 
+def localProperties = new Properties()
+localProperties.load(new FileInputStream(rootProject.file("local.properties")))
+
 android {
     compileSdk 33
 
@@ -16,6 +19,8 @@ android {
         targetSdk 33
         versionCode 1
         versionName "1.0"
+
+        buildConfigField "String", "BASE_URL", localProperties['baseUrl']
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }

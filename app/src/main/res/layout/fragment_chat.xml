@@ -22,20 +22,10 @@
         android:layout_height="wrap_content"
         android:textAppearance="@style/RocketChat.H2"
         app:layout_constraintBottom_toBottomOf="@+id/chat_arrow_back"
-        app:layout_constraintEnd_toStartOf="@+id/chat_refresh"
-        app:layout_constraintStart_toEndOf="@+id/chat_arrow_back"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/chat_arrow_back"
         tools:text="Cat chat" />
-
-    <androidx.appcompat.widget.AppCompatImageView
-        android:id="@+id/chat_refresh"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/margin_34"
-        android:layout_marginEnd="@dimen/margin_16"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/ic_chat_refresh" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/chat_users_list"
@@ -46,7 +36,7 @@
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/chat_refresh" />
+        app:layout_constraintTop_toBottomOf="@+id/chat_arrow_back" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/messages_list"
@@ -86,7 +76,7 @@
         android:layout_width="@dimen/margin_48"
         android:layout_height="wrap_content"
         android:layout_marginEnd="@dimen/margin_16"
-        android:layout_marginBottom="@dimen/margin_36"
+        android:layout_marginBottom="@dimen/margin_40"
         android:background="@drawable/ic_button_send"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />

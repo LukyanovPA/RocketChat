@@ -1,5 +1,7 @@
 package com.pavellukyanov.rocketchat.utils
 
+import com.pavellukyanov.rocketchat.BuildConfig
+
 object Constants {
     //Int
     const val INT_ZERO = 0
@@ -16,4 +18,5 @@ object Constants {
     //Common
     const val AVATAR_PLACEHOLDER =
         "android.resource://com.pavellukyanov.rocketchat/drawable/ic_avatar_placeholder"
+    const val WS_URL = "ws://${BuildConfig.BASE_URL}/"
 }

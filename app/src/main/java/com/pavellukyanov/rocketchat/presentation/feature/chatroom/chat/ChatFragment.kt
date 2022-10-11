@@ -7,7 +7,7 @@ import by.kirich1409.viewbindingdelegate.viewBinding
 import com.pavellukyanov.rocketchat.R
 import com.pavellukyanov.rocketchat.databinding.FragmentChatBinding
 import com.pavellukyanov.rocketchat.domain.entity.chatroom.Chatroom
-import com.pavellukyanov.rocketchat.presentation.base.BaseFragment
+import com.pavellukyanov.rocketchat.presentation.base.BaseWebSocketFragment
 import com.pavellukyanov.rocketchat.presentation.feature.chatroom.chat.adapters.ChatAdapter
 import com.pavellukyanov.rocketchat.presentation.feature.chatroom.chat.adapters.ChatUsersAdapter
 import com.pavellukyanov.rocketchat.presentation.feature.chatroom.chat.item.ChatItem
@@ -17,7 +17,7 @@ import com.pavellukyanov.rocketchat.presentation.helper.ext.putArgs
 import com.pavellukyanov.rocketchat.presentation.helper.ext.setOnTextChangeListener
 import com.pavellukyanov.rocketchat.utils.Constants.INT_ONE
 
-class ChatFragment : BaseFragment<ChatViewModel>(
+class ChatFragment : BaseWebSocketFragment<ChatViewModel>(
     ChatViewModel::class.java,
     R.layout.fragment_chat
 ) {
@@ -60,7 +60,6 @@ class ChatFragment : BaseFragment<ChatViewModel>(
             hideKeyboard()
             binding.sendMessageEdtx.text?.clear()
         }
-        chatRefresh.setOnClickListener { vm.refreshCache() }
     }
 
     private fun handleMessagesList(messages: List<ChatItem>) {

@@ -8,7 +8,6 @@ import com.pavellukyanov.rocketchat.data.utils.file.FileInfoHelper
 import com.pavellukyanov.rocketchat.data.utils.file.RequestHelper
 import com.pavellukyanov.rocketchat.data.utils.map
 import com.pavellukyanov.rocketchat.domain.entity.chatroom.Chatroom
-import com.pavellukyanov.rocketchat.domain.entity.chatroom.chat.ChatMessage
 import com.pavellukyanov.rocketchat.domain.repository.IChatroom
 import com.pavellukyanov.rocketchat.presentation.helper.NetworkMonitor
 import com.pavellukyanov.rocketchat.presentation.helper.handleInternetConnection
@@ -79,7 +78,7 @@ class ChatroomRepository @Inject constructor(
 
     override suspend fun getChatrooms(): Flow<List<Chatroom>> =
         cache.chatroomsDao().getChatrooms()
-            .map { localCache -> localCache.map { it.map() }.sortedByDescending { it.lastMessageTimeStamp } }
+            .map { localCache -> localCache.map { it.map() } }
 
     override suspend fun updateCache(): Flow<Unit> =
         networkMonitor.handleInternetConnection()

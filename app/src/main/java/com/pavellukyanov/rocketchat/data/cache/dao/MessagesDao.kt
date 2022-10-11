@@ -12,6 +12,9 @@ interface MessagesDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insert(newList: List<ChatMessage>)
 
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    fun insert(chatMessage: ChatMessage)
+
     @Delete
     fun delete(oldList: List<ChatMessage>)
 }

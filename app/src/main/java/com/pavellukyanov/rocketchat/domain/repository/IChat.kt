@@ -5,6 +5,8 @@ import kotlinx.coroutines.flow.Flow
 
 interface IChat {
     suspend fun getMessages(chatroomId: String): Flow<List<ChatMessage>>
-    suspend fun sendMessage(chatroomId: String, message: String): Flow<Boolean>
     suspend fun updateCache(chatroomId: String): Flow<Unit>
+    suspend fun initSession(chatroomId: String)
+    suspend fun sendMessage(message: String): Flow<Boolean>
+    suspend fun closeSession()
 }

@@ -1,13 +1,15 @@
 package com.pavellukyanov.rocketchat.presentation.feature.chatroom.chat
 
 import androidx.lifecycle.MutableLiveData
+import com.pavellukyanov.rocketchat.core.di.qualifiers.ChatSessionQ
 import com.pavellukyanov.rocketchat.domain.entity.chatroom.Chatroom
 import com.pavellukyanov.rocketchat.domain.entity.chatroom.chat.ChatMessage
 import com.pavellukyanov.rocketchat.domain.usecase.chatroom.chat.GetMessages
 import com.pavellukyanov.rocketchat.domain.usecase.chatroom.chat.RefreshChatCache
 import com.pavellukyanov.rocketchat.domain.usecase.chatroom.chat.SendMessage
 import com.pavellukyanov.rocketchat.domain.utils.UserInfo
-import com.pavellukyanov.rocketchat.presentation.base.BaseViewModel
+import com.pavellukyanov.rocketchat.domain.utils.WebSocketSession
+import com.pavellukyanov.rocketchat.presentation.base.BaseWebSocketViewModel
 import com.pavellukyanov.rocketchat.presentation.feature.chatroom.ChatroomNavigator
 import com.pavellukyanov.rocketchat.presentation.feature.chatroom.chat.item.ChatItem
 import com.pavellukyanov.rocketchat.presentation.feature.chatroom.chat.item.ChatUserItem
@@ -24,8 +26,10 @@ class ChatViewModel @Inject constructor(
     private val getMessages: GetMessages,
     private val sendMessage: SendMessage,
     private val refreshChatCache: RefreshChatCache,
-    private val userInfo: UserInfo
-) : BaseViewModel<ChatroomNavigator>(navigator) {
+    private val userInfo: UserInfo,
+    @ChatSessionQ
+    private val session: WebSocketSession
+) : BaseWebSocketViewModel<ChatroomNavigator>(navigator) {
     private val message = MutableStateFlow(EMPTY_STRING)
     private val buttonState = MutableStateFlow(false)
     val messages = MutableLiveData<List<ChatItem>>()
@@ -38,10 +42,14 @@ class ChatViewModel @Inject constructor(
         observButtonState()
     }
 
+    override fun initSession() = launchIO { session.initSession(chatroom?.id!!) }
+
+    override fun disconnect() = launchIO { session.closeSession() }
+
     fun back() = navigator.back()
 
     fun sendMes() = launchIO {
-        sendMessage(chatroom?.id!!, message.value)
+        sendMessage(message.value)
             .collect { state ->
                 if (state) message.emit(EMPTY_STRING)
             }
@@ -78,7 +86,7 @@ class ChatViewModel @Inject constructor(
         )
     }
 
-    fun refreshCache() = launchIO {
+    private fun refreshCache() = launchIO {
         refreshChatCache(chatroom?.id!!).collect {}
     }
 }

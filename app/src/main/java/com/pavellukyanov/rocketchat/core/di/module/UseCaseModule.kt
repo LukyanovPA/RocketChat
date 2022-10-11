@@ -1,5 +1,6 @@
 package com.pavellukyanov.rocketchat.core.di.module
 
+import com.pavellukyanov.rocketchat.core.di.qualifiers.ChatSessionQ
 import com.pavellukyanov.rocketchat.domain.usecase.auth.*
 import com.pavellukyanov.rocketchat.domain.usecase.chatroom.ChatroomCreate
 import com.pavellukyanov.rocketchat.domain.usecase.chatroom.ChatroomCreateImpl
@@ -12,6 +13,7 @@ import com.pavellukyanov.rocketchat.domain.usecase.profile.ChangeAvatar
 import com.pavellukyanov.rocketchat.domain.usecase.profile.ChangeAvatarImpl
 import com.pavellukyanov.rocketchat.domain.usecase.profile.GetMyAccount
 import com.pavellukyanov.rocketchat.domain.usecase.profile.GetMyAccountImpl
+import com.pavellukyanov.rocketchat.domain.utils.WebSocketSession
 import dagger.Binds
 import dagger.Module
 
@@ -49,4 +51,9 @@ abstract class UseCaseModule {
 
     @Binds
     abstract fun bindRefreshChatCache(impl: RefreshChatCacheImpl): RefreshChatCache
+
+    @Binds
+    @ChatSessionQ
+    abstract fun bindChatSession(impl: ChatSession): WebSocketSession
+
 }
