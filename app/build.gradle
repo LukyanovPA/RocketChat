@@ -9,6 +9,8 @@ localProperties.load(new FileInputStream(rootProject.file("local.properties")))
 android {
     compileSdk 33
 
+    buildToolsVersion '29.0.2'
+
     viewBinding {
         enabled = true
     }
@@ -23,6 +25,9 @@ android {
         buildConfigField "String", "BASE_URL", localProperties['baseUrl']
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+
+        renderscriptTargetApi 29
+        renderscriptSupportModeEnabled true
     }
 
     buildTypes {
@@ -60,6 +65,7 @@ dependencies {
     implementation "androidx.recyclerview:recyclerview:$recycler_version"
     implementation "androidx.cardview:cardview:$cardview_version"
     coreLibraryDesugaring "com.android.tools:desugar_jdk_libs:$desugarVersion"
+    implementation "fr.tvbarthel.blurdialogfragment:lib:${dialogBlurVersion}"
 
     //Kotlin Coroutines
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutinesCore"

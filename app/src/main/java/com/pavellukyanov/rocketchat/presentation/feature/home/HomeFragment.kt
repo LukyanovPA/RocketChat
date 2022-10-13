@@ -12,12 +12,12 @@ import com.pavellukyanov.rocketchat.presentation.base.BaseFragment
 import com.pavellukyanov.rocketchat.presentation.helper.ext.load
 import com.pavellukyanov.rocketchat.presentation.helper.ext.setOnTextChangeListener
 
-class HomeFragment : ChatroomsAdapter.ChatRoomListener, BaseFragment<HomeViewModel>(
+class HomeFragment : ChatRoomsAdapter.ChatRoomListener, BaseFragment<HomeViewModel>(
     HomeViewModel::class.java,
     R.layout.fragment_home
 ) {
     private val binding by viewBinding(FragmentHomeBinding::bind)
-    private val chatroomAdapter by lazy(LazyThreadSafetyMode.NONE) { ChatroomsAdapter(this) }
+    private val chatroomAdapter by lazy(LazyThreadSafetyMode.NONE) { ChatRoomsAdapter(this) }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -40,6 +40,10 @@ class HomeFragment : ChatroomsAdapter.ChatRoomListener, BaseFragment<HomeViewMod
 
     override fun onItemClicked(item: Chatroom) {
         vm.forwardToChatroom(item)
+    }
+
+    override fun onLongClicked(item: Chatroom) {
+        vm.onChatRoomLongClicked(item)
     }
 
     private fun setMyAccountData(myAccount: MyAccount) = with(binding) {

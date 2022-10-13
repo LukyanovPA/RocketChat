@@ -16,6 +16,7 @@ buildscript {
         recycler_version = '1.2.1'
         cardview_version = '1.0.0'
         desugarVersion = "1.1.5"
+        dialogBlurVersion = '2.2.0'
         //Room
         room_version = '2.4.3'
         //Glide

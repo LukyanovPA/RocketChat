@@ -7,6 +7,7 @@
     <color name="teal_700">#FF018786</color>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+    <color name="red">#FD2E02</color>
     
     //Common
     <color name="main_color">#292F3F</color>
@@ -21,4 +22,5 @@
     <color name="light_blue">#03A9F1</color>
     <color name="back_dark">#272A35</color>
     <color name="back_light">#373E4E</color>
+    <color name="bottomSheetBlur">#e7e7ec</color>
 </resources>

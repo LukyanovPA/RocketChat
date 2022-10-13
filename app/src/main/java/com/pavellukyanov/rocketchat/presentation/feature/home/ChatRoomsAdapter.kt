@@ -9,7 +9,7 @@ import com.pavellukyanov.rocketchat.presentation.base.BaseViewHolder
 import com.pavellukyanov.rocketchat.presentation.helper.ext.load
 import com.pavellukyanov.rocketchat.utils.DateUtil
 
-class ChatroomsAdapter(
+class ChatRoomsAdapter(
     chatRoomListener: ChatRoomListener
 ) : BaseAdapter<Chatroom>(chatRoomListener) {
 

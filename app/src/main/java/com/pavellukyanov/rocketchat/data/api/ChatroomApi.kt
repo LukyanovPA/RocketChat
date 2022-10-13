@@ -1,5 +1,6 @@
 package com.pavellukyanov.rocketchat.data.api
 
+import com.pavellukyanov.rocketchat.data.utils.ApiParams
 import com.pavellukyanov.rocketchat.data.utils.networkadapter.NetworkResponse
 import com.pavellukyanov.rocketchat.domain.entity.chatroom.Chatroom
 import okhttp3.MultipartBody
@@ -16,4 +17,9 @@ interface ChatroomApi {
 
     @GET("chatrooms/getAllChatrooms")
     suspend fun getAllChatRooms(): NetworkResponse<List<Chatroom>>
+
+    @POST("chatrooms/delete/{chatroomId}")
+    suspend fun deleteChatRoom(
+        @Path(ApiParams.CHAT_ROOM_ID) chatroomId: String
+    ): NetworkResponse<Boolean>
 }

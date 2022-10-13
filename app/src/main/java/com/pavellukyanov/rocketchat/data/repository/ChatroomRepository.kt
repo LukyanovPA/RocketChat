@@ -69,6 +69,20 @@ class ChatroomRepository @Inject constructor(
                     }
             }
 
+    override suspend fun deleteChatRoom(chatroomId: String): Flow<State<Boolean>> =
+        networkMonitor.handleInternetConnection()
+            .flatMapMerge {
+                flow {
+                    emit(State.Loading)
+                    val state = api.deleteChatRoom(chatroomId).asData()
+                    if (state) {
+                        val chatRoomLocal = cache.chatroomsDao().getChatRoom(chatroomId)
+                        cache.chatroomsDao().delete(chatRoomLocal)
+                    }
+                    emit(State.Success(state))
+                }
+            }
+
     companion object {
         private const val PART_NAME = "chatImg"
     }

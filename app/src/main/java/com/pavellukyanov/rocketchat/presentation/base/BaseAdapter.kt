@@ -37,6 +37,10 @@ abstract class BaseAdapter<D : Any>(
         holder.itemView.setOnClickListener {
             listener?.onItemClicked(data[position])
         }
+        holder.itemView.setOnLongClickListener {
+            listener?.onLongClicked(data[position])
+            true
+        }
     }
 
     override fun getItemCount() = data.size
@@ -45,5 +49,6 @@ abstract class BaseAdapter<D : Any>(
 
     interface BaseAdapterListener<D> {
         fun onItemClicked(item: D)
+        fun onLongClicked(item: D) {}
     }
 }

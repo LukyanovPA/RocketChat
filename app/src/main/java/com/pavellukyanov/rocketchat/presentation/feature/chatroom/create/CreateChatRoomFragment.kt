@@ -11,8 +11,8 @@ import com.pavellukyanov.rocketchat.presentation.base.BaseFragment
 import com.pavellukyanov.rocketchat.presentation.helper.ext.load
 import com.pavellukyanov.rocketchat.presentation.helper.ext.setOnTextChangeListener
 
-class CreateChatroomFragment : BaseFragment<CreateChatroomViewModel>(
-    CreateChatroomViewModel::class.java,
+class CreateChatRoomFragment : BaseFragment<CreateChatRoomViewModel>(
+    CreateChatRoomViewModel::class.java,
     R.layout.fragment_create_chatroom
 ) {
     private val binding by viewBinding(FragmentCreateChatroomBinding::bind)
@@ -41,8 +41,8 @@ class CreateChatroomFragment : BaseFragment<CreateChatroomViewModel>(
     }
 
     companion object {
-        fun newInstance(): CreateChatroomFragment = CreateChatroomFragment()
+        fun newInstance(): CreateChatRoomFragment = CreateChatRoomFragment()
 
-        val TAG = CreateChatroomFragment::class.java.simpleName
+        val TAG = CreateChatRoomFragment::class.java.simpleName
     }
 }

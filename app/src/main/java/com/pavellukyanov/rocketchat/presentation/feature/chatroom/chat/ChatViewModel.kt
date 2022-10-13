@@ -10,7 +10,7 @@ import com.pavellukyanov.rocketchat.domain.usecase.chatroom.chat.SendMessage
 import com.pavellukyanov.rocketchat.domain.utils.UserInfo
 import com.pavellukyanov.rocketchat.domain.utils.WebSocketSession
 import com.pavellukyanov.rocketchat.presentation.base.BaseWebSocketViewModel
-import com.pavellukyanov.rocketchat.presentation.feature.chatroom.ChatroomNavigator
+import com.pavellukyanov.rocketchat.presentation.feature.chatroom.ChatRoomNavigator
 import com.pavellukyanov.rocketchat.presentation.feature.chatroom.chat.item.ChatItem
 import com.pavellukyanov.rocketchat.presentation.feature.chatroom.chat.item.ChatUserItem
 import com.pavellukyanov.rocketchat.utils.Constants.EMPTY_STRING
@@ -22,14 +22,14 @@ import javax.inject.Inject
 
 class ChatViewModel @Inject constructor(
     private val chatroom: Chatroom?,
-    navigator: ChatroomNavigator,
+    navigator: ChatRoomNavigator,
     private val getMessages: GetMessages,
     private val sendMessage: SendMessage,
     private val refreshChatCache: RefreshChatCache,
     private val userInfo: UserInfo,
     @ChatSessionQ
     private val session: WebSocketSession
-) : BaseWebSocketViewModel<ChatroomNavigator>(navigator) {
+) : BaseWebSocketViewModel<ChatRoomNavigator>(navigator) {
     private val message = MutableStateFlow(EMPTY_STRING)
     private val buttonState = MutableStateFlow(false)
     val messages = MutableLiveData<List<ChatItem>>()
