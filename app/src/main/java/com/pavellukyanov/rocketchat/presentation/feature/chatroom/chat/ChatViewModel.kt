@@ -51,9 +51,6 @@ class ChatViewModel @Inject constructor(
     fun sendMes() = launchIO {
         sendMessage(message.value)
         message.emit(EMPTY_STRING)
-//            .collect { state ->
-//                if (state) message.emit(EMPTY_STRING)
-//            }
     }
 
     fun writeMessage(mes: String) = launchCPU {

@@ -8,7 +8,6 @@ import com.pavellukyanov.rocketchat.data.utils.WebSocketHelper
 import com.pavellukyanov.rocketchat.data.utils.asData
 import com.pavellukyanov.rocketchat.domain.entity.chatroom.chat.ChatMessage
 import com.pavellukyanov.rocketchat.domain.repository.IChat
-import com.pavellukyanov.rocketchat.domain.utils.UserInfo
 import com.pavellukyanov.rocketchat.presentation.helper.NetworkMonitor
 import com.pavellukyanov.rocketchat.presentation.helper.handleInternetConnection
 import kotlinx.coroutines.FlowPreview
@@ -27,14 +26,13 @@ class ChatRepository @Inject constructor(
     private val networkMonitor: NetworkMonitor,
     private val api: ChatApi,
     private val webSocketClient: WebSocketClient,
-    private val userInfo: UserInfo,
     private val gson: Gson
 ) : IChat {
     private var mWebSocket: WebSocket? = null
 
     override suspend fun initSession(chatroomId: String) {
         val request = Request.Builder()
-            .url(WebSocketHelper.getChatUrl(chatroomId, userInfo.user?.uuid!!))
+            .url(WebSocketHelper.getChatUrl(chatroomId))
             .build()
 
         webSocketClient.getWebSocketClient()
