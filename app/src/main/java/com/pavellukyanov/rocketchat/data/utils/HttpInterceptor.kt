@@ -40,7 +40,7 @@ class HttpInterceptor @Inject constructor(
         val initialResponse = chain.proceed(initialRequest)
 
         return when (initialResponse.code) {
-            in HttpResponseCode.OK.errorCode -> initialResponse
+            in HttpResponseCode.OK.errorCode, in HttpResponseCode.SOCKET_OK.errorCode -> initialResponse
             in HttpResponseCode.UNAUTHORIZED.errorCode -> {
                 refresh(initialResponse, chain)
             }

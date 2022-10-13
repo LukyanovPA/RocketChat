@@ -6,7 +6,9 @@ import timber.log.Timber
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
-class WebSocketClient @Inject constructor() : OkHttpClient() {
+class WebSocketClient @Inject constructor(
+    private val httpInterceptor: HttpInterceptor
+) : OkHttpClient() {
 
     fun getWebSocketClient(): OkHttpClient {
         val httpLoggingInterceptor =
@@ -16,6 +18,7 @@ class WebSocketClient @Inject constructor() : OkHttpClient() {
         return OkHttpClient()
             .newBuilder()
             .pingInterval(15, TimeUnit.SECONDS)
+            .addInterceptor(httpInterceptor)
             .addInterceptor(httpLoggingInterceptor)
             .build()
     }

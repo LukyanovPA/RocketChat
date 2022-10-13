@@ -5,5 +5,6 @@ enum class HttpResponseCode(val errorCode: IntRange) {
     BAD_REQUEST(400..400),
     UNAUTHORIZED(401..401),
     CLIENT_ERROR(402..499),
-    SERVER_ERROR(500..526)
+    SERVER_ERROR(500..526),
+    SOCKET_OK(101..101)
 }
