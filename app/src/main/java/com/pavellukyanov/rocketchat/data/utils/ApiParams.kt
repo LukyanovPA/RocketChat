@@ -1,5 +1,7 @@
 package com.pavellukyanov.rocketchat.data.utils
 
+import okhttp3.MediaType.Companion.toMediaType
+
 object ApiParams {
     const val REFRESH_TOKEN = "refreshToken"
     const val AVATAR = "avatar"
@@ -8,4 +10,7 @@ object ApiParams {
     const val IMG = "img"
     const val CHAT_ROOM_ID = "chatroomId"
     const val MESSAGE = "message"
+
+    //Common
+    val multiPartMediaType = "multipart/form-data".toMediaType()
 }

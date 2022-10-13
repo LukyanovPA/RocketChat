@@ -13,5 +13,5 @@ interface ChatroomsDao {
     fun insert(newList: List<ChatroomLocal>)
 
     @Delete
-    fun delete(oldList: List<ChatroomLocal>)
+    fun delete(chatRoomLocal: ChatroomLocal)
 }

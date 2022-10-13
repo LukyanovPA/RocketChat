@@ -3,10 +3,12 @@ package com.pavellukyanov.rocketchat.data.repository
 import android.net.Uri
 import com.pavellukyanov.rocketchat.data.api.ChatroomApi
 import com.pavellukyanov.rocketchat.data.cache.LocalDatabase
+import com.pavellukyanov.rocketchat.data.utils.ApiParams
 import com.pavellukyanov.rocketchat.data.utils.asData
 import com.pavellukyanov.rocketchat.data.utils.file.FileInfoHelper
 import com.pavellukyanov.rocketchat.data.utils.file.RequestHelper
 import com.pavellukyanov.rocketchat.data.utils.map
+import com.pavellukyanov.rocketchat.domain.entity.State
 import com.pavellukyanov.rocketchat.domain.entity.chatroom.Chatroom
 import com.pavellukyanov.rocketchat.domain.repository.IChatroom
 import com.pavellukyanov.rocketchat.presentation.helper.NetworkMonitor
@@ -14,6 +16,8 @@ import com.pavellukyanov.rocketchat.presentation.helper.handleInternetConnection
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.*
 import okhttp3.MultipartBody
+import okhttp3.RequestBody
+import okhttp3.RequestBody.Companion.toRequestBody
 import javax.inject.Inject
 
 @OptIn(FlowPreview::class)
@@ -24,56 +28,30 @@ class ChatroomRepository @Inject constructor(
     private val networkMonitor: NetworkMonitor,
     private val api: ChatroomApi
 ) : IChatroom {
-    override suspend fun createChatroom(chatroomName: String, chatroomDescription: String, chatroomImg: Uri?): Flow<Boolean> =
-        networkMonitor.handleInternetConnection()
-            .flatMapMerge {
-                if (chatroomImg != null) {
-                    uploadChatImg(chatroomImg)
-                        .flatMapMerge { src ->
-                            setChatroom(chatroomName, chatroomDescription, src)
-                                .flatMapMerge { createState ->
-                                    updateCache()
-                                        .flatMapMerge { flowOf(createState) }
-                                }
-                        }
-                } else {
-                    setChatroom(chatroomName, chatroomDescription)
-                        .flatMapMerge { createState ->
-                            updateCache()
-                                .flatMapMerge { flowOf(createState) }
-                        }
-                }
-            }
-
-    private fun uploadChatImg(uri: Uri): Flow<String> =
+    override suspend fun createChatroom(
+        chatroomName: String,
+        chatroomDescription: String,
+        chatroomImg: Uri?
+    ): Flow<State<Boolean>> =
         networkMonitor.handleInternetConnection()
             .flatMapMerge {
                 flow {
-                    val fileRequestBody = fileRequestHelper.generateRequestBody(uri)
-                    val fileName = fileInfoHelper.getFileName(uri)
-                    val body: MultipartBody.Part? =
-                        fileRequestBody?.let {
+                    emit(State.Loading)
+                    val partMap = hashMapOf<String, RequestBody>()
+                    var file: MultipartBody.Part? = null
+                    partMap[ApiParams.NAME] = chatroomName.toRequestBody(ApiParams.multiPartMediaType)
+                    partMap[ApiParams.DESCRIPTION] = chatroomDescription.toRequestBody(ApiParams.multiPartMediaType)
+
+                    if (chatroomImg != null) {
+                        val fileRequestBody = fileRequestHelper.generateRequestBody(chatroomImg)
+                        val fileName = fileInfoHelper.getFileName(chatroomImg)
+                        file = fileRequestBody?.let {
                             MultipartBody.Part.createFormData(PART_NAME, fileName, it)
                         }
-                    val uploadResponse = api.uploadChatImg(body).asData()
-                    if (uploadResponse.success) emit(uploadResponse.src!!) else throw Exception(uploadResponse.errorMessage)
-                }
-            }
+                    }
 
-    private suspend fun setChatroom(
-        chatroomName: String,
-        chatroomDescription: String? = null,
-        chatroomImg: String? = null
-    ): Flow<Boolean> =
-        networkMonitor.handleInternetConnection()
-            .flatMapMerge {
-                flowOf(
-                    api.createChatroom(
-                        name = chatroomName,
-                        description = chatroomDescription,
-                        img = chatroomImg
-                    ).asData()
-                )
+                    emit(State.Success(api.createChatroom(partMap, file).asData()))
+                }
             }
 
     override suspend fun getChatrooms(): Flow<List<Chatroom>> =

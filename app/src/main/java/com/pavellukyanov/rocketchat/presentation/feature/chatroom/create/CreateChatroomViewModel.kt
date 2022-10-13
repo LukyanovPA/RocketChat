@@ -3,6 +3,7 @@ package com.pavellukyanov.rocketchat.presentation.feature.chatroom.create
 import android.net.Uri
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import com.pavellukyanov.rocketchat.domain.entity.State
 import com.pavellukyanov.rocketchat.domain.usecase.chatroom.ChatroomCreate
 import com.pavellukyanov.rocketchat.presentation.base.BaseViewModel
 import com.pavellukyanov.rocketchat.presentation.feature.chatroom.ChatroomNavigator
@@ -28,7 +29,7 @@ class CreateChatroomViewModel @Inject constructor(
             weightLimit = GalleryHelper.PHOTO_SIZE_DIV_KB
         ) { listFiles ->
             listFiles?.let { response ->
-                response.firstOrNull()?.getPath()?.let { _chatroomImg.postValue(it) }
+                response.firstOrNull()?.getPath()?.let(_chatroomImg::postValue)
             }
         }
     }
@@ -50,8 +51,14 @@ class CreateChatroomViewModel @Inject constructor(
                     chatroomName.value,
                     chatroomDescription.value,
                     _chatroomImg.value
-                ).collect {
-                    if (it) navigator.back()
+                ).collect { state ->
+                    when (state) {
+                        is State.Loading -> setShimmerState(true)
+                        is State.Success -> {
+                            setShimmerState(false)
+                            navigator.back()
+                        }
+                    }
                 }
             }
         }

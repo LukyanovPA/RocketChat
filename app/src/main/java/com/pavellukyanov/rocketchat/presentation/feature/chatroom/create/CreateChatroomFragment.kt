@@ -3,6 +3,7 @@ package com.pavellukyanov.rocketchat.presentation.feature.chatroom.create
 import android.net.Uri
 import android.os.Bundle
 import android.view.View
+import androidx.core.view.isVisible
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.pavellukyanov.rocketchat.R
 import com.pavellukyanov.rocketchat.databinding.FragmentCreateChatroomBinding
@@ -20,6 +21,7 @@ class CreateChatroomFragment : BaseFragment<CreateChatroomViewModel>(
         super.onViewCreated(view, savedInstanceState)
         bind()
         vm.chatroomImg.observe(viewLifecycleOwner, ::handleChatroomImg)
+        vm.shimmerStateObserv().observe(viewLifecycleOwner, ::handleLoadingState)
     }
 
     private fun bind() = with(binding) {
@@ -32,6 +34,10 @@ class CreateChatroomFragment : BaseFragment<CreateChatroomViewModel>(
 
     private fun handleChatroomImg(uri: Uri) {
         binding.addChatroomImage.load(uri, circleCrop = true)
+    }
+
+    private fun handleLoadingState(state: Boolean) {
+        binding.createChatRoomLoading.isVisible = state
     }
 
     companion object {
