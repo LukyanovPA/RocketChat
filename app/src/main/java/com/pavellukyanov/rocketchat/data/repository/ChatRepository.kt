@@ -65,6 +65,7 @@ class ChatRepository @Inject constructor(
     }
 
     override suspend fun closeSession() {
+        mWebSocket?.cancel()
         mWebSocket?.close(WebSocketHelper.NORMAL_CODE, WebSocketHelper.NORMAL_REASON)
     }
 
