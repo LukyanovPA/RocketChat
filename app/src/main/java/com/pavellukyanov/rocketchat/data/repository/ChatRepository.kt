@@ -60,9 +60,9 @@ class ChatRepository @Inject constructor(
             })
     }
 
-    override suspend fun sendMessage(message: String): Flow<Boolean> = flow {
-        emit(mWebSocket?.send(message) == true)
-    }
+    override suspend fun sendMessage(message: String): Boolean =
+        mWebSocket?.send(message) ?: false
+
 
     override suspend fun closeSession() {
         mWebSocket?.cancel()

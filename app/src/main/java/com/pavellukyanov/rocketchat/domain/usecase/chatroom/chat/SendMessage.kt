@@ -1,14 +1,13 @@
 package com.pavellukyanov.rocketchat.domain.usecase.chatroom.chat
 
 import com.pavellukyanov.rocketchat.domain.repository.IChat
-import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
-interface SendMessage : suspend (String) -> Flow<Boolean>
+interface SendMessage : suspend (String) -> Boolean
 
 class SendMessageImpl @Inject constructor(
     private val repo: IChat
 ) : SendMessage {
-    override suspend fun invoke(message: String): Flow<Boolean> =
+    override suspend fun invoke(message: String): Boolean =
         repo.sendMessage(message)
 }
