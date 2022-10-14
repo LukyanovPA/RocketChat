@@ -1,7 +1,6 @@
 package com.pavellukyanov.rocketchat.presentation.feature.auth.signin
 
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import com.pavellukyanov.rocketchat.domain.usecase.auth.Login
 import com.pavellukyanov.rocketchat.presentation.base.BaseViewModel
 import com.pavellukyanov.rocketchat.presentation.feature.auth.AuthNavigator
@@ -14,7 +13,6 @@ class SignInViewModel @Inject constructor(
     navigator: AuthNavigator,
     private val login: Login
 ) : BaseViewModel<AuthNavigator>(navigator) {
-    override val shimmerState: MutableLiveData<Boolean> = MutableLiveData(false)
     private val email = MutableStateFlow(EMPTY_STRING)
     private val password = MutableStateFlow(EMPTY_STRING)
     private val buttonState = MutableStateFlow(false)

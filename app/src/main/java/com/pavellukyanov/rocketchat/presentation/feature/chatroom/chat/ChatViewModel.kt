@@ -3,21 +3,20 @@ package com.pavellukyanov.rocketchat.presentation.feature.chatroom.chat
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.pavellukyanov.rocketchat.core.di.qualifiers.ChatSessionQ
+import com.pavellukyanov.rocketchat.core.di.qualifiers.ChatUsersStorageQ
 import com.pavellukyanov.rocketchat.domain.entity.chatroom.Chatroom
 import com.pavellukyanov.rocketchat.domain.usecase.chatroom.chat.GetMessages
 import com.pavellukyanov.rocketchat.domain.usecase.chatroom.chat.RefreshChatCache
 import com.pavellukyanov.rocketchat.domain.usecase.chatroom.chat.SendMessage
+import com.pavellukyanov.rocketchat.domain.utils.ObjectStorage
 import com.pavellukyanov.rocketchat.domain.utils.WebSocketSession
 import com.pavellukyanov.rocketchat.presentation.base.BaseWebSocketViewModel
 import com.pavellukyanov.rocketchat.presentation.feature.chatroom.ChatRoomNavigator
 import com.pavellukyanov.rocketchat.presentation.feature.chatroom.chat.item.ChatItem
 import com.pavellukyanov.rocketchat.presentation.feature.chatroom.chat.item.ChatUserItem
 import com.pavellukyanov.rocketchat.utils.Constants.EMPTY_STRING
-import com.pavellukyanov.rocketchat.utils.Constants.INT_TWO
-import com.pavellukyanov.rocketchat.utils.Constants.INT_ZERO
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.flowOf
-import timber.log.Timber
 import javax.inject.Inject
 
 class ChatViewModel @Inject constructor(
@@ -26,9 +25,9 @@ class ChatViewModel @Inject constructor(
     private val getMessages: GetMessages,
     private val sendMessage: SendMessage,
     private val refreshChatCache: RefreshChatCache,
-    @ChatSessionQ private val session: WebSocketSession
+    @ChatSessionQ private val session: WebSocketSession,
+    @ChatUsersStorageQ private val storage: ObjectStorage<List<ChatUserItem>>
 ) : BaseWebSocketViewModel<ChatRoomNavigator>(navigator) {
-    override val shimmerState: MutableLiveData<Boolean> = MutableLiveData(true)
     private val message = MutableStateFlow(EMPTY_STRING)
     private val buttonState = MutableStateFlow(false)
     private val _messages = MutableLiveData<List<ChatItem>>()
@@ -40,13 +39,8 @@ class ChatViewModel @Inject constructor(
     init {
         refreshCache()
         fetchMessages()
+        fetchUsers()
         observButtonState()
-
-        launchUI {
-            shimmerState.observeForever {
-                Timber.d("Smotrim $it")
-            }
-        }
     }
 
     override fun initSession() = launchIO { session.initSession(chatroom?.id!!) }
@@ -74,23 +68,11 @@ class ChatViewModel @Inject constructor(
         getMessages(chatroom?.id!!)
             .asState { list ->
                 _messages.postValue(list)
-                fetchUsers(list)
             }
     }
 
-    private fun fetchUsers(messages: List<ChatItem>) = launchCPU {
-        _users.postValue(
-            messages.map { chatItem ->
-                when (chatItem) {
-                    is ChatItem.MyMessage -> chatItem.chatMessage.ownerAvatar
-                    is ChatItem.OtherMessage -> chatItem.chatMessage.ownerAvatar
-                }
-            }
-                .toSet()
-                .mapIndexed { index, avatar ->
-                    if (index % INT_TWO == INT_ZERO) ChatUserItem.UserUp(avatar) else ChatUserItem.UserBottom(avatar)
-                }
-        )
+    private fun fetchUsers() = launchIO {
+        storage.value.collect(_users::postValue)
     }
 
     private fun refreshCache() = launchIO {

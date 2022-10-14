@@ -12,7 +12,6 @@ class ChatRoomOptionsViewModel @Inject constructor(
     navigator: ChatRoomNavigator,
     private val fragmentResultHelper: FragmentResultHelper,
 ) : BaseViewModel<ChatRoomNavigator>(navigator) {
-    override val shimmerState: MutableLiveData<Boolean> = MutableLiveData(false)
     private val _items = MutableLiveData<List<OptionItem>>()
     val items: LiveData<List<OptionItem>> = _items
 

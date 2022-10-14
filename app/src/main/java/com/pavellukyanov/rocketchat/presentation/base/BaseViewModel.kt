@@ -1,6 +1,9 @@
 package com.pavellukyanov.rocketchat.presentation.base
 
-import androidx.lifecycle.*
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.asLiveData
+import androidx.lifecycle.viewModelScope
 import com.pavellukyanov.rocketchat.domain.entity.State
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
@@ -11,12 +14,12 @@ import kotlinx.coroutines.launch
 import timber.log.Timber
 
 abstract class BaseViewModel<N : BaseNavigator>(protected val navigator: N) : ViewModel() {
-    protected abstract val shimmerState: MutableLiveData<Boolean>
+    protected val shimmerState = MutableStateFlow(true)
 
-    fun shimmerStateObserv(): LiveData<Boolean> = shimmerState
+    fun shimmerStateObserv(): LiveData<Boolean> = shimmerState.asLiveData()
 
     fun viewIsLoad() {
-        shimmerState.value = false
+        shimmerState.compareAndSet(shimmerState.value, false)
     }
 
     private fun onError(error: Throwable) = launchUI {
@@ -53,7 +56,7 @@ abstract class BaseViewModel<N : BaseNavigator>(protected val navigator: N) : Vi
         this@asState
             .collect { state ->
                 when (state) {
-                    is State.Loading -> shimmerState.postValue(true)
+                    is State.Loading -> shimmerState.emit(true)
                     is State.Success -> onSuccess(state.data)
                 }
             }

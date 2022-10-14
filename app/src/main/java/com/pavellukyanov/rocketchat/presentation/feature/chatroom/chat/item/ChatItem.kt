@@ -23,4 +23,11 @@ sealed class ChatItem : CompositeModel() {
         override fun isSame(item: SameItem): Boolean =
             item is OtherMessage && item.chatMessage.id == chatMessage.id
     }
+
+    data class ChatDateItem(val date: String) : ChatItem() {
+        override fun viewType(): Int = R.layout.list_item_chat_date
+
+        override fun isSame(item: SameItem): Boolean =
+            item is ChatDateItem && item.date == date
+    }
 }

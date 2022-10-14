@@ -43,4 +43,15 @@
         app:layout_constraintEnd_toEndOf="@+id/other_message"
         tools:text="pupa" />
 
+    <TextView
+        android:id="@+id/other_message_time"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/margin_10"
+        android:textAppearance="@style/RocketChat.H4"
+        android:textColor="@color/light_green"
+        app:layout_constraintStart_toStartOf="@+id/other_message"
+        app:layout_constraintBottom_toBottomOf="@+id/other_message"
+        tools:text="12234" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

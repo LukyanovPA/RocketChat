@@ -73,7 +73,7 @@ class ChatFragment : BaseWebSocketFragment<ChatViewModel>(
     }
 
     override fun onItemClicked(item: ChatItem) {
-        TODO("Not yet implemented")
+
     }
 
     private fun handleUsersAvatars(users: List<ChatUserItem>) {

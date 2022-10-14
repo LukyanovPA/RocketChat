@@ -16,7 +16,6 @@ class CreateChatRoomViewModel @Inject constructor(
     private val galleryHelper: GalleryHelper,
     private val chatroomCreate: ChatroomCreate
 ) : BaseViewModel<ChatRoomNavigator>(navigator) {
-    override val shimmerState: MutableLiveData<Boolean> = MutableLiveData(false)
     private val chatroomName = MutableStateFlow(EMPTY_STRING)
     private val chatroomDescription = MutableStateFlow(EMPTY_STRING)
     private val _chatroomImg = MutableLiveData<Uri>()

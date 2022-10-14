@@ -18,7 +18,8 @@ import javax.inject.Singleton
         UseCaseModule::class,
         LocalBaseModule::class,
         ApiModule::class,
-        GsonModule::class
+        GsonModule::class,
+        StorageModule::class
     ]
 )
 interface AppComponent : AndroidInjector<App> {

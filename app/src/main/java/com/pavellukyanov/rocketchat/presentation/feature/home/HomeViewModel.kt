@@ -35,7 +35,6 @@ class HomeViewModel @Inject constructor(
     private val fragmentResultHelper: FragmentResultHelper,
     private val userInfo: UserInfo
 ) : BaseViewModel<HomeNavigator>(navigator) {
-    override val shimmerState: MutableLiveData<Boolean> = MutableLiveData(true)
     private val searchQuery = MutableStateFlow(EMPTY_STRING)
     private val _myAccount = MutableLiveData<MyAccount>()
     private val _chatrooms = MutableLiveData<List<Chatroom>>()
