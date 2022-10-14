@@ -25,7 +25,7 @@ class ChatRoomsAdapter(
                     chatroomImg.load(item.chatroomImg, circleCrop = true)
                     chatroomName.text = item.name
                     chatroomLastMessage.text = item.lastMessage
-                    chatroomLastMessageTimestamp.text = DateUtil.longToDateString(item.lastMessageTimeStamp)
+                    chatroomLastMessageTimestamp.text = DateUtil.longToDateStringDate(item.lastMessageTimeStamp)
                 }
             }
         }

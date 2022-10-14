@@ -1,34 +1,49 @@
 package com.pavellukyanov.rocketchat.utils
 
+import android.annotation.SuppressLint
 import com.pavellukyanov.rocketchat.utils.Constants.INT_ONE
 import com.pavellukyanov.rocketchat.utils.Constants.INT_ZERO
+import java.text.SimpleDateFormat
 import java.time.Instant
 import java.time.LocalDate
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
+import java.util.Date
+import java.util.concurrent.TimeUnit
 
 object DateUtil {
-    private val formatter = DateTimeFormatter.ofPattern("d.MM.yyyy")
+    private val dateFormatter = DateTimeFormatter.ofPattern("d.MM.yyyy")
+    @SuppressLint("SimpleDateFormat")
+    private val timeFormatter = SimpleDateFormat("HH:mm")
 
-    fun localDateToString(date: LocalDate): String =
-        date.format(formatter)
+    fun localDateToStringDate(date: LocalDate): String =
+        date.format(dateFormatter)
+
+    fun localDateToStringTime(date: Long): String {
+        val d = Date(TimeUnit.SECONDS.toMillis(date))
+        return timeFormatter.format(d)
+    }
 
     fun longToLocalDate(dateLong: Long): LocalDate =
         Instant.ofEpochMilli(dateLong).atZone(ZoneId.systemDefault()).toLocalDate()
 
-    fun longToDateString(dateLong: Long): String =
-        localDateToString(longToLocalDate(dateLong))
+    fun longToDateStringDate(dateLong: Long): String =
+        localDateToStringDate(longToLocalDate(dateLong))
+
+//    fun longToDateStringTime(dateLong: Long): String =
+//        localDateToStringTime(longToLocalDate(dateLong))
 
     fun dateCompareWithToday(localDate: LocalDate): String {
         val today = LocalDate.now()
 
+
         return if (localDate.year != today.year || localDate.monthValue != today.monthValue) {
-            localDateToString(localDate)
+            localDateToStringDate(localDate)
         } else {
             when (today.dayOfMonth - localDate.dayOfMonth) {
                 INT_ONE -> YESTERDAY
                 INT_ZERO -> TODAY
-                else -> localDateToString(localDate)
+                else -> localDateToStringDate(localDate)
             }
         }
     }

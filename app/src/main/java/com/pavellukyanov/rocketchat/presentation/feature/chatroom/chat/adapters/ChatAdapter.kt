@@ -37,8 +37,10 @@ class ChatAdapter(
     class MyMessageViewHolder(override val binding: ListItemMyMessageBinding) : BaseViewHolder(binding) {
         override fun bind(item: Any) {
             (item as ChatItem.MyMessage).apply {
-                binding.myMessage.text = item.chatMessage.message
-                binding.myMessageTime.text = DateUtil.longToDateString(item.chatMessage.messageTimeStamp)
+                with(binding) {
+                    myMessage.text = item.chatMessage.message
+                    myMessageTime.text = DateUtil.localDateToStringTime(item.chatMessage.messageTimeStamp)
+                }
             }
         }
     }
@@ -50,7 +52,7 @@ class ChatAdapter(
                     otherMessage.text = item.chatMessage.message
                     senderAvatar.load(item.chatMessage.ownerAvatar, circleCrop = true)
                     senderUsername.text = item.chatMessage.ownerUsername
-                    otherMessageTime.text = DateUtil.longToDateString(item.chatMessage.messageTimeStamp)
+                    otherMessageTime.text = DateUtil.localDateToStringTime(item.chatMessage.messageTimeStamp)
                 }
             }
         }

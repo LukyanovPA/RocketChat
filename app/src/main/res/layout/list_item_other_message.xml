@@ -13,7 +13,9 @@
         android:layout_marginVertical="@dimen/margin_8"
         android:layout_marginEnd="@dimen/margin_100"
         android:background="@drawable/bg_other_message"
-        android:padding="@dimen/margin_16"
+        android:paddingTop="@dimen/margin_24"
+        android:paddingHorizontal="@dimen/margin_16"
+        android:paddingBottom="@dimen/margin_16"
         android:textAppearance="@style/RocketChat.H4"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/sender_avatar"
@@ -35,23 +37,22 @@
         android:id="@+id/sender_username"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="@dimen/margin_16"
-        android:layout_marginBottom="@dimen/margin_8"
-        android:textAppearance="@style/RocketChat.H4.Bold"
+        android:layout_marginStart="@dimen/margin_16"
+        android:textAppearance="@style/RocketChat.Body.Bold"
         android:textColor="@color/light_green"
-        app:layout_constraintBottom_toBottomOf="@+id/other_message"
-        app:layout_constraintEnd_toEndOf="@+id/other_message"
+        app:layout_constraintTop_toTopOf="@+id/other_message"
+        app:layout_constraintStart_toStartOf="@+id/other_message"
         tools:text="pupa" />
 
     <TextView
         android:id="@+id/other_message_time"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/margin_10"
+        android:layout_marginEnd="@dimen/margin_16"
         android:textAppearance="@style/RocketChat.H4"
-        android:textColor="@color/light_green"
-        app:layout_constraintStart_toStartOf="@+id/other_message"
-        app:layout_constraintBottom_toBottomOf="@+id/other_message"
-        tools:text="12234" />
+        android:textColor="@color/light_light_gray"
+        app:layout_constraintEnd_toEndOf="@+id/other_message"
+        app:layout_constraintTop_toTopOf="@+id/other_message"
+        tools:text="13:30" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -16,6 +16,7 @@ import com.pavellukyanov.rocketchat.presentation.helper.ext.hideKeyboard
 import com.pavellukyanov.rocketchat.presentation.helper.ext.putArgs
 import com.pavellukyanov.rocketchat.presentation.helper.ext.setOnTextChangeListener
 import com.pavellukyanov.rocketchat.utils.Constants.INT_ONE
+import timber.log.Timber
 
 class ChatFragment : BaseWebSocketFragment<ChatViewModel>(
     ChatViewModel::class.java,
@@ -73,7 +74,7 @@ class ChatFragment : BaseWebSocketFragment<ChatViewModel>(
     }
 
     override fun onItemClicked(item: ChatItem) {
-
+        Timber.d("Smotrim $item")
     }
 
     private fun handleUsersAvatars(users: List<ChatUserItem>) {
