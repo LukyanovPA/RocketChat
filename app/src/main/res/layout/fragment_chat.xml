@@ -38,6 +38,21 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/chat_arrow_back" />
 
+    <com.facebook.shimmer.ShimmerFrameLayout
+        android:id="@+id/ph_message_list"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginTop="@dimen/margin_16"
+        app:layout_constraintBottom_toTopOf="@+id/chat_button_send"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/chat_users_list"
+        app:shimmer_duration="@integer/shimmer_duration">
+
+        <include layout="@layout/placeholder_chat" />
+
+    </com.facebook.shimmer.ShimmerFrameLayout>
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/messages_list"
         android:layout_width="match_parent"

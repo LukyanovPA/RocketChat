@@ -21,6 +21,7 @@ class HomeFragment : ChatRoomsAdapter.ChatRoomListener, BaseFragment<HomeViewMod
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        setShimmer(binding.phHomeChatroomList)
         bind()
         vm.refreshCache()
         vm.myAccount.observe(viewLifecycleOwner, ::setMyAccountData)
@@ -44,6 +45,10 @@ class HomeFragment : ChatRoomsAdapter.ChatRoomListener, BaseFragment<HomeViewMod
 
     override fun onLongClicked(item: Chatroom) {
         vm.onChatRoomLongClicked(item)
+    }
+
+    override fun adapterIsVisible(isVisible: Boolean) {
+        if (isVisible) viewIsLoad()
     }
 
     private fun setMyAccountData(myAccount: MyAccount) = with(binding) {

@@ -22,4 +22,11 @@
     <dimen name="minus_margin_8">-8dp</dimen>
     <dimen name="margin_48">48dp</dimen>
     <dimen name="margin_2">2dp</dimen>
+    <dimen name="margin_150">150dp</dimen>
+    <dimen name="margin_32">32dp</dimen>
+    <dimen name="margin_74">74dp</dimen>
+    <dimen name="margin_200">200dp</dimen>
+    <dimen name="margin_42">42dp</dimen>
+    <dimen name="margin_56">56dp</dimen>
+    <dimen name="margin_82">82dp</dimen>
 </resources>

@@ -1,7 +1,6 @@
 package com.pavellukyanov.rocketchat.presentation.feature.auth.signup
 
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import com.pavellukyanov.rocketchat.domain.usecase.auth.Registration
 import com.pavellukyanov.rocketchat.presentation.base.BaseViewModel
 import com.pavellukyanov.rocketchat.presentation.feature.auth.AuthNavigator

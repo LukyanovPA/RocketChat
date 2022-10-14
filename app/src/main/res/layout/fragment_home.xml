@@ -31,11 +31,11 @@
         android:id="@+id/main_logout"
         android:layout_width="@dimen/margin_30"
         android:layout_height="@dimen/margin_30"
-        app:srcCompat="@drawable/ic_logout"
         app:layout_constraintBottom_toBottomOf="@+id/main_avatar"
         app:layout_constraintEnd_toEndOf="@+id/create_chatroom_container"
         app:layout_constraintStart_toStartOf="@+id/create_chatroom_container"
-        app:layout_constraintTop_toTopOf="@+id/main_avatar"/>
+        app:layout_constraintTop_toTopOf="@+id/main_avatar"
+        app:srcCompat="@drawable/ic_logout" />
 
     <androidx.cardview.widget.CardView
         android:layout_width="@dimen/margin_0"
@@ -93,6 +93,21 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/create_chatroom_container" />
+
+    <com.facebook.shimmer.ShimmerFrameLayout
+        android:id="@+id/ph_home_chatroom_list"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginTop="@dimen/margin_16"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/create_chatroom_container"
+        app:shimmer_duration="@integer/shimmer_duration">
+
+        <include layout="@layout/placeholder_home_chats" />
+
+    </com.facebook.shimmer.ShimmerFrameLayout>
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

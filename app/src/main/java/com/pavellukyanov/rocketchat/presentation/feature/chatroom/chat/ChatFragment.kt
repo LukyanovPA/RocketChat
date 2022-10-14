@@ -20,13 +20,14 @@ import com.pavellukyanov.rocketchat.utils.Constants.INT_ONE
 class ChatFragment : BaseWebSocketFragment<ChatViewModel>(
     ChatViewModel::class.java,
     R.layout.fragment_chat
-) {
+), ChatAdapter.ChatListener {
     private val binding by viewBinding(FragmentChatBinding::bind)
-    private val chatAdapter by lazy(LazyThreadSafetyMode.NONE) { ChatAdapter() }
+    private val chatAdapter by lazy(LazyThreadSafetyMode.NONE) { ChatAdapter(this) }
     private val chatUsersAdapter by lazy(LazyThreadSafetyMode.NONE) { ChatUsersAdapter() }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        setShimmer(binding.phMessageList)
         bind()
         vm.messages.observe(viewLifecycleOwner, ::handleMessagesList)
         vm.buttonIsEnable().observe(viewLifecycleOwner, ::handleButtonSendState)
@@ -67,6 +68,14 @@ class ChatFragment : BaseWebSocketFragment<ChatViewModel>(
         binding.messagesList.smoothScrollToPosition(messages.lastIndex + INT_ONE)
     }
 
+    override fun adapterIsVisible(isVisible: Boolean) {
+        if (isVisible) viewIsLoad()
+    }
+
+    override fun onItemClicked(item: ChatItem) {
+
+    }
+
     private fun handleUsersAvatars(users: List<ChatUserItem>) {
         chatUsersAdapter.data = users
     }
@@ -75,8 +84,8 @@ class ChatFragment : BaseWebSocketFragment<ChatViewModel>(
         binding.chatButtonSend.isEnabled = state
     }
 
-    private fun handleChatroomValue(chatroom: Chatroom) = with(binding) {
-        chatName.text = chatroom.name
+    private fun handleChatroomValue(chatroom: Chatroom?) = with(binding) {
+        chatName.text = chatroom?.name
     }
 
     companion object {

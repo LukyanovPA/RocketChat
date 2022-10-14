@@ -10,7 +10,7 @@ import com.pavellukyanov.rocketchat.presentation.feature.chatroom.chat.item.Chat
 import com.pavellukyanov.rocketchat.presentation.helper.ext.load
 import com.pavellukyanov.rocketchat.presentation.widget.CompositeAdapter
 
-class ChatUsersAdapter : CompositeAdapter() {
+class ChatUsersAdapter : CompositeAdapter<ChatUserItem>(null) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BaseViewHolder =
         when (viewType) {

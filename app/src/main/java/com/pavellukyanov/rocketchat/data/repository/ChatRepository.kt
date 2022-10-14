@@ -68,10 +68,7 @@ class ChatRepository @Inject constructor(
     }
 
     override suspend fun getMessages(chatroomId: String): Flow<List<ChatMessage>> =
-        networkMonitor.handleInternetConnection()
-            .flatMapMerge {
-                cache.messages().getMessages(chatroomId)
-            }
+        cache.messages().getMessages(chatroomId)
 
     override suspend fun updateCache(chatroomId: String): Flow<Unit> =
         networkMonitor.handleInternetConnection()

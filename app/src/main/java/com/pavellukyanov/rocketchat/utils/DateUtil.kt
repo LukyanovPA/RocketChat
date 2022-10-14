@@ -1,5 +1,7 @@
 package com.pavellukyanov.rocketchat.utils
 
+import com.pavellukyanov.rocketchat.utils.Constants.INT_ONE
+import com.pavellukyanov.rocketchat.utils.Constants.INT_ZERO
 import java.time.Instant
 import java.time.LocalDate
 import java.time.ZoneId
@@ -16,4 +18,21 @@ object DateUtil {
 
     fun longToDateString(dateLong: Long): String =
         localDateToString(longToLocalDate(dateLong))
+
+    fun dateCompareWithToday(localDate: LocalDate): String {
+        val today = LocalDate.now()
+
+        return if (localDate.year != today.year || localDate.monthValue != today.monthValue) {
+            localDateToString(localDate)
+        } else {
+            when (today.dayOfMonth - localDate.dayOfMonth) {
+                INT_ONE -> YESTERDAY
+                INT_ZERO -> TODAY
+                else -> localDateToString(localDate)
+            }
+        }
+    }
+
+    private const val YESTERDAY = "Yesterday"
+    private const val TODAY = "Today"
 }
