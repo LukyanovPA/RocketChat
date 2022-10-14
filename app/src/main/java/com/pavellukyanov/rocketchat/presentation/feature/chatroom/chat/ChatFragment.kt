@@ -2,6 +2,7 @@ package com.pavellukyanov.rocketchat.presentation.feature.chatroom.chat
 
 import android.os.Bundle
 import android.view.View
+import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.pavellukyanov.rocketchat.R
@@ -27,6 +28,7 @@ class ChatFragment : BaseWebSocketFragment<ChatViewModel>(
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        setShimmer(binding.phMessageList)
         bind()
         vm.messages.observe(viewLifecycleOwner, ::handleMessagesList)
         vm.buttonIsEnable().observe(viewLifecycleOwner, ::handleButtonSendState)
@@ -62,6 +64,11 @@ class ChatFragment : BaseWebSocketFragment<ChatViewModel>(
         }
     }
 
+    override fun handleShimmerVisibility(state: Boolean) {
+        super.handleShimmerVisibility(state)
+        binding.messagesList.isVisible = !state
+    }
+
     private fun handleMessagesList(messages: List<ChatItem>) {
         chatAdapter.data = messages
         binding.messagesList.smoothScrollToPosition(messages.lastIndex + INT_ONE)
@@ -75,8 +82,8 @@ class ChatFragment : BaseWebSocketFragment<ChatViewModel>(
         binding.chatButtonSend.isEnabled = state
     }
 
-    private fun handleChatroomValue(chatroom: Chatroom) = with(binding) {
-        chatName.text = chatroom.name
+    private fun handleChatroomValue(chatroom: Chatroom?) = with(binding) {
+        chatName.text = chatroom?.name
     }
 
     companion object {

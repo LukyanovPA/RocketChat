@@ -44,6 +44,9 @@ abstract class BaseViewModel<N : BaseNavigator>(protected val navigator: N) : Vi
     protected fun <T> MutableStateFlow<T>.asLiveData(): LiveData<T> =
         asLiveData(viewModelScope.coroutineContext)
 
+    protected fun <T> Flow<T>.asLiveData(): LiveData<T> =
+        asLiveData(viewModelScope.coroutineContext)
+
     @OptIn(FlowPreview::class)
     protected fun <T> Flow<State<T>>.asState(): Flow<T> =
         flatMapMerge { state ->
