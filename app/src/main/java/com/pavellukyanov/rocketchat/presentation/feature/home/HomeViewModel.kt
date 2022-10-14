@@ -21,7 +21,6 @@ import com.pavellukyanov.rocketchat.utils.Constants.EMPTY_STRING
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.flatMapMerge
-import timber.log.Timber
 import javax.inject.Inject
 
 class HomeViewModel @Inject constructor(
@@ -95,10 +94,8 @@ class HomeViewModel @Inject constructor(
 
     private fun deleteChatRoom(chatroomId: String) = launchIO {
         chatRoomDelete(chatroomId)
-            .collect { state ->
-                Timber.d("Smotrim $state")
-//                if (state is State.Success) refreshCache()
-            }
+            .asState()
+            .collect { }
     }
 
     private fun setAvatar(uri: Uri) = launchIO {
@@ -114,12 +111,10 @@ class HomeViewModel @Inject constructor(
     @OptIn(FlowPreview::class)
     private fun fetchChatrooms() = launchIO {
         searchQuery.flatMapMerge { query ->
-            setShimmerState(true)
             getChatrooms(query)
-        }.collect {
-            _chatrooms.postValue(it)
-            setShimmerState(false)
         }
+            .asState()
+            .collect(_chatrooms::postValue)
     }
 
     fun refreshCache() = launchIO {

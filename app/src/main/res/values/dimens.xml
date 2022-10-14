@@ -22,4 +22,5 @@
     <dimen name="minus_margin_8">-8dp</dimen>
     <dimen name="margin_48">48dp</dimen>
     <dimen name="margin_2">2dp</dimen>
+    <dimen name="margin_150">150dp</dimen>
 </resources>

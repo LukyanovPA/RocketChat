@@ -3,7 +3,6 @@ package com.pavellukyanov.rocketchat.presentation.feature.chatroom.create
 import android.net.Uri
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import com.pavellukyanov.rocketchat.domain.entity.State
 import com.pavellukyanov.rocketchat.domain.usecase.chatroom.ChatroomCreate
 import com.pavellukyanov.rocketchat.presentation.base.BaseViewModel
 import com.pavellukyanov.rocketchat.presentation.feature.chatroom.ChatRoomNavigator
@@ -51,15 +50,9 @@ class CreateChatRoomViewModel @Inject constructor(
                     chatroomName.value,
                     chatroomDescription.value,
                     _chatroomImg.value
-                ).collect { state ->
-                    when (state) {
-                        is State.Loading -> setShimmerState(true)
-                        is State.Success -> {
-                            setShimmerState(false)
-                            navigator.back()
-                        }
-                    }
-                }
+                )
+                    .asState()
+                    .collect { navigator.back() }
             }
         }
     }

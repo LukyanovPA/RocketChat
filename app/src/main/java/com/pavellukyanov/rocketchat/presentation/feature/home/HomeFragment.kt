@@ -2,6 +2,7 @@ package com.pavellukyanov.rocketchat.presentation.feature.home
 
 import android.os.Bundle
 import android.view.View
+import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.pavellukyanov.rocketchat.R
@@ -21,6 +22,7 @@ class HomeFragment : ChatRoomsAdapter.ChatRoomListener, BaseFragment<HomeViewMod
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        setShimmer(binding.phHomeChatroomList)
         bind()
         vm.refreshCache()
         vm.myAccount.observe(viewLifecycleOwner, ::setMyAccountData)
@@ -36,6 +38,11 @@ class HomeFragment : ChatRoomsAdapter.ChatRoomListener, BaseFragment<HomeViewMod
         mainAvatar.setOnClickListener { vm.changeAvatar() }
         mainSearch.setOnTextChangeListener { vm.search(it) }
         mainLogout.setOnClickListener { vm.onClickLogOut() }
+    }
+
+    override fun handleShimmerVisibility(state: Boolean) {
+        super.handleShimmerVisibility(state)
+        binding.mainChatroomList.isVisible = !state
     }
 
     override fun onItemClicked(item: Chatroom) {

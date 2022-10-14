@@ -47,7 +47,7 @@ abstract class BaseFragment<VM : BaseViewModel<*>>(
         vm.shimmerStateObserv().observe(viewLifecycleOwner, ::handleShimmerVisibility)
     }
 
-    private fun handleShimmerVisibility(state: Boolean) {
+    open fun handleShimmerVisibility(state: Boolean) {
         shimmer?.isVisible = state
     }
 

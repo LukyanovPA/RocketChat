@@ -4,19 +4,16 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
-import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
+import com.pavellukyanov.rocketchat.domain.entity.State
+import kotlinx.coroutines.*
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.flow.flatMapMerge
+import kotlinx.coroutines.flow.flow
 import timber.log.Timber
 
 abstract class BaseViewModel<N : BaseNavigator>(protected val navigator: N) : ViewModel() {
-    private val shimmerState = MutableStateFlow(false)
-
-    protected fun setShimmerState(state: Boolean) = launchCPU {
-        shimmerState.compareAndSet(shimmerState.value, state)
-    }
+    private val shimmerState = MutableStateFlow(true)
 
     fun shimmerStateObserv(): LiveData<Boolean> = shimmerState.asLiveData()
 
@@ -46,6 +43,20 @@ abstract class BaseViewModel<N : BaseNavigator>(protected val navigator: N) : Vi
 
     protected fun <T> MutableStateFlow<T>.asLiveData(): LiveData<T> =
         asLiveData(viewModelScope.coroutineContext)
+
+    @OptIn(FlowPreview::class)
+    protected fun <T> Flow<State<T>>.asState(): Flow<T> =
+        flatMapMerge { state ->
+            flow {
+                when (state) {
+                    is State.Loading -> shimmerState.emit(true)
+                    is State.Success -> {
+                        shimmerState.emit(false)
+                        emit(state.data)
+                    }
+                }
+            }
+        }
 
     companion object {
         private const val TAG = "ViewModelScopeError"
