@@ -68,8 +68,8 @@ class ChatFragment : BaseWebSocketFragment<ChatViewModel>(
         binding.messagesList.smoothScrollToPosition(messages.lastIndex + INT_ONE)
     }
 
-    override fun holderIsBind(isBind: Boolean) {
-        if (isBind) viewIsLoad()
+    override fun adapterIsVisible(isVisible: Boolean) {
+        if (isVisible) viewIsLoad()
     }
 
     override fun onItemClicked(item: ChatItem) {

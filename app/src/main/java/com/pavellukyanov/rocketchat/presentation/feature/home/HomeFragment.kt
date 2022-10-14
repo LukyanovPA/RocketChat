@@ -47,8 +47,8 @@ class HomeFragment : ChatRoomsAdapter.ChatRoomListener, BaseFragment<HomeViewMod
         vm.onChatRoomLongClicked(item)
     }
 
-    override fun holderIsBind(isBind: Boolean) {
-        if (isBind) viewIsLoad()
+    override fun adapterIsVisible(isVisible: Boolean) {
+        if (isVisible) viewIsLoad()
     }
 
     private fun setMyAccountData(myAccount: MyAccount) = with(binding) {
