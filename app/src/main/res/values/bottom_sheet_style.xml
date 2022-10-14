@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <style name="TransparentBottomSheetDialogTheme" parent="Theme.Design.Light.BottomSheetDialog">
+    <style name="TransparentBottomSheetDialogTheme" parent="Theme.Material3.Dark.BottomSheetDialog">
         <item name="android:windowIsTranslucent">true</item>
         <item name="android:windowContentOverlay">@null</item>
         <item name="android:colorBackground">@color/bottomSheetBlur</item>
