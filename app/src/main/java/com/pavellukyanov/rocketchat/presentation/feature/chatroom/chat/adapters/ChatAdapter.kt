@@ -9,9 +9,12 @@ import com.pavellukyanov.rocketchat.presentation.base.BaseViewHolder
 import com.pavellukyanov.rocketchat.presentation.feature.chatroom.chat.item.ChatItem
 import com.pavellukyanov.rocketchat.presentation.helper.ext.load
 import com.pavellukyanov.rocketchat.presentation.widget.CompositeAdapter
-import com.pavellukyanov.rocketchat.utils.Constants.AVATAR_PLACEHOLDER
 
-class ChatAdapter : CompositeAdapter() {
+class ChatAdapter(
+    chatListener: ChatListener
+) : CompositeAdapter<ChatItem>(chatListener) {
+
+    interface ChatListener : BaseAdapterListener<ChatItem>
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BaseViewHolder =
         when (viewType) {
@@ -38,7 +41,7 @@ class ChatAdapter : CompositeAdapter() {
             if (item is ChatItem.OtherMessage) {
                 with(binding) {
                     otherMessage.text = item.chatMessage.message
-                    senderAvatar.load(item.chatMessage.ownerAvatar ?: AVATAR_PLACEHOLDER, circleCrop = true)
+                    senderAvatar.load(item.chatMessage.ownerAvatar, circleCrop = true)
                     senderUsername.text = item.chatMessage.ownerUsername
                 }
             }

@@ -14,6 +14,7 @@ class SignUpViewModel @Inject constructor(
     navigator: AuthNavigator,
     private val registration: Registration
 ) : BaseViewModel<AuthNavigator>(navigator) {
+    override val shimmerState: MutableLiveData<Boolean> = MutableLiveData(false)
     private val email = MutableStateFlow(EMPTY_STRING)
     private val password = MutableStateFlow(EMPTY_STRING)
     private val nickname = MutableStateFlow(EMPTY_STRING)

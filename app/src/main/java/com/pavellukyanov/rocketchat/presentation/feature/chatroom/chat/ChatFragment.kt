@@ -2,7 +2,6 @@ package com.pavellukyanov.rocketchat.presentation.feature.chatroom.chat
 
 import android.os.Bundle
 import android.view.View
-import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.pavellukyanov.rocketchat.R
@@ -21,9 +20,9 @@ import com.pavellukyanov.rocketchat.utils.Constants.INT_ONE
 class ChatFragment : BaseWebSocketFragment<ChatViewModel>(
     ChatViewModel::class.java,
     R.layout.fragment_chat
-) {
+), ChatAdapter.ChatListener {
     private val binding by viewBinding(FragmentChatBinding::bind)
-    private val chatAdapter by lazy(LazyThreadSafetyMode.NONE) { ChatAdapter() }
+    private val chatAdapter by lazy(LazyThreadSafetyMode.NONE) { ChatAdapter(this) }
     private val chatUsersAdapter by lazy(LazyThreadSafetyMode.NONE) { ChatUsersAdapter() }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -64,14 +63,17 @@ class ChatFragment : BaseWebSocketFragment<ChatViewModel>(
         }
     }
 
-    override fun handleShimmerVisibility(state: Boolean) {
-        super.handleShimmerVisibility(state)
-        binding.messagesList.isVisible = !state
-    }
-
     private fun handleMessagesList(messages: List<ChatItem>) {
         chatAdapter.data = messages
         binding.messagesList.smoothScrollToPosition(messages.lastIndex + INT_ONE)
+    }
+
+    override fun holderIsBind(isBind: Boolean) {
+        if (isBind) viewIsLoad()
+    }
+
+    override fun onItemClicked(item: ChatItem) {
+        TODO("Not yet implemented")
     }
 
     private fun handleUsersAvatars(users: List<ChatUserItem>) {

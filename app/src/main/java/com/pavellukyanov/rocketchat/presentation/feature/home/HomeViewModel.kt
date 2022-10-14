@@ -35,6 +35,7 @@ class HomeViewModel @Inject constructor(
     private val fragmentResultHelper: FragmentResultHelper,
     private val userInfo: UserInfo
 ) : BaseViewModel<HomeNavigator>(navigator) {
+    override val shimmerState: MutableLiveData<Boolean> = MutableLiveData(true)
     private val searchQuery = MutableStateFlow(EMPTY_STRING)
     private val _myAccount = MutableLiveData<MyAccount>()
     private val _chatrooms = MutableLiveData<List<Chatroom>>()
@@ -94,8 +95,7 @@ class HomeViewModel @Inject constructor(
 
     private fun deleteChatRoom(chatroomId: String) = launchIO {
         chatRoomDelete(chatroomId)
-            .asState()
-            .collect { }
+            .asState { }
     }
 
     private fun setAvatar(uri: Uri) = launchIO {
@@ -113,8 +113,7 @@ class HomeViewModel @Inject constructor(
         searchQuery.flatMapMerge { query ->
             getChatrooms(query)
         }
-            .asState()
-            .collect(_chatrooms::postValue)
+            .asState { _chatrooms.postValue(it) }
     }
 
     fun refreshCache() = launchIO {

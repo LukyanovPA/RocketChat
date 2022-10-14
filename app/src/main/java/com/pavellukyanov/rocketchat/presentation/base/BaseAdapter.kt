@@ -34,6 +34,7 @@ abstract class BaseAdapter<D : Any>(
 
     override fun onBindViewHolder(holder: BaseViewHolder, position: Int) {
         holder.bind(getItem(holder, position))
+        listener?.holderIsBind(data.lastIndex == position)
         holder.itemView.setOnClickListener {
             listener?.onItemClicked(data[position])
         }
@@ -50,5 +51,6 @@ abstract class BaseAdapter<D : Any>(
     interface BaseAdapterListener<D> {
         fun onItemClicked(item: D)
         fun onLongClicked(item: D) {}
+        fun holderIsBind(isBind: Boolean) {}
     }
 }

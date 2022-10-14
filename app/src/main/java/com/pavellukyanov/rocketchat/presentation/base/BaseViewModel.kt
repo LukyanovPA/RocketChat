@@ -1,21 +1,23 @@
 package com.pavellukyanov.rocketchat.presentation.base
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.asLiveData
-import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.*
 import com.pavellukyanov.rocketchat.domain.entity.State
-import kotlinx.coroutines.*
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.flatMapMerge
-import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.launch
 import timber.log.Timber
 
 abstract class BaseViewModel<N : BaseNavigator>(protected val navigator: N) : ViewModel() {
-    protected val shimmerState = MutableStateFlow(true)
+    protected abstract val shimmerState: MutableLiveData<Boolean>
 
-    fun shimmerStateObserv(): LiveData<Boolean> = shimmerState.asLiveData()
+    fun shimmerStateObserv(): LiveData<Boolean> = shimmerState
+
+    fun viewIsLoad() {
+        shimmerState.value = false
+    }
 
     private fun onError(error: Throwable) = launchUI {
         error.message?.let { navigator.showGlobalErrorDialog(it) }
@@ -47,19 +49,15 @@ abstract class BaseViewModel<N : BaseNavigator>(protected val navigator: N) : Vi
     protected fun <T> Flow<T>.asLiveData(): LiveData<T> =
         asLiveData(viewModelScope.coroutineContext)
 
-    @OptIn(FlowPreview::class)
-    protected fun <T> Flow<State<T>>.asState(): Flow<T> =
-        flatMapMerge { state ->
-            flow {
+    protected fun <T> Flow<State<T>>.asState(onSuccess: suspend CoroutineScope.(T) -> Unit) = launchIO {
+        this@asState
+            .collect { state ->
                 when (state) {
-                    is State.Loading -> shimmerState.emit(true)
-                    is State.Success -> {
-                        shimmerState.emit(false)
-                        emit(state.data)
-                    }
+                    is State.Loading -> shimmerState.postValue(true)
+                    is State.Success -> onSuccess(state.data)
                 }
             }
-        }
+    }
 
     companion object {
         private const val TAG = "ViewModelScopeError"

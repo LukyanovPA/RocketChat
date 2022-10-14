@@ -17,6 +17,7 @@ import com.pavellukyanov.rocketchat.utils.Constants.INT_TWO
 import com.pavellukyanov.rocketchat.utils.Constants.INT_ZERO
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.flowOf
+import timber.log.Timber
 import javax.inject.Inject
 
 class ChatViewModel @Inject constructor(
@@ -27,6 +28,7 @@ class ChatViewModel @Inject constructor(
     private val refreshChatCache: RefreshChatCache,
     @ChatSessionQ private val session: WebSocketSession
 ) : BaseWebSocketViewModel<ChatRoomNavigator>(navigator) {
+    override val shimmerState: MutableLiveData<Boolean> = MutableLiveData(true)
     private val message = MutableStateFlow(EMPTY_STRING)
     private val buttonState = MutableStateFlow(false)
     private val _messages = MutableLiveData<List<ChatItem>>()
@@ -39,6 +41,12 @@ class ChatViewModel @Inject constructor(
         refreshCache()
         fetchMessages()
         observButtonState()
+
+        launchUI {
+            shimmerState.observeForever {
+                Timber.d("Smotrim $it")
+            }
+        }
     }
 
     override fun initSession() = launchIO { session.initSession(chatroom?.id!!) }
@@ -64,10 +72,9 @@ class ChatViewModel @Inject constructor(
 
     private fun fetchMessages() = launchIO {
         getMessages(chatroom?.id!!)
-            .asState()
-            .collect { list ->
-                fetchUsers(list)
+            .asState { list ->
                 _messages.postValue(list)
+                fetchUsers(list)
             }
     }
 

@@ -6,14 +6,13 @@ import com.pavellukyanov.rocketchat.data.cache.LocalDatabase
 import com.pavellukyanov.rocketchat.data.utils.WebSocketClient
 import com.pavellukyanov.rocketchat.data.utils.WebSocketHelper
 import com.pavellukyanov.rocketchat.data.utils.asData
+import com.pavellukyanov.rocketchat.domain.entity.State
 import com.pavellukyanov.rocketchat.domain.entity.chatroom.chat.ChatMessage
 import com.pavellukyanov.rocketchat.domain.repository.IChat
 import com.pavellukyanov.rocketchat.presentation.helper.NetworkMonitor
 import com.pavellukyanov.rocketchat.presentation.helper.handleInternetConnection
 import kotlinx.coroutines.FlowPreview
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flatMapMerge
-import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.*
 import okhttp3.Request
 import okhttp3.Response
 import okhttp3.WebSocket
@@ -67,10 +66,14 @@ class ChatRepository @Inject constructor(
         mWebSocket?.close(WebSocketHelper.NORMAL_CODE, WebSocketHelper.NORMAL_REASON)
     }
 
-    override suspend fun getMessages(chatroomId: String): Flow<List<ChatMessage>> =
+    override suspend fun getMessages(chatroomId: String): Flow<State<List<ChatMessage>>> =
         networkMonitor.handleInternetConnection()
             .flatMapMerge {
-                cache.messages().getMessages(chatroomId)
+                flowOf(State.Loading)
+                    .flatMapMerge {
+                        cache.messages().getMessages(chatroomId)
+                            .map { State.Success(it) }
+                    }
             }
 
     override suspend fun updateCache(chatroomId: String): Flow<Unit> =
