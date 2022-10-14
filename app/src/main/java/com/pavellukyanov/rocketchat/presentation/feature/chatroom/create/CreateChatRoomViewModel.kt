@@ -21,6 +21,10 @@ class CreateChatRoomViewModel @Inject constructor(
     private val _chatroomImg = MutableLiveData<Uri>()
     val chatroomImg: LiveData<Uri> = _chatroomImg
 
+    init {
+        launchCPU { shimmerState.emit(false) }
+    }
+
     fun changeChatroomImg() = launchCPU {
         galleryHelper.pickImagesWithCheckPermission(
             CreateChatRoomFragment.TAG,

@@ -13,7 +13,7 @@ import kotlinx.coroutines.flow.flow
 import timber.log.Timber
 
 abstract class BaseViewModel<N : BaseNavigator>(protected val navigator: N) : ViewModel() {
-    private val shimmerState = MutableStateFlow(true)
+    protected val shimmerState = MutableStateFlow(true)
 
     fun shimmerStateObserv(): LiveData<Boolean> = shimmerState.asLiveData()
 
