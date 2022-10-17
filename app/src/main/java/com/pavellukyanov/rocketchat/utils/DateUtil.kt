@@ -1,27 +1,21 @@
 package com.pavellukyanov.rocketchat.utils
 
-import android.annotation.SuppressLint
 import com.pavellukyanov.rocketchat.utils.Constants.INT_ONE
 import com.pavellukyanov.rocketchat.utils.Constants.INT_ZERO
-import java.text.SimpleDateFormat
 import java.time.Instant
 import java.time.LocalDate
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
-import java.util.Date
-import java.util.concurrent.TimeUnit
 
 object DateUtil {
     private val dateFormatter = DateTimeFormatter.ofPattern("d.MM.yyyy")
-    @SuppressLint("SimpleDateFormat")
-    private val timeFormatter = SimpleDateFormat("HH:mm")
+    private val timeFormatter = DateTimeFormatter.ofPattern("HH:mm")
 
     fun localDateToStringDate(date: LocalDate): String =
         date.format(dateFormatter)
 
     fun localDateToStringTime(date: Long): String {
-        val d = Date(TimeUnit.SECONDS.toMillis(date))
-        return timeFormatter.format(d)
+        return Instant.ofEpochMilli(date).atZone(ZoneId.systemDefault()).toLocalTime().format(timeFormatter)
     }
 
     fun longToLocalDate(dateLong: Long): LocalDate =
@@ -29,9 +23,6 @@ object DateUtil {
 
     fun longToDateStringDate(dateLong: Long): String =
         localDateToStringDate(longToLocalDate(dateLong))
-
-//    fun longToDateStringTime(dateLong: Long): String =
-//        localDateToStringTime(longToLocalDate(dateLong))
 
     fun dateCompareWithToday(localDate: LocalDate): String {
         val today = LocalDate.now()
