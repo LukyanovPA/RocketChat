@@ -2,6 +2,7 @@ package com.pavellukyanov.rocketchat.data.utils
 
 import com.pavellukyanov.rocketchat.data.cache.entity.ChatroomLocal
 import com.pavellukyanov.rocketchat.domain.entity.chatroom.Chatroom
+import com.pavellukyanov.rocketchat.utils.Constants.EMPTY_STRING
 
 fun ChatroomLocal.map(): Chatroom =
     Chatroom(
@@ -11,7 +12,8 @@ fun ChatroomLocal.map(): Chatroom =
         description = description,
         chatroomImg = chatroomImg,
         lastMessage = lastMessage,
-        lastMessageTimeStamp = lastMessageTimeStamp
+        lastMessageTimeStamp = lastMessageTimeStamp,
+        lastMessageOwnerUsername = lastMessageOwnerUsername
     )
 
 fun Chatroom.map(): ChatroomLocal =
@@ -22,5 +24,6 @@ fun Chatroom.map(): ChatroomLocal =
         description = description,
         chatroomImg = chatroomImg,
         lastMessage = lastMessage,
-        lastMessageTimeStamp = lastMessageTimeStamp
+        lastMessageTimeStamp = lastMessageTimeStamp,
+        lastMessageOwnerUsername = lastMessageOwnerUsername ?: EMPTY_STRING
     )

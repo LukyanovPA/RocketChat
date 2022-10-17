@@ -41,6 +41,21 @@ object DateUtil {
         }
     }
 
+    fun longCompareWithToday(longDate: Long): String {
+        val localDate = longToLocalDate(longDate)
+        val today = LocalDate.now()
+
+        return if (localDate.year != today.year || localDate.monthValue != today.monthValue) {
+            localDateToStringDate(localDate)
+        } else {
+            when (today.dayOfMonth - localDate.dayOfMonth) {
+                INT_ONE -> YESTERDAY
+                INT_ZERO -> localDateToStringTime(longDate)
+                else -> localDateToStringDate(localDate)
+            }
+        }
+    }
+
     private const val YESTERDAY = "Yesterday"
     private const val TODAY = "Today"
 }

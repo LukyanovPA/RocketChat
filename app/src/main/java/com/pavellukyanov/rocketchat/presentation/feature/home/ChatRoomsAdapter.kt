@@ -7,6 +7,7 @@ import com.pavellukyanov.rocketchat.domain.entity.chatroom.Chatroom
 import com.pavellukyanov.rocketchat.presentation.base.BaseAdapter
 import com.pavellukyanov.rocketchat.presentation.base.BaseViewHolder
 import com.pavellukyanov.rocketchat.presentation.helper.ext.load
+import com.pavellukyanov.rocketchat.utils.Constants.EMPTY_STRING
 import com.pavellukyanov.rocketchat.utils.DateUtil
 
 class ChatRoomsAdapter(
@@ -25,7 +26,8 @@ class ChatRoomsAdapter(
                     chatroomImg.load(item.chatroomImg, circleCrop = true)
                     chatroomName.text = item.name
                     chatroomLastMessage.text = item.lastMessage
-                    chatroomLastMessageTimestamp.text = DateUtil.longToDateStringDate(item.lastMessageTimeStamp)
+                    chatroomLastMessageTimestamp.text = DateUtil.longCompareWithToday(item.lastMessageTimeStamp)
+                    chatroomLastMessageOwnerUsername.text = item.lastMessageOwnerUsername ?: EMPTY_STRING
                 }
             }
         }
