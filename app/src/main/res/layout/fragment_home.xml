@@ -85,29 +85,32 @@
 
     </androidx.cardview.widget.CardView>
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/main_chatroom_list"
+    <com.google.android.material.tabs.TabLayout
+        android:id="@+id/home_tabs"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/margin_16"
         android:layout_marginTop="@dimen/margin_16"
+        android:background="@android:color/transparent"
+        android:clipToPadding="true"
+        app:tabGravity="center"
+        app:tabIndicatorColor="@color/white"
+        app:tabIndicatorFullWidth="false"
+        app:tabIndicatorHeight="@dimen/margin_0"
+        app:tabMode="scrollable"
+        app:tabPaddingEnd="@dimen/margin_0"
+        app:tabPaddingStart="@dimen/margin_0"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/create_chatroom_container" />
 
-    <com.facebook.shimmer.ShimmerFrameLayout
-        android:id="@+id/ph_home_chatroom_list"
+    <androidx.viewpager2.widget.ViewPager2
+        android:id="@+id/home_pager"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_marginTop="@dimen/margin_16"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/create_chatroom_container"
-        app:shimmer_duration="@integer/shimmer_duration">
-
-        <include layout="@layout/placeholder_home_chats" />
-
-    </com.facebook.shimmer.ShimmerFrameLayout>
-
+        app:layout_constraintTop_toBottomOf="@+id/home_tabs" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

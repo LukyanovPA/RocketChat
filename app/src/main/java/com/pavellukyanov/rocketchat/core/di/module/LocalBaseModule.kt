@@ -6,6 +6,7 @@ import com.pavellukyanov.rocketchat.data.cache.LocalDatabase
 import com.pavellukyanov.rocketchat.data.cache.dao.ChatroomsDao
 import com.pavellukyanov.rocketchat.data.cache.dao.MessagesDao
 import com.pavellukyanov.rocketchat.data.cache.dao.MyAccountDao
+import com.pavellukyanov.rocketchat.data.cache.dao.UsersDao
 import dagger.Module
 import dagger.Provides
 import javax.inject.Singleton
@@ -39,4 +40,9 @@ class LocalBaseModule {
     @Singleton
     fun provideMessagesDao(database: LocalDatabase): MessagesDao =
         database.messages()
+
+    @Provides
+    @Singleton
+    fun provideUsersDao(database: LocalDatabase): UsersDao =
+        database.users()
 }

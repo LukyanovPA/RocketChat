@@ -44,14 +44,12 @@ abstract class BaseFragment<VM : BaseViewModel<*>>(
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        vm.shimmerStateObserv().observe(viewLifecycleOwner, ::handleShimmerVisibility)
+        vm.shimmerStateObserv()?.observe(viewLifecycleOwner, ::handleShimmerVisibility)
     }
 
     protected open fun handleShimmerVisibility(state: Boolean) {
         shimmer?.isVisible = state
     }
-
-    protected fun viewIsLoad() = vm.viewIsLoad()
 
     override fun onAttach(context: Context) {
         AndroidSupportInjection.inject(this)

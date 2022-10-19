@@ -15,4 +15,7 @@ interface UsersApi {
     @Multipart
     @POST("users/changeAvatar")
     suspend fun changeAvatar(@Part file: MultipartBody.Part?): NetworkResponse<Boolean>
+
+    @GET("users/getAllUsers")
+    suspend fun getAllUsers(): NetworkResponse<List<User>>
 }

@@ -4,9 +4,12 @@ import com.pavellukyanov.rocketchat.presentation.feature.auth.signin.SignInFragm
 import com.pavellukyanov.rocketchat.presentation.feature.auth.signup.SignUpFragment
 import com.pavellukyanov.rocketchat.presentation.feature.chatroom.chat.ChatFragment
 import com.pavellukyanov.rocketchat.presentation.feature.chatroom.chat.ChatModule
+import com.pavellukyanov.rocketchat.presentation.feature.chatroom.chatrooms.ChatRoomsFragment
 import com.pavellukyanov.rocketchat.presentation.feature.chatroom.create.CreateChatRoomFragment
+import com.pavellukyanov.rocketchat.presentation.feature.chatroom.favourites.FavouritesChatRoomsFragment
 import com.pavellukyanov.rocketchat.presentation.feature.chatroom.options.ChatRoomOptionsFragment
 import com.pavellukyanov.rocketchat.presentation.feature.home.HomeFragment
+import com.pavellukyanov.rocketchat.presentation.feature.users.list.ListUsersFragment
 import dagger.Module
 import dagger.android.ContributesAndroidInjector
 
@@ -29,4 +32,13 @@ abstract class FragmentsModule {
 
     @ContributesAndroidInjector
     abstract fun chatRoomOptionsFragment(): ChatRoomOptionsFragment
+
+    @ContributesAndroidInjector
+    abstract fun chatRoomsFragment(): ChatRoomsFragment
+
+    @ContributesAndroidInjector
+    abstract fun favouritesChatRoomsFragment(): FavouritesChatRoomsFragment
+
+    @ContributesAndroidInjector
+    abstract fun listUsersFragment(): ListUsersFragment
 }

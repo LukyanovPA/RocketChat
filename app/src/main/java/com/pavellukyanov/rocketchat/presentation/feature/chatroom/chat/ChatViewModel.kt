@@ -24,6 +24,7 @@ class ChatViewModel @Inject constructor(
     private val refreshChatCache: RefreshChatCache,
     @ChatSessionQ private val session: WebSocketSession
 ) : BaseWebSocketViewModel<ChatRoomNavigator>(navigator) {
+    override val shimmerState: MutableStateFlow<Boolean> = MutableStateFlow(true)
     private val message = MutableStateFlow(EMPTY_STRING)
     private val buttonState = MutableStateFlow(false)
     private val _messages = MutableLiveData<List<ChatItem>>()

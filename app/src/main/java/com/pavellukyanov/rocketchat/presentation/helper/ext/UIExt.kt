@@ -13,6 +13,7 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.load.resource.bitmap.CenterCrop
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
+import com.google.android.material.tabs.TabLayout
 import com.google.android.material.textfield.TextInputEditText
 import com.pavellukyanov.rocketchat.utils.Constants.INT_TWENTY
 import com.pavellukyanov.rocketchat.utils.Constants.INT_ZERO
@@ -61,4 +62,24 @@ fun AppCompatImageView.load(
         }
         .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC)
         .into(this)
+}
+
+fun TabLayout.onTableSelected(
+    onReselected: ((TabLayout.Tab?) -> Unit)? = null,
+    onUnselected: ((TabLayout.Tab?) -> Unit)? = null,
+    onSelected: ((TabLayout.Tab?) -> Unit)? = null
+) {
+    this.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
+        override fun onTabReselected(tab: TabLayout.Tab?) {
+            onReselected?.invoke(tab)
+        }
+
+        override fun onTabUnselected(tab: TabLayout.Tab?) {
+            onUnselected?.invoke(tab)
+        }
+
+        override fun onTabSelected(tab: TabLayout.Tab?) {
+            onSelected?.invoke(tab)
+        }
+    })
 }

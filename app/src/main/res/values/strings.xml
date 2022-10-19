@@ -24,6 +24,9 @@
 
     //Home
     <string name="home_header">Hi, %1$s!</string>
+    <string name="home_tab_chat_rooms">Chatrooms</string>
+    <string name="home_tab_chat_favourites">Favourites</string>
+    <string name="home_tab_chat_users">Users</string>
 
     //Chatroom
     <string name="create_chatroom_empty_name_error">You have to come up with a name for your chatroom</string>

@@ -2,62 +2,83 @@ package com.pavellukyanov.rocketchat.presentation.feature.home
 
 import android.os.Bundle
 import android.view.View
-import androidx.recyclerview.widget.LinearLayoutManager
+import android.widget.TextView
 import by.kirich1409.viewbindingdelegate.viewBinding
+import com.google.android.material.tabs.TabLayoutMediator
 import com.pavellukyanov.rocketchat.R
 import com.pavellukyanov.rocketchat.databinding.FragmentHomeBinding
-import com.pavellukyanov.rocketchat.domain.entity.chatroom.Chatroom
+import com.pavellukyanov.rocketchat.databinding.TabHomePagerBinding
 import com.pavellukyanov.rocketchat.domain.entity.home.MyAccount
 import com.pavellukyanov.rocketchat.presentation.base.BaseFragment
+import com.pavellukyanov.rocketchat.presentation.base.PagerFragmentAdapter
+import com.pavellukyanov.rocketchat.presentation.feature.chatroom.chatrooms.ChatRoomsFragment
+import com.pavellukyanov.rocketchat.presentation.feature.chatroom.favourites.FavouritesChatRoomsFragment
+import com.pavellukyanov.rocketchat.presentation.feature.users.list.ListUsersFragment
 import com.pavellukyanov.rocketchat.presentation.helper.ext.load
+import com.pavellukyanov.rocketchat.presentation.helper.ext.onTableSelected
 import com.pavellukyanov.rocketchat.presentation.helper.ext.setOnTextChangeListener
 
-class HomeFragment : ChatRoomsAdapter.ChatRoomListener, BaseFragment<HomeViewModel>(
+class HomeFragment : BaseFragment<HomeViewModel>(
     HomeViewModel::class.java,
     R.layout.fragment_home
 ) {
     private val binding by viewBinding(FragmentHomeBinding::bind)
-    private val chatroomAdapter by lazy(LazyThreadSafetyMode.NONE) { ChatRoomsAdapter(this) }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        setShimmer(binding.phHomeChatroomList)
         bind()
         vm.refreshCache()
         vm.myAccount.observe(viewLifecycleOwner, ::setMyAccountData)
-        vm.chatrooms.observe(viewLifecycleOwner, ::handleChatroomList)
     }
 
     private fun bind() = with(binding) {
-        mainChatroomList.apply {
-            adapter = chatroomAdapter
-            layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
-        }
         createChatroomContainer.setOnClickListener { vm.createNewChatRoom() }
         mainAvatar.setOnClickListener { vm.changeAvatar() }
         mainSearch.setOnTextChangeListener { vm.search(it) }
         mainLogout.setOnClickListener { vm.onClickLogOut() }
-    }
 
-    override fun onItemClicked(item: Chatroom) {
-        vm.forwardToChatroom(item)
-    }
+        val frags = listOf(
+            ChatRoomsFragment.newInstance(),
+            FavouritesChatRoomsFragment.newInstance(),
+            ListUsersFragment.newInstance()
+        )
+        homePager.apply {
+            adapter = PagerFragmentAdapter(childFragmentManager, lifecycle)
+        }
+        val titles = listOf(R.string.home_tab_chat_rooms, R.string.home_tab_chat_favourites, R.string.home_tab_chat_users)
 
-    override fun onLongClicked(item: Chatroom) {
-        vm.onChatRoomLongClicked(item)
-    }
+        with(homeTabs) {
+            TabLayoutMediator(this, homePager, true, false) { tab, position ->
+                val tabBinding = TabHomePagerBinding.inflate(layoutInflater).tabHome
+                tab.customView = tabBinding
+                tabBinding.setText(titles[position])
+            }.attach()
 
-    override fun adapterIsVisible(isVisible: Boolean) {
-        if (isVisible) viewIsLoad()
+            onTableSelected(
+                onSelected = { tab ->
+                    (tab?.customView?.findViewById(R.id.tab_home) as? TextView)?.apply {
+                        setTextAppearance(R.style.RocketChat_H2)
+                    }
+                },
+                onUnselected = { tab ->
+                    (tab?.customView?.findViewById(R.id.tab_home) as? TextView)?.apply {
+                        setTextAppearance(R.style.RocketChat_SubTitle)
+                    }
+                }
+            )
+        }
+
+        homePager.apply {
+            if (adapter != null && adapter is PagerFragmentAdapter) {
+                offscreenPageLimit = frags.size
+                (adapter as PagerFragmentAdapter).update(frags)
+            }
+        }
     }
 
     private fun setMyAccountData(myAccount: MyAccount) = with(binding) {
         mainAvatar.load(myAccount.avatar, circleCrop = true)
         mainHeader.text = getString(R.string.home_header, myAccount.username)
-    }
-
-    private fun handleChatroomList(listChatroom: List<Chatroom>) {
-        chatroomAdapter.data = listChatroom
     }
 
     companion object {

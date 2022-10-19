@@ -14,12 +14,13 @@ import kotlinx.coroutines.launch
 import timber.log.Timber
 
 abstract class BaseViewModel<N : BaseNavigator>(protected val navigator: N) : ViewModel() {
-    protected val shimmerState = MutableStateFlow(true)
 
-    fun shimmerStateObserv(): LiveData<Boolean> = shimmerState.asLiveData()
+    open val shimmerState: MutableStateFlow<Boolean>? = null
 
-    fun viewIsLoad() {
-        shimmerState.compareAndSet(shimmerState.value, false)
+    fun shimmerStateObserv(): LiveData<Boolean>? = shimmerState?.asLiveData()
+
+    fun stopShimmer() = launchCPU {
+        shimmerState?.emit(false)
     }
 
     private fun onError(error: Throwable) = launchUI {
@@ -56,7 +57,7 @@ abstract class BaseViewModel<N : BaseNavigator>(protected val navigator: N) : Vi
         this@asState
             .collect { state ->
                 when (state) {
-                    is State.Loading -> shimmerState.emit(true)
+                    is State.Loading -> shimmerState?.emit(true)
                     is State.Success -> onSuccess(state.data)
                 }
             }

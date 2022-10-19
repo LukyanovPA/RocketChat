@@ -58,7 +58,7 @@ class ChatFragment : BaseWebSocketFragment<ChatViewModel>(
     }
 
     override fun adapterIsVisible(isVisible: Boolean) {
-        if (isVisible) viewIsLoad()
+        if (isVisible) vm.stopShimmer()
     }
 
     override fun onItemClicked(item: ChatItem) {

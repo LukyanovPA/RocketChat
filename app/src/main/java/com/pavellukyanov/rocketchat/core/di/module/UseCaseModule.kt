@@ -15,6 +15,8 @@ import com.pavellukyanov.rocketchat.domain.usecase.profile.ChangeAvatar
 import com.pavellukyanov.rocketchat.domain.usecase.profile.ChangeAvatarImpl
 import com.pavellukyanov.rocketchat.domain.usecase.profile.GetMyAccount
 import com.pavellukyanov.rocketchat.domain.usecase.profile.GetMyAccountImpl
+import com.pavellukyanov.rocketchat.domain.usecase.users.GetAllUsers
+import com.pavellukyanov.rocketchat.domain.usecase.users.GetAllUsersImpl
 import com.pavellukyanov.rocketchat.domain.utils.WebSocketSession
 import dagger.Binds
 import dagger.Module
@@ -61,4 +63,6 @@ abstract class UseCaseModule {
     @Binds
     abstract fun bindChatRoomDelete(impl: ChatRoomDeleteImpl): ChatRoomDelete
 
+    @Binds
+    abstract fun bindGetAllUsers(impl: GetAllUsersImpl): GetAllUsers
 }

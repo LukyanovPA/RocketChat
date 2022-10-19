@@ -1,4 +1,4 @@
-package com.pavellukyanov.rocketchat.presentation.feature.home
+package com.pavellukyanov.rocketchat.presentation.feature.chatroom.chatrooms
 
 import android.view.LayoutInflater
 import android.view.ViewGroup

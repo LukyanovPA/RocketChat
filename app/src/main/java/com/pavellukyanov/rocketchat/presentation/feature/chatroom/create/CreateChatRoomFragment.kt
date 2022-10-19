@@ -21,7 +21,7 @@ class CreateChatRoomFragment : BaseFragment<CreateChatRoomViewModel>(
         super.onViewCreated(view, savedInstanceState)
         bind()
         vm.chatroomImg.observe(viewLifecycleOwner, ::handleChatroomImg)
-        vm.shimmerStateObserv().observe(viewLifecycleOwner, ::handleLoadingState)
+        vm.shimmerStateObserv()?.observe(viewLifecycleOwner, ::handleLoadingState)
     }
 
     private fun bind() = with(binding) {
