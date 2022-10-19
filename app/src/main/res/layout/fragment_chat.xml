@@ -27,16 +27,15 @@
         app:layout_constraintTop_toTopOf="@+id/chat_arrow_back"
         tools:text="Cat chat" />
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/chat_users_list"
-        android:layout_width="@dimen/margin_0"
+    <TextView
+        android:id="@+id/chat_description"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginHorizontal="@dimen/margin_16"
-        android:layout_marginTop="@dimen/margin_16"
-        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/chat_arrow_back" />
+        android:textAppearance="@style/RocketChat.Body"
+        app:layout_constraintEnd_toEndOf="@+id/chat_name"
+        app:layout_constraintStart_toStartOf="@+id/chat_name"
+        app:layout_constraintTop_toBottomOf="@+id/chat_name"
+        tools:text="Cat description" />
 
     <com.facebook.shimmer.ShimmerFrameLayout
         android:id="@+id/ph_message_list"
@@ -46,7 +45,7 @@
         app:layout_constraintBottom_toTopOf="@+id/chat_button_send"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/chat_users_list"
+        app:layout_constraintTop_toBottomOf="@+id/chat_description"
         app:shimmer_duration="@integer/shimmer_duration">
 
         <include layout="@layout/placeholder_chat" />
@@ -63,7 +62,7 @@
         app:layout_constraintBottom_toTopOf="@+id/chat_button_send"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/chat_users_list"
+        app:layout_constraintTop_toBottomOf="@+id/chat_description"
         app:reverseLayout="false"
         app:stackFromEnd="true" />
 

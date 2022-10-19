@@ -1,15 +1,10 @@
 package com.pavellukyanov.rocketchat.domain.usecase.chatroom.chat
 
-import com.pavellukyanov.rocketchat.core.di.qualifiers.ChatUsersStorageQ
 import com.pavellukyanov.rocketchat.domain.entity.State
-import com.pavellukyanov.rocketchat.domain.entity.chatroom.chat.ChatMessage
 import com.pavellukyanov.rocketchat.domain.repository.IChat
-import com.pavellukyanov.rocketchat.domain.utils.ObjectStorage
 import com.pavellukyanov.rocketchat.domain.utils.UserInfo
 import com.pavellukyanov.rocketchat.domain.utils.asState
 import com.pavellukyanov.rocketchat.presentation.feature.chatroom.chat.item.ChatItem
-import com.pavellukyanov.rocketchat.presentation.feature.chatroom.chat.item.ChatUserItem
-import com.pavellukyanov.rocketchat.utils.Constants
 import com.pavellukyanov.rocketchat.utils.Constants.INT_ONE
 import com.pavellukyanov.rocketchat.utils.Constants.INT_ZERO
 import com.pavellukyanov.rocketchat.utils.DateUtil
@@ -21,13 +16,11 @@ interface GetMessages : suspend (String) -> Flow<State<List<ChatItem>>>
 
 class GetMessagesImpl @Inject constructor(
     private val repo: IChat,
-    private val userInfo: UserInfo,
-    @ChatUsersStorageQ private val storage: ObjectStorage<List<ChatUserItem>>
+    private val userInfo: UserInfo
 ) : GetMessages {
     override suspend fun invoke(chatroomId: String): Flow<State<List<ChatItem>>> =
         repo.getMessages(chatroomId)
             .map { messages ->
-                mapChatUsers(messages)
                 val list = mutableListOf<ChatItem>()
                 messages.forEachIndexed { index, message ->
                     if (index > INT_ZERO) {
@@ -47,15 +40,5 @@ class GetMessagesImpl @Inject constructor(
         val before = DateUtil.longToLocalDate(beforeDate)
         val current = DateUtil.longToLocalDate(currentDate)
         return if (current.isAfter(before)) ChatItem.ChatDateItem(DateUtil.dateCompareWithToday(before)) else null
-    }
-
-    private fun mapChatUsers(messages: List<ChatMessage>) {
-        storage.setObject(
-            messages.map { it.ownerAvatar }
-                .toSet()
-                .mapIndexed { index, avatar ->
-                    if (index % Constants.INT_TWO == INT_ZERO) ChatUserItem.UserUp(avatar) else ChatUserItem.UserBottom(avatar)
-                }
-        )
     }
 }

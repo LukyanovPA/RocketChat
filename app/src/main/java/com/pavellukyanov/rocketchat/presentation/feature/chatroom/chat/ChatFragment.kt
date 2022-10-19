@@ -9,9 +9,7 @@ import com.pavellukyanov.rocketchat.databinding.FragmentChatBinding
 import com.pavellukyanov.rocketchat.domain.entity.chatroom.Chatroom
 import com.pavellukyanov.rocketchat.presentation.base.BaseWebSocketFragment
 import com.pavellukyanov.rocketchat.presentation.feature.chatroom.chat.adapters.ChatAdapter
-import com.pavellukyanov.rocketchat.presentation.feature.chatroom.chat.adapters.ChatUsersAdapter
 import com.pavellukyanov.rocketchat.presentation.feature.chatroom.chat.item.ChatItem
-import com.pavellukyanov.rocketchat.presentation.feature.chatroom.chat.item.ChatUserItem
 import com.pavellukyanov.rocketchat.presentation.helper.ext.hideKeyboard
 import com.pavellukyanov.rocketchat.presentation.helper.ext.putArgs
 import com.pavellukyanov.rocketchat.presentation.helper.ext.setOnTextChangeListener
@@ -24,7 +22,6 @@ class ChatFragment : BaseWebSocketFragment<ChatViewModel>(
 ), ChatAdapter.ChatListener {
     private val binding by viewBinding(FragmentChatBinding::bind)
     private val chatAdapter by lazy(LazyThreadSafetyMode.NONE) { ChatAdapter(this) }
-    private val chatUsersAdapter by lazy(LazyThreadSafetyMode.NONE) { ChatUsersAdapter() }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -33,7 +30,6 @@ class ChatFragment : BaseWebSocketFragment<ChatViewModel>(
         vm.messages.observe(viewLifecycleOwner, ::handleMessagesList)
         vm.buttonIsEnable().observe(viewLifecycleOwner, ::handleButtonSendState)
         vm.chatroomValue.observe(viewLifecycleOwner, ::handleChatroomValue)
-        vm.users.observe(viewLifecycleOwner, ::handleUsersAvatars)
     }
 
     private fun bind() = with(binding) {
@@ -46,14 +42,6 @@ class ChatFragment : BaseWebSocketFragment<ChatViewModel>(
             ).apply {
                 stackFromEnd = true
             }
-        }
-        chatUsersList.apply {
-            adapter = chatUsersAdapter
-            layoutManager = LinearLayoutManager(
-                context,
-                LinearLayoutManager.HORIZONTAL,
-                false
-            )
         }
         chatArrowBack.setOnClickListener { vm.back() }
         sendMessageEdtx.setOnTextChangeListener(vm::writeMessage)
@@ -77,16 +65,13 @@ class ChatFragment : BaseWebSocketFragment<ChatViewModel>(
         Timber.d("Smotrim $item")
     }
 
-    private fun handleUsersAvatars(users: List<ChatUserItem>) {
-        chatUsersAdapter.data = users
-    }
-
     private fun handleButtonSendState(state: Boolean) {
         binding.chatButtonSend.isEnabled = state
     }
 
     private fun handleChatroomValue(chatroom: Chatroom?) = with(binding) {
         chatName.text = chatroom?.name
+        chatDescription.text = chatroom?.description
     }
 
     companion object {

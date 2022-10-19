@@ -3,17 +3,14 @@ package com.pavellukyanov.rocketchat.presentation.feature.chatroom.chat
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.pavellukyanov.rocketchat.core.di.qualifiers.ChatSessionQ
-import com.pavellukyanov.rocketchat.core.di.qualifiers.ChatUsersStorageQ
 import com.pavellukyanov.rocketchat.domain.entity.chatroom.Chatroom
 import com.pavellukyanov.rocketchat.domain.usecase.chatroom.chat.GetMessages
 import com.pavellukyanov.rocketchat.domain.usecase.chatroom.chat.RefreshChatCache
 import com.pavellukyanov.rocketchat.domain.usecase.chatroom.chat.SendMessage
-import com.pavellukyanov.rocketchat.domain.utils.ObjectStorage
 import com.pavellukyanov.rocketchat.domain.utils.WebSocketSession
 import com.pavellukyanov.rocketchat.presentation.base.BaseWebSocketViewModel
 import com.pavellukyanov.rocketchat.presentation.feature.chatroom.ChatRoomNavigator
 import com.pavellukyanov.rocketchat.presentation.feature.chatroom.chat.item.ChatItem
-import com.pavellukyanov.rocketchat.presentation.feature.chatroom.chat.item.ChatUserItem
 import com.pavellukyanov.rocketchat.utils.Constants.EMPTY_STRING
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.flowOf
@@ -25,21 +22,17 @@ class ChatViewModel @Inject constructor(
     private val getMessages: GetMessages,
     private val sendMessage: SendMessage,
     private val refreshChatCache: RefreshChatCache,
-    @ChatSessionQ private val session: WebSocketSession,
-    @ChatUsersStorageQ private val storage: ObjectStorage<List<ChatUserItem>>
+    @ChatSessionQ private val session: WebSocketSession
 ) : BaseWebSocketViewModel<ChatRoomNavigator>(navigator) {
     private val message = MutableStateFlow(EMPTY_STRING)
     private val buttonState = MutableStateFlow(false)
     private val _messages = MutableLiveData<List<ChatItem>>()
     val messages: LiveData<List<ChatItem>> = _messages
-    private val _users = MutableLiveData<List<ChatUserItem>>()
-    val users: LiveData<List<ChatUserItem>> = _users
     val chatroomValue = flowOf(chatroom).asLiveData()
 
     init {
         refreshCache()
         fetchMessages()
-        fetchUsers()
         observButtonState()
     }
 
@@ -69,10 +62,6 @@ class ChatViewModel @Inject constructor(
             .asState { list ->
                 _messages.postValue(list)
             }
-    }
-
-    private fun fetchUsers() = launchIO {
-        storage.value.collect(_users::postValue)
     }
 
     private fun refreshCache() = launchIO {
