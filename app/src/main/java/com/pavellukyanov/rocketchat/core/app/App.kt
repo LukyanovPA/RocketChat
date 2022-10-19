@@ -17,7 +17,7 @@ class App : Application(), HasAndroidInjector {
     override fun onCreate() {
         super.onCreate()
 
-        this.applicationContext.deleteDatabase("RocketChatDatabase.db")
+//        this.applicationContext.deleteDatabase("RocketChatDatabase.db")
 
         DaggerAppComponent
             .builder()

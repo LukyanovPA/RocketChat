@@ -27,6 +27,18 @@
         app:layout_constraintTop_toTopOf="@+id/chat_arrow_back"
         tools:text="Cat chat" />
 
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/chatroom_is_favourites"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/margin_8"
+        android:scaleType="centerCrop"
+        android:tint="@color/yellow"
+        app:layout_constraintBottom_toBottomOf="@+id/chat_name"
+        app:layout_constraintStart_toEndOf="@+id/chat_name"
+        app:layout_constraintTop_toTopOf="@+id/chat_name"
+        app:srcCompat="@drawable/ic_is_favourites" />
+
     <TextView
         android:id="@+id/chat_description"
         android:layout_width="wrap_content"

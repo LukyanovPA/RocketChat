@@ -1,4 +1,4 @@
-package com.pavellukyanov.rocketchat.domain.usecase.home
+package com.pavellukyanov.rocketchat.domain.usecase.chatroom
 
 import com.pavellukyanov.rocketchat.domain.entity.State
 import com.pavellukyanov.rocketchat.domain.entity.chatroom.Chatroom

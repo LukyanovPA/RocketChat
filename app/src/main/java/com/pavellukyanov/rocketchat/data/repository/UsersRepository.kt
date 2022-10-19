@@ -22,10 +22,13 @@ class UsersRepository @Inject constructor(
     override suspend fun getAllUsers(): Flow<List<User>> =
         cache.users().getAllUsers()
 
-    override suspend fun updateCache(): Flow<Unit> = networkMonitor.handleInternetConnection()
-        .flatMapMerge {
-            flow {
-                cache.users().insert(api.getAllUsers().asData())
+    override suspend fun updateCache(): Flow<Unit> =
+        networkMonitor.handleInternetConnection()
+            .flatMapMerge {
+                flow {
+                    val users = api.getAllUsers().asData()
+                    cache.users().insert(users)
+                    emit(Unit)
+                }
             }
-        }
 }

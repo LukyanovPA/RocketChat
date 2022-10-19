@@ -23,4 +23,5 @@
     <color name="back_dark">#272A35</color>
     <color name="back_light">#373E4E</color>
     <color name="bottomSheetBlur">#e7e7ec</color>
+    <color name="yellow">#FFC300</color>
 </resources>

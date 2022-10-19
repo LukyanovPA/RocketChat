@@ -13,7 +13,8 @@ fun ChatroomLocal.map(): Chatroom =
         chatroomImg = chatroomImg,
         lastMessage = lastMessage,
         lastMessageTimeStamp = lastMessageTimeStamp,
-        lastMessageOwnerUsername = lastMessageOwnerUsername
+        lastMessageOwnerUsername = lastMessageOwnerUsername,
+        isFavourites = isFavourites
     )
 
 fun Chatroom.map(): ChatroomLocal =
@@ -25,5 +26,6 @@ fun Chatroom.map(): ChatroomLocal =
         chatroomImg = chatroomImg,
         lastMessage = lastMessage,
         lastMessageTimeStamp = lastMessageTimeStamp,
-        lastMessageOwnerUsername = lastMessageOwnerUsername ?: EMPTY_STRING
+        lastMessageOwnerUsername = lastMessageOwnerUsername ?: EMPTY_STRING,
+        isFavourites = isFavourites
     )

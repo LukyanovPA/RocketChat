@@ -16,6 +16,18 @@
         app:layout_constraintTop_toTopOf="parent"
         tools:src="@tools:sample/avatars" />
 
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/chatroom_is_favourites"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/margin_8"
+        android:scaleType="centerCrop"
+        android:tint="@color/yellow"
+        app:layout_constraintBottom_toBottomOf="@+id/chatroom_name"
+        app:layout_constraintStart_toEndOf="@+id/chatroom_name"
+        app:layout_constraintTop_toTopOf="@+id/chatroom_name"
+        app:srcCompat="@drawable/ic_is_favourites" />
+
     <TextView
         android:id="@+id/chatroom_name"
         android:layout_width="wrap_content"
@@ -59,8 +71,8 @@
         android:layout_marginEnd="@dimen/margin_16"
         android:textAppearance="@style/RocketChat.Body.Bold"
         android:textColor="@color/light_green"
-        app:layout_constraintTop_toBottomOf="@+id/chatroom_last_message_timestamp"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/chatroom_last_message_timestamp"
         tools:text="pupa" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -7,14 +7,23 @@ import kotlinx.coroutines.flow.Flow
 @Dao
 interface ChatroomsDao {
     @Query("SELECT * FROM chatrooms")
-    fun getChatrooms(): Flow<List<ChatroomLocal>>
+    fun getChatroomsStream(): Flow<List<ChatroomLocal>>
+
+    @Query("SELECT * FROM chatrooms")
+    fun getChatrooms(): List<ChatroomLocal>
 
     @Query("SELECT * FROM chatrooms WHERE chatroomId = :chatRoomId")
-    fun getChatRoom(chatRoomId: String): ChatroomLocal
+    fun getChatRoom(chatRoomId: String): Flow<ChatroomLocal>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insert(newList: List<ChatroomLocal>)
+    suspend fun insert(newList: List<ChatroomLocal>)
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insert(chatroomLocal: ChatroomLocal)
 
     @Delete
-    fun delete(chatRoomLocal: ChatroomLocal)
+    suspend fun delete(chatRoomLocal: ChatroomLocal)
+
+    @Delete
+    suspend fun delete(chatRoomLocalList: List<ChatroomLocal>)
 }

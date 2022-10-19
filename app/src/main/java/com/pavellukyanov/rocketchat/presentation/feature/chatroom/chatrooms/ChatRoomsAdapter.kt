@@ -2,6 +2,7 @@ package com.pavellukyanov.rocketchat.presentation.feature.chatroom.chatrooms
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import com.pavellukyanov.rocketchat.R
 import com.pavellukyanov.rocketchat.databinding.ListItemChatroomBinding
 import com.pavellukyanov.rocketchat.domain.entity.chatroom.Chatroom
 import com.pavellukyanov.rocketchat.presentation.base.BaseAdapter
@@ -28,6 +29,9 @@ class ChatRoomsAdapter(
                     chatroomLastMessage.text = item.lastMessage
                     chatroomLastMessageTimestamp.text = DateUtil.longCompareWithToday(item.lastMessageTimeStamp)
                     chatroomLastMessageOwnerUsername.text = item.lastMessageOwnerUsername ?: EMPTY_STRING
+                    chatroomIsFavourites.setImageResource(
+                        if (item.isFavourites) R.drawable.ic_is_favourites else R.drawable.ic_is_not_favourites
+                    )
                 }
             }
         }

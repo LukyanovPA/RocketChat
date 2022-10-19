@@ -5,7 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import com.pavellukyanov.rocketchat.core.di.qualifiers.HomeSearchQ
 import com.pavellukyanov.rocketchat.domain.entity.chatroom.Chatroom
 import com.pavellukyanov.rocketchat.domain.usecase.chatroom.ChatRoomDelete
-import com.pavellukyanov.rocketchat.domain.usecase.home.GetChatRooms
+import com.pavellukyanov.rocketchat.domain.usecase.chatroom.GetChatRooms
 import com.pavellukyanov.rocketchat.domain.utils.ObjectStorage
 import com.pavellukyanov.rocketchat.domain.utils.UserInfo
 import com.pavellukyanov.rocketchat.presentation.base.BaseViewModel

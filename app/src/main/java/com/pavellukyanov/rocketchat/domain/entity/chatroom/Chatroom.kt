@@ -13,7 +13,8 @@ data class Chatroom(
     val chatroomImg: String,
     val lastMessageTimeStamp: Long,
     val lastMessage: String,
-    val lastMessageOwnerUsername: String?
+    val lastMessageOwnerUsername: String?,
+    @Transient val isFavourites: Boolean = false
 ) : Parcelable, SameItem {
     override fun isSame(item: SameItem): Boolean =
         item is Chatroom && id == item.id && lastMessageTimeStamp == item.lastMessageTimeStamp

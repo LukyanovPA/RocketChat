@@ -50,6 +50,7 @@ class ChatFragment : BaseWebSocketFragment<ChatViewModel>(
             hideKeyboard()
             binding.sendMessageEdtx.text?.clear()
         }
+        chatroomIsFavourites.setOnClickListener { vm.handleFavouritesState() }
     }
 
     private fun handleMessagesList(messages: List<ChatItem>) {
@@ -72,6 +73,7 @@ class ChatFragment : BaseWebSocketFragment<ChatViewModel>(
     private fun handleChatroomValue(chatroom: Chatroom?) = with(binding) {
         chatName.text = chatroom?.name
         chatDescription.text = chatroom?.description
+        chatroomIsFavourites.setImageResource(if (chatroom?.isFavourites == true) R.drawable.ic_is_favourites else R.drawable.ic_is_not_favourites)
     }
 
     companion object {

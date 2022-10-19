@@ -2,13 +2,8 @@ package com.pavellukyanov.rocketchat.core.di.module
 
 import com.pavellukyanov.rocketchat.core.di.qualifiers.ChatSessionQ
 import com.pavellukyanov.rocketchat.domain.usecase.auth.*
-import com.pavellukyanov.rocketchat.domain.usecase.chatroom.ChatRoomDelete
-import com.pavellukyanov.rocketchat.domain.usecase.chatroom.ChatRoomDeleteImpl
-import com.pavellukyanov.rocketchat.domain.usecase.chatroom.ChatroomCreate
-import com.pavellukyanov.rocketchat.domain.usecase.chatroom.ChatroomCreateImpl
+import com.pavellukyanov.rocketchat.domain.usecase.chatroom.*
 import com.pavellukyanov.rocketchat.domain.usecase.chatroom.chat.*
-import com.pavellukyanov.rocketchat.domain.usecase.home.GetChatRooms
-import com.pavellukyanov.rocketchat.domain.usecase.home.GetChatRoomsImpl
 import com.pavellukyanov.rocketchat.domain.usecase.home.RefreshChatroomsCache
 import com.pavellukyanov.rocketchat.domain.usecase.home.RefreshChatroomsCacheImpl
 import com.pavellukyanov.rocketchat.domain.usecase.profile.ChangeAvatar
@@ -65,4 +60,13 @@ abstract class UseCaseModule {
 
     @Binds
     abstract fun bindGetAllUsers(impl: GetAllUsersImpl): GetAllUsers
+
+    @Binds
+    abstract fun bindGetFavourites(impl: GetFavouritesImpl): GetFavourites
+
+    @Binds
+    abstract fun bindChangeFavouritesState(impl: ChangeFavouritesStateImpl): ChangeFavouritesState
+
+    @Binds
+    abstract fun bindGetChatRoom(impl: GetChatRoomImpl): GetChatRoom
 }
