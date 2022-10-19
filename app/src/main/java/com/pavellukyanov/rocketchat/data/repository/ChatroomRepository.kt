@@ -67,32 +67,24 @@ class ChatroomRepository @Inject constructor(
                         mapChatRooms(local, network)
                     }
                     .flatMapMerge { local ->
+                        cache.chatroomsDao().delete()
                         cache.chatroomsDao().insert(local)
                         flowOf(Unit)
                     }
             }
 
-    private suspend fun mapChatRooms(local: List<ChatroomLocal>, network: List<Chatroom>): List<ChatroomLocal> {
-        val localList = local.toMutableList()
-        val listDelete = mutableListOf<ChatroomLocal>()
-        network.forEach { networkRoom ->
-            local.find { it.chatroomId != networkRoom.id }?.let { listDelete.add(it) }
-        }
-        cache.chatroomsDao().delete(listDelete)
-        localList.removeAll(listDelete)
-
-        val newList = mutableListOf<ChatroomLocal>()
-        network.forEach { networkRoom ->
-            val sameChatroom = localList.find { it.chatroomId == networkRoom.id }
-            val newLocal = networkRoom.map()
-            if (sameChatroom != null) {
-                newList.add(newLocal.copy(isFavourites = sameChatroom.isFavourites))
+    private fun mapChatRooms(local: List<ChatroomLocal>, network: List<Chatroom>): List<ChatroomLocal> =
+        network.map { networkRoom ->
+            val localRoom = local.find { it.chatroomId == networkRoom.id }
+            if (localRoom != null) {
+                val new = networkRoom.copy(
+                    isFavourites = localRoom.isFavourites
+                )
+                new.map()
             } else {
-                newList.add(newLocal)
+                networkRoom.map()
             }
         }
-        return newList
-    }
 
     override suspend fun deleteChatRoom(chatroomId: String): Flow<State<Boolean>> =
         networkMonitor.handleInternetConnection()

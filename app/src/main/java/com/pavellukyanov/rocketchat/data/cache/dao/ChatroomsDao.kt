@@ -26,4 +26,7 @@ interface ChatroomsDao {
 
     @Delete
     suspend fun delete(chatRoomLocalList: List<ChatroomLocal>)
+
+    @Query("DELETE FROM chatrooms")
+    suspend fun delete()
 }
