@@ -47,10 +47,9 @@ class SignUpViewModel @Inject constructor(
     }
 
     fun signUp() = launchIO {
-        registration(nickname.value, email.value, password.value)
-            .collect { state ->
-                if (state) launchUI { navigator.forwardToHome() }
-            }
+        handleResponseState(registration(nickname.value, email.value, password.value)) {
+            launchUI { navigator.forwardToHome() }
+        }
     }
 
     fun forwardToSignIn() = navigator.forwardToSignIn()

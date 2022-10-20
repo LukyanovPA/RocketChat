@@ -1,5 +1,6 @@
 package com.pavellukyanov.rocketchat.data.api
 
+import com.pavellukyanov.rocketchat.data.utils.BaseResponse
 import com.pavellukyanov.rocketchat.data.utils.networkadapter.NetworkResponse
 import com.pavellukyanov.rocketchat.domain.entity.users.User
 import okhttp3.MultipartBody
@@ -10,12 +11,12 @@ import retrofit2.http.Part
 
 interface UsersApi {
     @GET("users/currentUser")
-    suspend fun getCurrentUser(): NetworkResponse<User>
+    suspend fun getCurrentUser(): NetworkResponse<BaseResponse<User>>
 
     @Multipart
     @POST("users/changeAvatar")
     suspend fun changeAvatar(@Part file: MultipartBody.Part?): NetworkResponse<Boolean>
 
     @GET("users/getAllUsers")
-    suspend fun getAllUsers(): NetworkResponse<List<User>>
+    suspend fun getAllUsers(): NetworkResponse<BaseResponse<List<User>>>
 }

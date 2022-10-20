@@ -38,10 +38,9 @@ class SignInViewModel @Inject constructor(
     }
 
     fun signIn() = launchIO {
-        login(email.value, password.value)
-            .collect { state ->
-                if (state) launchUI { navigator.forwardToHome() }
-            }
+        handleResponseState(login(email.value, password.value)) {
+            launchUI { navigator.forwardToHome() }
+        }
     }
 
     fun forwardToSignUp() = navigator.forwardToSignUp()

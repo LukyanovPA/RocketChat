@@ -4,6 +4,7 @@ import android.net.Uri
 import com.pavellukyanov.rocketchat.data.api.UsersApi
 import com.pavellukyanov.rocketchat.data.cache.LocalDatabase
 import com.pavellukyanov.rocketchat.data.utils.asData
+import com.pavellukyanov.rocketchat.data.utils.asResponse
 import com.pavellukyanov.rocketchat.data.utils.file.FileInfoHelper
 import com.pavellukyanov.rocketchat.data.utils.file.RequestHelper
 import com.pavellukyanov.rocketchat.domain.entity.home.MyAccount
@@ -56,7 +57,7 @@ class HomeRepository @Inject constructor(
         networkMonitor.handleInternetConnection()
             .flatMapMerge {
                 flow {
-                    api.getCurrentUser().asData().also {
+                    api.getCurrentUser().asResponse().also {
                         userStorage.user = it
                     }
                     cache.myAccountDao().insert(

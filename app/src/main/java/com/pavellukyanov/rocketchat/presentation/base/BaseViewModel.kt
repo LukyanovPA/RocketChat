@@ -4,6 +4,8 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
+import com.pavellukyanov.rocketchat.data.utils.ResponseState
+import com.pavellukyanov.rocketchat.data.utils.errors.ApiException
 import com.pavellukyanov.rocketchat.domain.entity.State
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
@@ -24,7 +26,17 @@ abstract class BaseViewModel<N : BaseNavigator>(protected val navigator: N) : Vi
     }
 
     private fun onError(error: Throwable) = launchUI {
-        error.message?.let { navigator.showGlobalErrorDialog(it) }
+        when (error) {
+            is ApiException.UnauthorizedException -> navigator.toSignIn()
+            else -> error.message?.let { navigator.showGlobalErrorDialog(it) }
+        }
+    }
+
+    open fun <T> handleResponseState(state: ResponseState<T>, onSuccess: (T) -> Unit) {
+        when (state) {
+            is ResponseState.Success -> onSuccess(state.data)
+            is ResponseState.ServerErrors -> launchUI { navigator.showGlobalErrorDialog(state.errorMessage!!) }
+        }
     }
 
     protected fun launchUI(action: suspend CoroutineScope.() -> Unit) =

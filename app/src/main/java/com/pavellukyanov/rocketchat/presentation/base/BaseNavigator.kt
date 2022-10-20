@@ -4,6 +4,7 @@ import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import com.pavellukyanov.rocketchat.R
+import com.pavellukyanov.rocketchat.presentation.feature.auth.signin.SignInFragment
 
 abstract class BaseNavigator(
     val fragmentManager: FragmentManager
@@ -47,5 +48,9 @@ abstract class BaseNavigator(
                 closeButtonRes = R.string.global_error_button_close
             ), SimpleDialogFragment.TAG
         )
+    }
+
+    fun toSignIn() {
+        replace(SignInFragment.newInstance(), SignInFragment.TAG)
     }
 }
