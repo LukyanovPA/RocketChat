@@ -32,7 +32,7 @@ abstract class BaseViewModel<N : BaseNavigator>(protected val navigator: N) : Vi
         }
     }
 
-    open fun <T> handleResponseState(state: ResponseState<T>, onSuccess: (T) -> Unit) {
+    protected open fun <T> handleResponseState(state: ResponseState<T>, onSuccess: (T) -> Unit) {
         when (state) {
             is ResponseState.Success -> onSuccess(state.data)
             is ResponseState.ServerErrors -> launchUI { navigator.showGlobalErrorDialog(state.errorMessage!!) }

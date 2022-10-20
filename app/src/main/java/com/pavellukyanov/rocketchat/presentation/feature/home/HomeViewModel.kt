@@ -49,7 +49,7 @@ class HomeViewModel @Inject constructor(
     }
 
     fun onClickLogOut() = launchIO {
-        logOut().collect {
+        handleResponseState(logOut()) {
             launchUI { navigator.forwardToSignIn() }
         }
     }

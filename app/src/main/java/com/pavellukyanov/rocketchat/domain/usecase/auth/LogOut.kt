@@ -1,14 +1,14 @@
 package com.pavellukyanov.rocketchat.domain.usecase.auth
 
+import com.pavellukyanov.rocketchat.data.utils.ResponseState
 import com.pavellukyanov.rocketchat.domain.repository.IAuth
-import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
-interface LogOut : suspend () -> Flow<Unit>
+interface LogOut : suspend () -> ResponseState<Boolean>
 
 class LogOutImpl @Inject constructor(
     private val iAuth: IAuth
 ) : LogOut {
-    override suspend operator fun invoke(): Flow<Unit> =
+    override suspend operator fun invoke(): ResponseState<Boolean> =
         iAuth.logout()
 }
