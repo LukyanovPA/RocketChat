@@ -6,7 +6,6 @@ import com.pavellukyanov.rocketchat.data.utils.networkadapter.NetworkResponse
 import com.pavellukyanov.rocketchat.domain.entity.auth.SignInRequest
 import com.pavellukyanov.rocketchat.domain.entity.auth.SignUpRequest
 import com.pavellukyanov.rocketchat.domain.entity.auth.TokenResponse
-import com.pavellukyanov.rocketchat.domain.entity.users.User
 import retrofit2.Call
 import retrofit2.http.Body
 import retrofit2.http.GET
@@ -22,7 +21,7 @@ interface AuthApi {
     suspend fun signIn(@Body signInRequest: SignInRequest): NetworkResponse<BaseResponse<TokenResponse>>
 
     @POST("auth/updateToken")
-    fun updateToken(@Query(ApiParams.REFRESH_TOKEN) refreshToken: String?): Call<TokenResponse>
+    fun updateToken(@Query(ApiParams.REFRESH_TOKEN) refreshToken: String?): Call<BaseResponse<TokenResponse>>
 
     @GET("auth/logout")
     suspend fun logout(): NetworkResponse<BaseResponse<Boolean>>

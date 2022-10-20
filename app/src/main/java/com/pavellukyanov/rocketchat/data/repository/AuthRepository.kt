@@ -29,7 +29,7 @@ class AuthRepository @Inject constructor(
 
     override fun updateToken() {
         api.updateToken(userStorage.tokens?.refreshToken).asData().also {
-            userStorage.tokens = it
+            userStorage.tokens = it.data
         }
     }
 

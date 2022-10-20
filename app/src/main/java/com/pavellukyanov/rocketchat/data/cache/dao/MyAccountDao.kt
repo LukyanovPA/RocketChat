@@ -13,8 +13,8 @@ interface MyAccountDao {
     fun getMyAccount(): Flow<List<MyAccount>>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insert(myAccount: MyAccount)
+    suspend fun insert(myAccount: MyAccount)
 
     @Query("DELETE FROM my_account")
-    fun delete()
+    suspend fun delete()
 }

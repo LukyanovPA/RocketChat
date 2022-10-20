@@ -54,11 +54,7 @@ class HomeViewModel @Inject constructor(
         }
     }
 
-    private fun setAvatar(uri: Uri) = launchIO {
-        changeAvatar(uri).collect { state ->
-            if (state) fetchMyAccount()
-        }
-    }
+    private fun setAvatar(uri: Uri) = launchIO { changeAvatar(uri) }
 
     private fun fetchMyAccount() = launchIO {
         getMyAccount().collect(_myAccount::postValue)
