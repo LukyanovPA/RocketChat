@@ -27,7 +27,7 @@ class HomeRepository @Inject constructor(
     private val userStorage: UserInfo
 ) : IHome {
     override suspend fun getMyAccount(): Flow<MyAccount> =
-        cache.myAccountDao().getMyAccount()
+        cache.myAccount().getMyAccount()
             .map { it.firstOrNull() }
             .flatMapMerge { account ->
                 flow {
@@ -57,7 +57,7 @@ class HomeRepository @Inject constructor(
     }
 
     private suspend fun updateMyAccount() {
-        cache.myAccountDao().insert(
+        cache.myAccount().insert(
             MyAccount(
                 uuid = userStorage.user?.uuid!!,
                 username = userStorage.user?.username!!,

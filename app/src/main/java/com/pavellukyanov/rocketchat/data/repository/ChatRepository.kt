@@ -1,12 +1,11 @@
 package com.pavellukyanov.rocketchat.data.repository
 
-import com.google.gson.Gson
 import com.pavellukyanov.rocketchat.data.api.ChatApi
 import com.pavellukyanov.rocketchat.data.cache.LocalDatabase
-import com.pavellukyanov.rocketchat.data.utils.WebSocketClient
-import com.pavellukyanov.rocketchat.data.utils.WebSocketHelper
-import com.pavellukyanov.rocketchat.data.utils.asData
+import com.pavellukyanov.rocketchat.data.utils.asResponse
 import com.pavellukyanov.rocketchat.domain.entity.chatroom.chat.ChatMessage
+import com.pavellukyanov.rocketchat.domain.entity.chatroom.chat.SocketMessage
+import com.pavellukyanov.rocketchat.domain.repository.ChatWebSocket
 import com.pavellukyanov.rocketchat.domain.repository.IChat
 import com.pavellukyanov.rocketchat.presentation.helper.NetworkMonitor
 import com.pavellukyanov.rocketchat.presentation.helper.handleInternetConnection
@@ -14,10 +13,6 @@ import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flatMapMerge
 import kotlinx.coroutines.flow.flow
-import okhttp3.Request
-import okhttp3.Response
-import okhttp3.WebSocket
-import okhttp3.WebSocketListener
 import javax.inject.Inject
 
 @OptIn(FlowPreview::class)
@@ -25,46 +20,19 @@ class ChatRepository @Inject constructor(
     private val cache: LocalDatabase,
     private val networkMonitor: NetworkMonitor,
     private val api: ChatApi,
-    private val webSocketClient: WebSocketClient,
-    private val gson: Gson
+    private val chatWebSocket: ChatWebSocket
 ) : IChat {
-    private var mWebSocket: WebSocket? = null
 
-    override suspend fun initSession(chatroomId: String) {
-        val request = Request.Builder()
-            .url(WebSocketHelper.getChatUrl(chatroomId))
-            .build()
-
-        webSocketClient.getWebSocketClient()
-            .newWebSocket(request, object : WebSocketListener() {
-                override fun onOpen(webSocket: WebSocket, response: Response) {
-                    super.onOpen(webSocket, response)
-                    mWebSocket = webSocket
-                }
-
-                override fun onMessage(webSocket: WebSocket, text: String) {
-                    super.onMessage(webSocket, text)
-                    val message = gson.fromJson(
-                        text,
-                        ChatMessage::class.java
-                    )
-                    cache.messages().insert(message)
-                }
-
-                override fun onFailure(webSocket: WebSocket, t: Throwable, response: Response?) {
-                    super.onFailure(webSocket, t, response)
-                    throw t
-                }
-            })
+    override suspend fun initSession() {
+        chatWebSocket.initSession(cache.messages()::insert)
     }
 
-    override suspend fun sendMessage(message: String): Boolean =
-        mWebSocket?.send(message) ?: false
-
-
     override suspend fun closeSession() {
-        mWebSocket?.cancel()
-        mWebSocket?.close(WebSocketHelper.NORMAL_CODE, WebSocketHelper.NORMAL_REASON)
+        chatWebSocket.closeSession()
+    }
+
+    override suspend fun sendMessage(message: SocketMessage) {
+        chatWebSocket.sendMessage(message)
     }
 
     override suspend fun getMessages(chatroomId: String): Flow<List<ChatMessage>> =
@@ -74,7 +42,7 @@ class ChatRepository @Inject constructor(
         networkMonitor.handleInternetConnection()
             .flatMapMerge {
                 flow {
-                    val messages = api.getMessages(chatroomId).asData()
+                    val messages = api.getMessages(chatroomId).asResponse()
                     cache.messages().insert(messages)
                     emit(Unit)
                 }

@@ -29,12 +29,12 @@ class LocalBaseModule {
     @Provides
     @Singleton
     fun provideChatroomsDao(database: LocalDatabase): ChatroomsDao =
-        database.chatroomsDao()
+        database.chatrooms()
 
     @Provides
     @Singleton
     fun provideMyAccountDao(database: LocalDatabase): MyAccountDao =
-        database.myAccountDao()
+        database.myAccount()
 
     @Provides
     @Singleton

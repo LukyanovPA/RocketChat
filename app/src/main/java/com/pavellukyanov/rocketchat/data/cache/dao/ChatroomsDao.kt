@@ -19,7 +19,7 @@ interface ChatroomsDao {
     suspend fun insert(newList: List<ChatroomLocal>)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insert(chatroomLocal: ChatroomLocal)
+    fun insert(chatroomLocal: ChatroomLocal)
 
     @Delete
     suspend fun delete(chatRoomLocal: ChatroomLocal)

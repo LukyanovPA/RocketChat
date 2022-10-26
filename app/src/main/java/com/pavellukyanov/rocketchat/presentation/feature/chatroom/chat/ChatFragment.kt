@@ -7,7 +7,7 @@ import by.kirich1409.viewbindingdelegate.viewBinding
 import com.pavellukyanov.rocketchat.R
 import com.pavellukyanov.rocketchat.databinding.FragmentChatBinding
 import com.pavellukyanov.rocketchat.domain.entity.chatroom.Chatroom
-import com.pavellukyanov.rocketchat.presentation.base.BaseWebSocketFragment
+import com.pavellukyanov.rocketchat.presentation.base.BaseFragment
 import com.pavellukyanov.rocketchat.presentation.feature.chatroom.chat.adapters.ChatAdapter
 import com.pavellukyanov.rocketchat.presentation.feature.chatroom.chat.item.ChatItem
 import com.pavellukyanov.rocketchat.presentation.helper.ext.hideKeyboard
@@ -16,7 +16,7 @@ import com.pavellukyanov.rocketchat.presentation.helper.ext.setOnTextChangeListe
 import com.pavellukyanov.rocketchat.utils.Constants.INT_ONE
 import timber.log.Timber
 
-class ChatFragment : BaseWebSocketFragment<ChatViewModel>(
+class ChatFragment : BaseFragment<ChatViewModel>(
     ChatViewModel::class.java,
     R.layout.fragment_chat
 ), ChatAdapter.ChatListener {

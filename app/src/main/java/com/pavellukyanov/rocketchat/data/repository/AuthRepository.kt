@@ -42,7 +42,7 @@ class AuthRepository @Inject constructor(
         api.logout().asResponseState().also { state ->
             if (state is ResponseState.Success) {
                 clearData()
-                cache.myAccountDao().delete()
+                cache.myAccount().delete()
             }
         }
 }

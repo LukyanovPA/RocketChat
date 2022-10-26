@@ -6,6 +6,7 @@ import com.pavellukyanov.rocketchat.data.cache.LocalDatabase
 import com.pavellukyanov.rocketchat.data.cache.entity.ChatroomLocal
 import com.pavellukyanov.rocketchat.data.utils.ApiParams
 import com.pavellukyanov.rocketchat.data.utils.asData
+import com.pavellukyanov.rocketchat.data.utils.asResponse
 import com.pavellukyanov.rocketchat.data.utils.file.FileInfoHelper
 import com.pavellukyanov.rocketchat.data.utils.file.RequestHelper
 import com.pavellukyanov.rocketchat.data.utils.map
@@ -29,6 +30,7 @@ class ChatroomRepository @Inject constructor(
     private val networkMonitor: NetworkMonitor,
     private val api: ChatroomApi
 ) : IChatroom {
+
     override suspend fun createChatroom(
         chatroomName: String,
         chatroomDescription: String,
@@ -51,24 +53,24 @@ class ChatroomRepository @Inject constructor(
                         }
                     }
 
-                    emit(State.Success(api.createChatroom(partMap, file).asData()))
+                    emit(State.Success(api.createChatroom(partMap, file).asResponse()))
                 }
             }
 
     override suspend fun getChatrooms(): Flow<List<Chatroom>> =
-        cache.chatroomsDao().getChatroomsStream()
+        cache.chatrooms().getChatroomsStream()
             .map { localCache -> localCache.map { it.map() } }
 
     override suspend fun updateCache(): Flow<Unit> =
         networkMonitor.handleInternetConnection()
             .flatMapMerge {
                 flowOf(api.getAllChatRooms().asData())
-                    .combine(flowOf(cache.chatroomsDao().getChatrooms())) { network, local ->
+                    .combine(flowOf(cache.chatrooms().getChatrooms())) { network, local ->
                         mapChatRooms(local, network)
                     }
                     .flatMapMerge { local ->
-                        cache.chatroomsDao().delete()
-                        cache.chatroomsDao().insert(local)
+                        cache.chatrooms().delete()
+                        cache.chatrooms().insert(local)
                         flowOf(Unit)
                     }
             }
@@ -93,10 +95,10 @@ class ChatroomRepository @Inject constructor(
                     emit(State.Loading)
                     val state = api.deleteChatRoom(chatroomId).asData()
                     if (state) {
-                        cache.chatroomsDao().getChatRoom(chatroomId)
+                        cache.chatrooms().getChatRoom(chatroomId)
                             .flatMapMerge { chatRoomLocal ->
                                 flow {
-                                    cache.chatroomsDao().delete(chatRoomLocal)
+                                    cache.chatrooms().delete(chatRoomLocal)
                                     emit(State.Success(true))
                                 }
                             }
@@ -108,16 +110,16 @@ class ChatroomRepository @Inject constructor(
 
     override suspend fun changeFavouritesState(chatroom: Chatroom): Flow<Unit> =
         flow {
-            cache.chatroomsDao().insert(chatroom.map())
+            cache.chatrooms().insert(chatroom.map())
             emit(Unit)
         }
 
     override suspend fun getFavourites(): Flow<List<Chatroom>> =
-        cache.chatroomsDao().getChatroomsStream()
+        cache.chatrooms().getChatroomsStream()
             .map { rooms -> rooms.filter { it.isFavourites }.map { it.map() } }
 
     override suspend fun getChatRoom(chatroomId: String): Flow<Chatroom> =
-        cache.chatroomsDao().getChatRoom(chatroomId)
+        cache.chatrooms().getChatRoom(chatroomId)
             .map { it.map() }
 
     companion object {

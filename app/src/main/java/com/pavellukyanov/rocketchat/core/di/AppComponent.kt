@@ -19,7 +19,8 @@ import javax.inject.Singleton
         LocalBaseModule::class,
         ApiModule::class,
         GsonModule::class,
-        StorageModule::class
+        StorageModule::class,
+        WebSocketModule::class
     ]
 )
 interface AppComponent : AndroidInjector<App> {

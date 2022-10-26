@@ -29,7 +29,6 @@ class UserInfoStorage @Inject constructor(
             saveSync(TOKEN_KEY, value)
         }
 
-
     override var user: User? = null
 
     companion object {

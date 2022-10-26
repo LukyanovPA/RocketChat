@@ -24,8 +24,8 @@ import com.pavellukyanov.rocketchat.domain.entity.users.User
 )
 @TypeConverters(MyAccountConverter::class)
 abstract class LocalDatabase : RoomDatabase() {
-    abstract fun chatroomsDao(): ChatroomsDao
-    abstract fun myAccountDao(): MyAccountDao
+    abstract fun chatrooms(): ChatroomsDao
+    abstract fun myAccount(): MyAccountDao
     abstract fun messages(): MessagesDao
     abstract fun users(): UsersDao
 }
