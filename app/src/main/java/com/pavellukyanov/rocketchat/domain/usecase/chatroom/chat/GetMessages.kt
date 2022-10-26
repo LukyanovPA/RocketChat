@@ -1,9 +1,7 @@
 package com.pavellukyanov.rocketchat.domain.usecase.chatroom.chat
 
-import com.pavellukyanov.rocketchat.domain.entity.State
 import com.pavellukyanov.rocketchat.domain.repository.IChat
 import com.pavellukyanov.rocketchat.domain.utils.UserInfo
-import com.pavellukyanov.rocketchat.domain.utils.asState
 import com.pavellukyanov.rocketchat.presentation.feature.chatroom.chat.item.ChatItem
 import com.pavellukyanov.rocketchat.utils.Constants.INT_ONE
 import com.pavellukyanov.rocketchat.utils.Constants.INT_ZERO
@@ -12,13 +10,13 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
-interface GetMessages : suspend (String) -> Flow<State<List<ChatItem>>>
+interface GetMessages : suspend (String) -> Flow<List<ChatItem>>
 
 class GetMessagesImpl @Inject constructor(
     private val repo: IChat,
     private val userInfo: UserInfo
 ) : GetMessages {
-    override suspend fun invoke(chatroomId: String): Flow<State<List<ChatItem>>> =
+    override suspend fun invoke(chatroomId: String): Flow<List<ChatItem>> =
         repo.getMessages(chatroomId)
             .map { messages ->
                 val list = mutableListOf<ChatItem>()
@@ -34,7 +32,7 @@ class GetMessagesImpl @Inject constructor(
                     }
                 }
                 list
-            }.asState()
+            }
 
     private fun getChatDateItem(beforeDate: Long, currentDate: Long): ChatItem.ChatDateItem? {
         val before = DateUtil.longToLocalDate(beforeDate)

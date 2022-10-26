@@ -8,16 +8,16 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.pavellukyanov.rocketchat.databinding.FragmentChatroomOptionsBinding
 import com.pavellukyanov.rocketchat.presentation.base.BaseBottomSheetDialogFragment
 
-class ChatRoomOptionsFragment : BaseBottomSheetDialogFragment<FragmentChatroomOptionsBinding, ChatRoomOptionsViewModel>(
-    ChatRoomOptionsViewModel::class.java
-), ChatRoomOptionsAdapter.ChatRoomOptionsListener {
+class ChatRoomOptionsFragment :
+    BaseBottomSheetDialogFragment<List<OptionItem>, OptionsEvent, FragmentChatroomOptionsBinding, ChatRoomOptionsViewModel>(
+        ChatRoomOptionsViewModel::class.java
+    ), ChatRoomOptionsAdapter.ChatRoomOptionsListener {
     private val optionsAdapter by lazy(LazyThreadSafetyMode.NONE) { ChatRoomOptionsAdapter(this) }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        vm.start()
+        action(OptionsEvent.Start)
         bind()
-        vm.items.observe(viewLifecycleOwner, ::handleOptions)
     }
 
     override fun inflateViewBinding(inflater: LayoutInflater, container: ViewGroup?): FragmentChatroomOptionsBinding {
@@ -31,12 +31,12 @@ class ChatRoomOptionsFragment : BaseBottomSheetDialogFragment<FragmentChatroomOp
         }
     }
 
-    private fun handleOptions(options: List<OptionItem>) {
-        optionsAdapter.data = options
+    override fun render(state: List<OptionItem>) {
+        optionsAdapter.data = state
     }
 
     override fun onItemClicked(item: OptionItem) {
-        vm.onOptionClicked(item)
+        action(OptionsEvent.Click(item))
     }
 
     companion object {

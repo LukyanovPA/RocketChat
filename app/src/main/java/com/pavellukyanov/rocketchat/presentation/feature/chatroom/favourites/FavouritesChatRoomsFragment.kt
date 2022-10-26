@@ -9,11 +9,13 @@ import com.pavellukyanov.rocketchat.databinding.FragmentFavouritesChatroomsBindi
 import com.pavellukyanov.rocketchat.domain.entity.chatroom.Chatroom
 import com.pavellukyanov.rocketchat.presentation.base.BaseFragment
 import com.pavellukyanov.rocketchat.presentation.feature.chatroom.chatrooms.ChatRoomsAdapter
+import com.pavellukyanov.rocketchat.presentation.feature.chatroom.chatrooms.ChatRoomsState
 
-class FavouritesChatRoomsFragment : ChatRoomsAdapter.ChatRoomListener, BaseFragment<FavouritesChatRoomsViewModel>(
-    FavouritesChatRoomsViewModel::class.java,
-    R.layout.fragment_favourites_chatrooms
-) {
+class FavouritesChatRoomsFragment : ChatRoomsAdapter.ChatRoomListener,
+    BaseFragment<ChatRoomsState, Chatroom, FavouritesChatRoomsViewModel>(
+        FavouritesChatRoomsViewModel::class.java,
+        R.layout.fragment_favourites_chatrooms
+    ) {
     private val binding by viewBinding(FragmentFavouritesChatroomsBinding::bind)
     private val chatroomAdapter by lazy(LazyThreadSafetyMode.NONE) { ChatRoomsAdapter(this) }
 
@@ -21,7 +23,6 @@ class FavouritesChatRoomsFragment : ChatRoomsAdapter.ChatRoomListener, BaseFragm
         super.onViewCreated(view, savedInstanceState)
         setShimmer(binding.phFavouritesList)
         bind()
-        vm.chatrooms.observe(viewLifecycleOwner, ::handleChatroomList)
     }
 
     private fun bind() = with(binding) {
@@ -31,16 +32,21 @@ class FavouritesChatRoomsFragment : ChatRoomsAdapter.ChatRoomListener, BaseFragm
         }
     }
 
+    override fun render(state: ChatRoomsState) {
+        when (state) {
+            is ChatRoomsState.Success -> handleChatroomList(state.chatRooms)
+            is ChatRoomsState.EmptyList -> {
+                //TODO: - добавить заглушку для пустого списка
+            }
+        }
+    }
+
     private fun handleChatroomList(listChatroom: List<Chatroom>) {
         chatroomAdapter.data = listChatroom
     }
 
     override fun onItemClicked(item: Chatroom) {
-        vm.forwardToChatroom(item)
-    }
-
-    override fun adapterIsVisible(isVisible: Boolean) {
-        if (isVisible) vm.stopShimmer()
+        action(item)
     }
 
     companion object {

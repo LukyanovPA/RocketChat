@@ -8,7 +8,7 @@ import com.pavellukyanov.rocketchat.databinding.FragmentSignUpBinding
 import com.pavellukyanov.rocketchat.presentation.base.BaseFragment
 import com.pavellukyanov.rocketchat.presentation.helper.ext.setOnTextChangeListener
 
-class SignUpFragment : BaseFragment<SignUpViewModel>(
+class SignUpFragment : BaseFragment<Boolean, SignUpEvent, SignUpViewModel>(
     SignUpViewModel::class.java,
     R.layout.fragment_sign_up
 ) {
@@ -16,19 +16,18 @@ class SignUpFragment : BaseFragment<SignUpViewModel>(
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        vm.buttonState().observe(viewLifecycleOwner, ::handleButtonState)
         bind()
     }
 
     private fun bind() = with(binding) {
-        regInputNickname.setOnTextChangeListener(vm::setNickname)
-        regInputEmail.setOnTextChangeListener(vm::setEmail)
-        regInputPassword.setOnTextChangeListener(vm::setPassword)
-        regSignInLink.setOnClickListener { vm.forwardToSignIn() }
-        regButton.setOnClickListener { vm.signUp() }
+        regInputNickname.setOnTextChangeListener { action(SignUpEvent.Nickname(it)) }
+        regInputEmail.setOnTextChangeListener { action(SignUpEvent.Email(it)) }
+        regInputPassword.setOnTextChangeListener { action(SignUpEvent.Password(it)) }
+        regSignInLink.setOnClickListener { action(SignUpEvent.GoToSignIn) }
+        regButton.setOnClickListener { action(SignUpEvent.SignUp) }
     }
 
-    private fun handleButtonState(state: Boolean) {
+    override fun render(state: Boolean) {
         binding.regButton.isEnabled = state
     }
 

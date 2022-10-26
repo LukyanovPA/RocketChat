@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.isVisible
 import androidx.lifecycle.ViewModelProvider
 import androidx.viewbinding.ViewBinding
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
@@ -14,7 +15,7 @@ import dagger.android.support.AndroidSupportInjection
 import fr.tvbarthel.lib.blurdialogfragment.BlurDialogEngine
 import javax.inject.Inject
 
-abstract class BaseBottomSheetDialogFragment<VB : ViewBinding, VM : BaseViewModel<*>>(
+abstract class BaseBottomSheetDialogFragment<STATE : Any, EVENT : Any, VB : ViewBinding, VM : BaseViewModel<STATE, EVENT, *>>(
     private val viewModelClass: Class<VM>
 ) : BottomSheetDialogFragment() {
     lateinit var binding: VB
@@ -36,6 +37,7 @@ abstract class BaseBottomSheetDialogFragment<VB : ViewBinding, VM : BaseViewMode
             setUseRenderScript(true)
         }
         vm = ViewModelProvider(this, viewModelFactory)[viewModelClass]
+        vm.state.observe(viewLifecycleOwner, ::handleViewState)
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -43,6 +45,16 @@ abstract class BaseBottomSheetDialogFragment<VB : ViewBinding, VM : BaseViewMode
         onBind()
         return binding.root
     }
+
+    private fun handleViewState(state: ViewState<STATE>) {
+        state.state?.let { render(it) }
+    }
+
+    open fun action(event: EVENT) {
+        vm.action(event)
+    }
+
+    abstract fun render(state: STATE)
 
     open fun onBind() {}
 

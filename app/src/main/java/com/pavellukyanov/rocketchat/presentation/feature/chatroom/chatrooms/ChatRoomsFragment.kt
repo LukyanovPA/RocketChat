@@ -9,7 +9,7 @@ import com.pavellukyanov.rocketchat.databinding.FragmentChatroomsBinding
 import com.pavellukyanov.rocketchat.domain.entity.chatroom.Chatroom
 import com.pavellukyanov.rocketchat.presentation.base.BaseFragment
 
-class ChatRoomsFragment : ChatRoomsAdapter.ChatRoomListener, BaseFragment<ChatRoomsViewModel>(
+class ChatRoomsFragment : ChatRoomsAdapter.ChatRoomListener, BaseFragment<ChatRoomsState, ChatRoomsEvent, ChatRoomsViewModel>(
     ChatRoomsViewModel::class.java,
     R.layout.fragment_chatrooms
 ) {
@@ -20,7 +20,6 @@ class ChatRoomsFragment : ChatRoomsAdapter.ChatRoomListener, BaseFragment<ChatRo
         super.onViewCreated(view, savedInstanceState)
         setShimmer(binding.phHomeChatroomList)
         bind()
-        vm.chatrooms.observe(viewLifecycleOwner, ::handleChatroomList)
     }
 
     private fun bind() = with(binding) {
@@ -30,20 +29,26 @@ class ChatRoomsFragment : ChatRoomsAdapter.ChatRoomListener, BaseFragment<ChatRo
         }
     }
 
+    override fun render(state: ChatRoomsState) {
+        when (state) {
+            is ChatRoomsState.Success -> handleChatroomList(state.chatRooms)
+            is ChatRoomsState.EmptyList -> {
+                //TODO: - добавить заглушку для пустого списка
+            }
+        }
+    }
+
     private fun handleChatroomList(listChatroom: List<Chatroom>) {
         chatroomAdapter.data = listChatroom
     }
 
     override fun onItemClicked(item: Chatroom) {
-        vm.forwardToChatroom(item)
+        action(ChatRoomsEvent.GoToChatRoom(item))
     }
 
+    //TODO: - переделать на удаление по свайпу
     override fun onLongClicked(item: Chatroom) {
-        vm.onChatRoomLongClicked(item)
-    }
-
-    override fun adapterIsVisible(isVisible: Boolean) {
-        if (isVisible) vm.stopShimmer()
+        action(ChatRoomsEvent.DeleteChatRoom(item))
     }
 
     companion object {

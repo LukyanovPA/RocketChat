@@ -1,8 +1,6 @@
 package com.pavellukyanov.rocketchat.presentation.feature.chatroom.create
 
 import android.net.Uri
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import com.pavellukyanov.rocketchat.domain.usecase.chatroom.ChatroomCreate
 import com.pavellukyanov.rocketchat.presentation.base.BaseViewModel
 import com.pavellukyanov.rocketchat.presentation.feature.chatroom.ChatRoomNavigator
@@ -15,47 +13,64 @@ class CreateChatRoomViewModel @Inject constructor(
     navigator: ChatRoomNavigator,
     private val galleryHelper: GalleryHelper,
     private val chatroomCreate: ChatroomCreate
-) : BaseViewModel<ChatRoomNavigator>(navigator) {
-    override val shimmerState: MutableStateFlow<Boolean> = MutableStateFlow(false)
+) : BaseViewModel<CreateChatRoomState, CreateChatRoomEvent, ChatRoomNavigator>(navigator) {
     private val chatroomName = MutableStateFlow(EMPTY_STRING)
     private val chatroomDescription = MutableStateFlow(EMPTY_STRING)
-    private val _chatroomImg = MutableLiveData<Uri>()
-    val chatroomImg: LiveData<Uri> = _chatroomImg
+    private var _uri: Uri? = null
 
-    fun changeChatroomImg() = launchCPU {
+    init {
+        setLoading(false)
+    }
+
+    override fun action(event: CreateChatRoomEvent) {
+        when (event) {
+            is CreateChatRoomEvent.GoBack -> navigator.back()
+            is CreateChatRoomEvent.ChangeImg -> changeChatroomImg()
+            is CreateChatRoomEvent.Create -> createChatroom()
+            is CreateChatRoomEvent.Name -> setChatroomName(event.name)
+            is CreateChatRoomEvent.Description -> setChatroomDescription(event.description)
+        }
+    }
+
+    private fun changeChatroomImg() = launchCPU {
         galleryHelper.pickImagesWithCheckPermission(
             CreateChatRoomFragment.TAG,
             GalleryHelper.PICK_IMAGE_SINGLE,
             weightLimit = GalleryHelper.PHOTO_SIZE_DIV_KB
         ) { listFiles ->
             listFiles?.let { response ->
-                response.firstOrNull()?.getPath()?.let(_chatroomImg::postValue)
+                response.firstOrNull()?.getPath()?.let { uri ->
+                    _uri = uri
+                    _state.postValue(getViewState(CreateChatRoomState.Img(uri)))
+                }
             }
         }
     }
 
-    fun setChatroomName(name: String) = launchCPU {
+    private fun setChatroomName(name: String) = launchCPU {
         chatroomName.emit(name)
     }
 
-    fun setChatroomDescription(description: String) = launchCPU {
+    private fun setChatroomDescription(description: String) = launchCPU {
         chatroomDescription.emit(description)
     }
 
-    fun createChatroom() {
+    private fun createChatroom() = launchIO {
+        setLoading(true)
         if (chatroomName.value.isEmpty()) {
+            setLoading(false)
             launchUI { navigator.showEmptyChatroomNameErrorDialog() }
         } else {
-            launchIO {
-                chatroomCreate(
-                    chatroomName.value,
-                    chatroomDescription.value,
-                    _chatroomImg.value
-                )
-                    .asState { navigator.back() }
-            }
+            chatroomCreate(
+                chatroomName.value,
+                chatroomDescription.value,
+                _uri
+            ).also { if (it) navigator.back() }
+            setLoading(false)
         }
     }
 
-    fun back() = navigator.back()
+    private fun setLoading(state: Boolean) {
+        _state.postValue(getViewState(CreateChatRoomState.Loading(state)))
+    }
 }

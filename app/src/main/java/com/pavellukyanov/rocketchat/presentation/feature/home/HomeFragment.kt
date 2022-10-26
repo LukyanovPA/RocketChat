@@ -18,7 +18,7 @@ import com.pavellukyanov.rocketchat.presentation.helper.ext.load
 import com.pavellukyanov.rocketchat.presentation.helper.ext.onTableSelected
 import com.pavellukyanov.rocketchat.presentation.helper.ext.setOnTextChangeListener
 
-class HomeFragment : BaseFragment<HomeViewModel>(
+class HomeFragment : BaseFragment<MyAccount, HomeEvent, HomeViewModel>(
     HomeViewModel::class.java,
     R.layout.fragment_home
 ) {
@@ -27,15 +27,18 @@ class HomeFragment : BaseFragment<HomeViewModel>(
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         bind()
-        vm.refreshCache()
-        vm.myAccount.observe(viewLifecycleOwner, ::setMyAccountData)
+        action(HomeEvent.RefreshCache)
+    }
+
+    override fun render(state: MyAccount) {
+        setMyAccountData(state)
     }
 
     private fun bind() = with(binding) {
-        createChatroomContainer.setOnClickListener { vm.createNewChatRoom() }
-        mainAvatar.setOnClickListener { vm.changeAvatar() }
-        mainSearch.setOnTextChangeListener { vm.search(it) }
-        mainLogout.setOnClickListener { vm.onClickLogOut() }
+        createChatroomContainer.setOnClickListener { action(HomeEvent.CreateNewChatRom) }
+        mainAvatar.setOnClickListener { action(HomeEvent.ChangeAvatar) }
+        mainSearch.setOnTextChangeListener { action(HomeEvent.Search(it)) }
+        mainLogout.setOnClickListener { action(HomeEvent.LogOut) }
 
         val frags = listOf(
             ChatRoomsFragment.newInstance(),

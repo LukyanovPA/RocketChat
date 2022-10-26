@@ -1,7 +1,5 @@
 package com.pavellukyanov.rocketchat.presentation.feature.chatroom.chatrooms
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import com.pavellukyanov.rocketchat.core.di.qualifiers.HomeSearchQ
 import com.pavellukyanov.rocketchat.domain.entity.chatroom.Chatroom
 import com.pavellukyanov.rocketchat.domain.usecase.chatroom.ChatRoomDelete
@@ -15,7 +13,6 @@ import com.pavellukyanov.rocketchat.presentation.feature.chatroom.options.Option
 import com.pavellukyanov.rocketchat.presentation.feature.home.HomeFragment
 import com.pavellukyanov.rocketchat.presentation.helper.FragmentResultHelper
 import kotlinx.coroutines.FlowPreview
-import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.flatMapMerge
 import javax.inject.Inject
 
@@ -26,20 +23,23 @@ class ChatRoomsViewModel @Inject constructor(
     private val userInfo: UserInfo,
     private val getChatrooms: GetChatRooms,
     @HomeSearchQ private val searchStorage: ObjectStorage<String>
-) : BaseViewModel<ChatRoomNavigator>(navigator) {
-    override val shimmerState: MutableStateFlow<Boolean> = MutableStateFlow(true)
-    private val _chatrooms = MutableLiveData<List<Chatroom>>()
-    val chatrooms: LiveData<List<Chatroom>> = _chatrooms
-
+) : BaseViewModel<ChatRoomsState, ChatRoomsEvent, ChatRoomNavigator>(navigator) {
     init {
         fetchChatrooms()
     }
 
-    fun forwardToChatroom(chatroom: Chatroom) {
+    override fun action(event: ChatRoomsEvent) {
+        when (event) {
+            is ChatRoomsEvent.GoToChatRoom -> forwardToChatroom(event.chatroom)
+            is ChatRoomsEvent.DeleteChatRoom -> onChatRoomLongClicked(event.chatroom)
+        }
+    }
+
+    private fun forwardToChatroom(chatroom: Chatroom) {
         navigator.forwardToChat(chatroom)
     }
 
-    fun onChatRoomLongClicked(item: Chatroom) {
+    private fun onChatRoomLongClicked(item: Chatroom) {
         if (item.ownerId == userInfo.user?.uuid) {
             handleOptionsType(item.id)
             navigator.forwardToChatRoomOptions()
@@ -59,7 +59,6 @@ class ChatRoomsViewModel @Inject constructor(
 
     private fun deleteChatRoom(chatroomId: String) = launchIO {
         chatRoomDelete(chatroomId)
-            .asState { }
     }
 
     @OptIn(FlowPreview::class)
@@ -68,6 +67,17 @@ class ChatRoomsViewModel @Inject constructor(
             .flatMapMerge { query ->
                 getChatrooms(query)
             }
-            .asState { _chatrooms.postValue(it) }
+            .asState()
+            .collect { list ->
+                if (list.isEmpty()) {
+                    _state.postValue(getViewState(ChatRoomsState.EmptyList))
+                } else {
+                    _state.postValue(
+                        getViewState(
+                            ChatRoomsState.Success(list)
+                        )
+                    )
+                }
+            }
     }
 }

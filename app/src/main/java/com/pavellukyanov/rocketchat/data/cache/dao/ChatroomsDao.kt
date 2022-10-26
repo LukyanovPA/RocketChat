@@ -13,7 +13,7 @@ interface ChatroomsDao {
     fun getChatrooms(): List<ChatroomLocal>
 
     @Query("SELECT * FROM chatrooms WHERE chatroomId = :chatRoomId")
-    fun getChatRoom(chatRoomId: String): Flow<ChatroomLocal>
+    suspend fun getChatRoom(chatRoomId: String): ChatroomLocal
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(newList: List<ChatroomLocal>)

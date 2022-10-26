@@ -1,7 +1,5 @@
 package com.pavellukyanov.rocketchat.presentation.feature.chatroom.favourites
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import com.pavellukyanov.rocketchat.core.di.qualifiers.HomeSearchQ
 import com.pavellukyanov.rocketchat.domain.entity.chatroom.Chatroom
 import com.pavellukyanov.rocketchat.domain.usecase.chatroom.ChangeFavouritesState
@@ -9,8 +7,8 @@ import com.pavellukyanov.rocketchat.domain.usecase.chatroom.GetFavourites
 import com.pavellukyanov.rocketchat.domain.utils.ObjectStorage
 import com.pavellukyanov.rocketchat.presentation.base.BaseViewModel
 import com.pavellukyanov.rocketchat.presentation.feature.chatroom.ChatRoomNavigator
+import com.pavellukyanov.rocketchat.presentation.feature.chatroom.chatrooms.ChatRoomsState
 import kotlinx.coroutines.FlowPreview
-import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.flatMapMerge
 import javax.inject.Inject
 
@@ -19,16 +17,14 @@ class FavouritesChatRoomsViewModel @Inject constructor(
     private val getFavourites: GetFavourites,
     private val changeFavouritesState: ChangeFavouritesState,
     @HomeSearchQ private val searchStorage: ObjectStorage<String>
-) : BaseViewModel<ChatRoomNavigator>(navigator) {
-    override val shimmerState: MutableStateFlow<Boolean> = MutableStateFlow(true)
-    private val _chatrooms = MutableLiveData<List<Chatroom>>()
-    val chatrooms: LiveData<List<Chatroom>> = _chatrooms
-
+) : BaseViewModel<ChatRoomsState, Chatroom, ChatRoomNavigator>(navigator) {
     init {
         fetchChatrooms()
     }
 
-    fun forwardToChatroom(chatroom: Chatroom) {
+    override fun action(event: Chatroom) = forwardToChatroom(event)
+
+    private fun forwardToChatroom(chatroom: Chatroom) {
         navigator.forwardToChat(chatroom)
     }
 
@@ -38,6 +34,17 @@ class FavouritesChatRoomsViewModel @Inject constructor(
             .flatMapMerge { query ->
                 getFavourites(query)
             }
-            .asState { _chatrooms.postValue(it) }
+            .asState()
+            .collect { list ->
+                if (list.isEmpty()) {
+                    _state.postValue(getViewState(ChatRoomsState.EmptyList))
+                } else {
+                    _state.postValue(
+                        getViewState(
+                            ChatRoomsState.Success(list)
+                        )
+                    )
+                }
+            }
     }
 }

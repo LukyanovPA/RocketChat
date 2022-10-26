@@ -10,7 +10,7 @@ import com.pavellukyanov.rocketchat.domain.entity.users.User
 import com.pavellukyanov.rocketchat.presentation.base.BaseFragment
 import timber.log.Timber
 
-class ListUsersFragment : ListUsersAdapter.ListUsersListener, BaseFragment<ListUsersViewModel>(
+class ListUsersFragment : ListUsersAdapter.ListUsersListener, BaseFragment<List<User>, Any, ListUsersViewModel>(
     ListUsersViewModel::class.java,
     R.layout.fragment_list_users
 ) {
@@ -20,7 +20,6 @@ class ListUsersFragment : ListUsersAdapter.ListUsersListener, BaseFragment<ListU
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         bind()
-        vm.users.observe(viewLifecycleOwner, ::handleUsersList)
     }
 
     private fun bind() = with(binding) {
@@ -28,6 +27,10 @@ class ListUsersFragment : ListUsersAdapter.ListUsersListener, BaseFragment<ListU
             adapter = listUsersAdapter
             layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
         }
+    }
+
+    override fun render(state: List<User>) {
+        handleUsersList(state)
     }
 
     private fun handleUsersList(users: List<User>) {

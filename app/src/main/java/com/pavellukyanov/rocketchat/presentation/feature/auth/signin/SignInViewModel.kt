@@ -1,8 +1,8 @@
 package com.pavellukyanov.rocketchat.presentation.feature.auth.signin
 
-import androidx.lifecycle.LiveData
 import com.pavellukyanov.rocketchat.domain.usecase.auth.Login
 import com.pavellukyanov.rocketchat.presentation.base.BaseViewModel
+import com.pavellukyanov.rocketchat.presentation.base.ViewState
 import com.pavellukyanov.rocketchat.presentation.feature.auth.AuthNavigator
 import com.pavellukyanov.rocketchat.utils.Constants.EMPTY_STRING
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -12,36 +12,44 @@ import javax.inject.Inject
 class SignInViewModel @Inject constructor(
     navigator: AuthNavigator,
     private val login: Login
-) : BaseViewModel<AuthNavigator>(navigator) {
+) : BaseViewModel<Boolean, SignInEvent, AuthNavigator>(navigator) {
     private val email = MutableStateFlow(EMPTY_STRING)
     private val password = MutableStateFlow(EMPTY_STRING)
-    private val buttonState = MutableStateFlow(false)
 
     init {
-        observButtonState()
+        handleButtonState()
     }
 
-    private fun observButtonState() = launchCPU {
+    override fun action(event: SignInEvent) {
+        when (event) {
+            is SignInEvent.Email -> setEmail(event.email)
+            is SignInEvent.Password -> setPassword(event.password)
+            is SignInEvent.GoToSignUp -> forwardToSignUp()
+            is SignInEvent.SignIn -> signIn()
+        }
+    }
+
+    private fun handleButtonState() = launchCPU {
         email.combine(password) { email, password ->
             email.isNotEmpty() && password.isNotEmpty()
-        }.collect(buttonState::emit)
+        }.collect { state ->
+            _state.postValue(ViewState(state = state))
+        }
     }
 
-    fun buttonState(): LiveData<Boolean> = buttonState.asLiveData()
-
-    fun setEmail(value: String) = launchCPU {
+    private fun setEmail(value: String) = launchCPU {
         email.emit(value)
     }
 
-    fun setPassword(value: String) = launchCPU {
+    private fun setPassword(value: String) = launchCPU {
         password.emit(value)
     }
 
-    fun signIn() = launchIO {
+    private fun signIn() = launchIO {
         handleResponseState(login(email.value, password.value)) {
             launchUI { navigator.forwardToHome() }
         }
     }
 
-    fun forwardToSignUp() = navigator.forwardToSignUp()
+    private fun forwardToSignUp() = navigator.forwardToSignUp()
 }

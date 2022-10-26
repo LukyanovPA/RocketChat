@@ -1,15 +1,13 @@
 package com.pavellukyanov.rocketchat.domain.usecase.chatroom
 
-import com.pavellukyanov.rocketchat.domain.entity.State
 import com.pavellukyanov.rocketchat.domain.repository.IChatroom
-import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
-interface ChatRoomDelete : suspend (String) -> Flow<State<Boolean>>
+interface ChatRoomDelete : suspend (String) -> Unit
 
 class ChatRoomDeleteImpl @Inject constructor(
     private val iChatroom: IChatroom
 ) : ChatRoomDelete {
-    override suspend fun invoke(chatroomId: String): Flow<State<Boolean>> =
+    override suspend fun invoke(chatroomId: String) =
         iChatroom.deleteChatRoom(chatroomId)
 }

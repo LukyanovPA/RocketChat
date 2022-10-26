@@ -1,7 +1,5 @@
 package com.pavellukyanov.rocketchat.presentation.feature.chatroom.options
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import com.pavellukyanov.rocketchat.presentation.base.BaseViewModel
 import com.pavellukyanov.rocketchat.presentation.feature.chatroom.ChatRoomNavigator
 import com.pavellukyanov.rocketchat.presentation.feature.chatroom.options.ChatRoomOptionsFragment.Companion.CHATROOM_OPTIONS_REQUEST_KEY
@@ -11,15 +9,20 @@ import javax.inject.Inject
 class ChatRoomOptionsViewModel @Inject constructor(
     navigator: ChatRoomNavigator,
     private val fragmentResultHelper: FragmentResultHelper,
-) : BaseViewModel<ChatRoomNavigator>(navigator) {
-    private val _items = MutableLiveData<List<OptionItem>>()
-    val items: LiveData<List<OptionItem>> = _items
+) : BaseViewModel<List<OptionItem>, OptionsEvent, ChatRoomNavigator>(navigator) {
 
-    fun start() {
-        _items.value = listOf(OptionItem(OptionsType.EDIT), OptionItem(OptionsType.REMOVE))
+    override fun action(event: OptionsEvent) {
+        when (event) {
+            is OptionsEvent.Start -> start()
+            is OptionsEvent.Click -> onOptionClicked(event.item)
+        }
     }
 
-    fun onOptionClicked(item: OptionItem) {
+    private fun start() {
+        _state.postValue(getViewState(listOf(OptionItem(OptionsType.EDIT), OptionItem(OptionsType.REMOVE))))
+    }
+
+    private fun onOptionClicked(item: OptionItem) {
         sendResult(item.type)
         navigator.back()
     }

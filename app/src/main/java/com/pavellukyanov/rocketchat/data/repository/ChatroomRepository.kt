@@ -10,7 +10,6 @@ import com.pavellukyanov.rocketchat.data.utils.asResponse
 import com.pavellukyanov.rocketchat.data.utils.file.FileInfoHelper
 import com.pavellukyanov.rocketchat.data.utils.file.RequestHelper
 import com.pavellukyanov.rocketchat.data.utils.map
-import com.pavellukyanov.rocketchat.domain.entity.State
 import com.pavellukyanov.rocketchat.domain.entity.chatroom.Chatroom
 import com.pavellukyanov.rocketchat.domain.repository.IChatroom
 import com.pavellukyanov.rocketchat.presentation.helper.NetworkMonitor
@@ -35,27 +34,21 @@ class ChatroomRepository @Inject constructor(
         chatroomName: String,
         chatroomDescription: String,
         chatroomImg: Uri?
-    ): Flow<State<Boolean>> =
-        networkMonitor.handleInternetConnection()
-            .flatMapMerge {
-                flow {
-                    emit(State.Loading)
-                    val partMap = hashMapOf<String, RequestBody>()
-                    var file: MultipartBody.Part? = null
-                    partMap[ApiParams.NAME] = chatroomName.toRequestBody(ApiParams.multiPartMediaType)
-                    partMap[ApiParams.DESCRIPTION] = chatroomDescription.toRequestBody(ApiParams.multiPartMediaType)
+    ): Boolean {
+        val partMap = hashMapOf<String, RequestBody>()
+        var file: MultipartBody.Part? = null
+        partMap[ApiParams.NAME] = chatroomName.toRequestBody(ApiParams.multiPartMediaType)
+        partMap[ApiParams.DESCRIPTION] = chatroomDescription.toRequestBody(ApiParams.multiPartMediaType)
 
-                    if (chatroomImg != null) {
-                        val fileRequestBody = fileRequestHelper.generateRequestBody(chatroomImg)
-                        val fileName = fileInfoHelper.getFileName(chatroomImg)
-                        file = fileRequestBody?.let {
-                            MultipartBody.Part.createFormData(PART_NAME, fileName, it)
-                        }
-                    }
-
-                    emit(State.Success(api.createChatroom(partMap, file).asResponse()))
-                }
+        if (chatroomImg != null) {
+            val fileRequestBody = fileRequestHelper.generateRequestBody(chatroomImg)
+            val fileName = fileInfoHelper.getFileName(chatroomImg)
+            file = fileRequestBody?.let {
+                MultipartBody.Part.createFormData(PART_NAME, fileName, it)
             }
+        }
+        return api.createChatroom(partMap, file).asResponse()
+    }
 
     override suspend fun getChatrooms(): Flow<List<Chatroom>> =
         cache.chatrooms().getChatroomsStream()
@@ -88,39 +81,24 @@ class ChatroomRepository @Inject constructor(
             }
         }
 
-    override suspend fun deleteChatRoom(chatroomId: String): Flow<State<Boolean>> =
-        networkMonitor.handleInternetConnection()
-            .flatMapMerge {
-                flow {
-                    emit(State.Loading)
-                    val state = api.deleteChatRoom(chatroomId).asData()
-                    if (state) {
-                        cache.chatrooms().getChatRoom(chatroomId)
-                            .flatMapMerge { chatRoomLocal ->
-                                flow {
-                                    cache.chatrooms().delete(chatRoomLocal)
-                                    emit(State.Success(true))
-                                }
-                            }
-                    } else {
-                        emit(State.Success(false))
-                    }
-                }
-            }
-
-    override suspend fun changeFavouritesState(chatroom: Chatroom): Flow<Unit> =
-        flow {
-            cache.chatrooms().insert(chatroom.map())
-            emit(Unit)
+    override suspend fun deleteChatRoom(chatroomId: String) {
+        val state = api.deleteChatRoom(chatroomId).asData()
+        if (state) {
+            val chatRoomLocal = cache.chatrooms().getChatRoom(chatroomId)
+            cache.chatrooms().delete(chatRoomLocal)
         }
+    }
+
+    override suspend fun changeFavouritesState(chatroom: Chatroom) {
+        cache.chatrooms().insert(chatroom.map())
+    }
 
     override suspend fun getFavourites(): Flow<List<Chatroom>> =
         cache.chatrooms().getChatroomsStream()
             .map { rooms -> rooms.filter { it.isFavourites }.map { it.map() } }
 
-    override suspend fun getChatRoom(chatroomId: String): Flow<Chatroom> =
-        cache.chatrooms().getChatRoom(chatroomId)
-            .map { it.map() }
+    override suspend fun getChatRoom(chatroomId: String): Chatroom =
+        cache.chatrooms().getChatRoom(chatroomId).map()
 
     companion object {
         private const val PART_NAME = "chatImg"

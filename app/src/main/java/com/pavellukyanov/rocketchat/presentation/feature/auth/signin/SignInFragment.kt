@@ -8,7 +8,7 @@ import com.pavellukyanov.rocketchat.databinding.FragmentSignInBinding
 import com.pavellukyanov.rocketchat.presentation.base.BaseFragment
 import com.pavellukyanov.rocketchat.presentation.helper.ext.setOnTextChangeListener
 
-class SignInFragment : BaseFragment<SignInViewModel>(
+class SignInFragment : BaseFragment<Boolean, SignInEvent, SignInViewModel>(
     SignInViewModel::class.java,
     R.layout.fragment_sign_in
 ) {
@@ -16,18 +16,17 @@ class SignInFragment : BaseFragment<SignInViewModel>(
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        vm.buttonState().observe(viewLifecycleOwner, ::handleButtonState)
         bind()
     }
 
     private fun bind() = with(binding) {
-        loginInputEmail.setOnTextChangeListener(vm::setEmail)
-        loginInputPassword.setOnTextChangeListener(vm::setPassword)
-        loginSignUpLink.setOnClickListener { vm.forwardToSignUp() }
-        loginButton.setOnClickListener { vm.signIn() }
+        loginInputEmail.setOnTextChangeListener { action(SignInEvent.Email(it)) }
+        loginInputPassword.setOnTextChangeListener { action(SignInEvent.Password(it)) }
+        loginSignUpLink.setOnClickListener { action(SignInEvent.GoToSignUp) }
+        loginButton.setOnClickListener { action(SignInEvent.SignIn) }
     }
 
-    private fun handleButtonState(state: Boolean) {
+    override fun render(state: Boolean) {
         binding.loginButton.isEnabled = state
     }
 

@@ -14,7 +14,7 @@ import com.pavellukyanov.rocketchat.presentation.helper.gallery.PickImageContrac
 import dagger.android.support.AndroidSupportInjection
 import javax.inject.Inject
 
-abstract class BaseFragment<VM : BaseViewModel<*>>(
+abstract class BaseFragment<STATE : Any, EVENT : Any, VM : BaseViewModel<STATE, EVENT, *>>(
     private val viewModelClass: Class<VM>,
     layoutRes: Int
 ) : Fragment(layoutRes) {
@@ -44,12 +44,19 @@ abstract class BaseFragment<VM : BaseViewModel<*>>(
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        vm.shimmerStateObserv()?.observe(viewLifecycleOwner, ::handleShimmerVisibility)
+        vm.state.observe(viewLifecycleOwner, ::handleViewState)
     }
 
-    protected open fun handleShimmerVisibility(state: Boolean) {
-        shimmer?.isVisible = state
+    private fun handleViewState(state: ViewState<STATE>) {
+        shimmer?.isVisible = state.isLoading
+        state.state?.let { render(it) }
     }
+
+    open fun action(event: EVENT) {
+        vm.action(event)
+    }
+
+    abstract fun render(state: STATE)
 
     override fun onAttach(context: Context) {
         AndroidSupportInjection.inject(this)

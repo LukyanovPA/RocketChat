@@ -11,7 +11,7 @@ import com.pavellukyanov.rocketchat.presentation.base.BaseFragment
 import com.pavellukyanov.rocketchat.presentation.helper.ext.load
 import com.pavellukyanov.rocketchat.presentation.helper.ext.setOnTextChangeListener
 
-class CreateChatRoomFragment : BaseFragment<CreateChatRoomViewModel>(
+class CreateChatRoomFragment : BaseFragment<CreateChatRoomState, CreateChatRoomEvent, CreateChatRoomViewModel>(
     CreateChatRoomViewModel::class.java,
     R.layout.fragment_create_chatroom
 ) {
@@ -20,16 +20,21 @@ class CreateChatRoomFragment : BaseFragment<CreateChatRoomViewModel>(
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         bind()
-        vm.chatroomImg.observe(viewLifecycleOwner, ::handleChatroomImg)
-        vm.shimmerStateObserv()?.observe(viewLifecycleOwner, ::handleLoadingState)
     }
 
     private fun bind() = with(binding) {
-        createChatroomArrowBack.setOnClickListener { vm.back() }
-        addChatroomImage.setOnClickListener { vm.changeChatroomImg() }
-        createChatroomCheck.setOnClickListener { vm.createChatroom() }
-        createChatroomName.setOnTextChangeListener(vm::setChatroomName)
-        createChatroomDescription.setOnTextChangeListener(vm::setChatroomDescription)
+        createChatroomArrowBack.setOnClickListener { action(CreateChatRoomEvent.GoBack) }
+        addChatroomImage.setOnClickListener { action(CreateChatRoomEvent.ChangeImg) }
+        createChatroomCheck.setOnClickListener { action(CreateChatRoomEvent.Create) }
+        createChatroomName.setOnTextChangeListener { action(CreateChatRoomEvent.Name(it)) }
+        createChatroomDescription.setOnTextChangeListener { action(CreateChatRoomEvent.Description(it)) }
+    }
+
+    override fun render(state: CreateChatRoomState) {
+        when (state) {
+            is CreateChatRoomState.Loading -> handleLoadingState(state.state)
+            is CreateChatRoomState.Img -> handleChatroomImg(state.uri)
+        }
     }
 
     private fun handleChatroomImg(uri: Uri) {

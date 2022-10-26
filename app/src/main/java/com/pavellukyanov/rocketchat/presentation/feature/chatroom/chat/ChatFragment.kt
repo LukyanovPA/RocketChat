@@ -16,7 +16,7 @@ import com.pavellukyanov.rocketchat.presentation.helper.ext.setOnTextChangeListe
 import com.pavellukyanov.rocketchat.utils.Constants.INT_ONE
 import timber.log.Timber
 
-class ChatFragment : BaseFragment<ChatViewModel>(
+class ChatFragment : BaseFragment<ChatState, ChatEvent, ChatViewModel>(
     ChatViewModel::class.java,
     R.layout.fragment_chat
 ), ChatAdapter.ChatListener {
@@ -27,9 +27,6 @@ class ChatFragment : BaseFragment<ChatViewModel>(
         super.onViewCreated(view, savedInstanceState)
         setShimmer(binding.phMessageList)
         bind()
-        vm.messages.observe(viewLifecycleOwner, ::handleMessagesList)
-        vm.buttonIsEnable().observe(viewLifecycleOwner, ::handleButtonSendState)
-        vm.chatroomValue.observe(viewLifecycleOwner, ::handleChatroomValue)
     }
 
     private fun bind() = with(binding) {
@@ -43,23 +40,27 @@ class ChatFragment : BaseFragment<ChatViewModel>(
                 stackFromEnd = true
             }
         }
-        chatArrowBack.setOnClickListener { vm.back() }
-        sendMessageEdtx.setOnTextChangeListener(vm::writeMessage)
+        chatArrowBack.setOnClickListener { action(ChatEvent.GoBack) }
+        sendMessageEdtx.setOnTextChangeListener { action(ChatEvent.Message(it)) }
         chatButtonSend.setOnClickListener {
-            vm.sendMes()
+            action(ChatEvent.SendMessage)
             hideKeyboard()
             binding.sendMessageEdtx.text?.clear()
         }
-        chatroomIsFavourites.setOnClickListener { vm.handleFavouritesState() }
+        chatroomIsFavourites.setOnClickListener { action(ChatEvent.ChangeFavourites) }
+    }
+
+    override fun render(state: ChatState) {
+        when (state) {
+            is ChatState.Messages -> handleMessagesList(state.messages)
+            is ChatState.ChatValue -> handleChatroomValue(state.chatRoom)
+            is ChatState.ButtonState -> handleButtonSendState(state.state)
+        }
     }
 
     private fun handleMessagesList(messages: List<ChatItem>) {
         chatAdapter.data = messages
         binding.messagesList.smoothScrollToPosition(messages.lastIndex + INT_ONE)
-    }
-
-    override fun adapterIsVisible(isVisible: Boolean) {
-        if (isVisible) vm.stopShimmer()
     }
 
     override fun onItemClicked(item: ChatItem) {
@@ -70,10 +71,11 @@ class ChatFragment : BaseFragment<ChatViewModel>(
         binding.chatButtonSend.isEnabled = state
     }
 
-    private fun handleChatroomValue(chatroom: Chatroom?) = with(binding) {
-        chatName.text = chatroom?.name
-        chatDescription.text = chatroom?.description
-        chatroomIsFavourites.setImageResource(if (chatroom?.isFavourites == true) R.drawable.ic_is_favourites else R.drawable.ic_is_not_favourites)
+    private fun handleChatroomValue(chatroom: Chatroom) = with(binding) {
+        Timber.d("Smotrim frag $chatroom")
+        chatName.text = chatroom.name
+        chatDescription.text = chatroom.description
+        chatroomIsFavourites.setImageResource(if (chatroom.isFavourites) R.drawable.ic_is_favourites else R.drawable.ic_is_not_favourites)
     }
 
     companion object {
