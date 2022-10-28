@@ -40,7 +40,7 @@ abstract class BaseBottomSheetDialogFragment<STATE : Any, EVENT : Any, VB : View
             setUseRenderScript(true)
         }
         vm = ViewModelProvider(this, viewModelFactory)[viewModelClass]
-        viewLifecycleOwner.lifecycleScope.launch(Dispatchers.Main) {
+        lifecycleScope.launch(Dispatchers.Main) {
             try {
                 vm.state.collect(::handleViewState)
             } catch (throwable: Throwable) {
