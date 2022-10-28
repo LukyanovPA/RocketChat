@@ -13,7 +13,6 @@ import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.pavellukyanov.rocketchat.R
 import dagger.android.support.AndroidSupportInjection
 import fr.tvbarthel.lib.blurdialogfragment.BlurDialogEngine
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import timber.log.Timber
 import javax.inject.Inject
@@ -40,7 +39,7 @@ abstract class BaseBottomSheetDialogFragment<STATE : Any, EVENT : Any, VB : View
             setUseRenderScript(true)
         }
         vm = ViewModelProvider(this, viewModelFactory)[viewModelClass]
-        lifecycleScope.launch(Dispatchers.Main) {
+        lifecycleScope.launch {
             try {
                 vm.state.collect(::handleViewState)
             } catch (throwable: Throwable) {
