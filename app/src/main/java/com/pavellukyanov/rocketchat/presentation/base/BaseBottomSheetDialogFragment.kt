@@ -6,13 +6,16 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.view.isVisible
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import androidx.viewbinding.ViewBinding
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.pavellukyanov.rocketchat.R
 import dagger.android.support.AndroidSupportInjection
 import fr.tvbarthel.lib.blurdialogfragment.BlurDialogEngine
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import timber.log.Timber
 import javax.inject.Inject
 
 abstract class BaseBottomSheetDialogFragment<STATE : Any, EVENT : Any, VB : ViewBinding, VM : BaseViewModel<STATE, EVENT, *>>(
@@ -37,7 +40,14 @@ abstract class BaseBottomSheetDialogFragment<STATE : Any, EVENT : Any, VB : View
             setUseRenderScript(true)
         }
         vm = ViewModelProvider(this, viewModelFactory)[viewModelClass]
-        vm.state.observe(viewLifecycleOwner, ::handleViewState)
+        viewLifecycleOwner.lifecycleScope.launch(Dispatchers.Main) {
+            try {
+                vm.state.collect(::handleViewState)
+            } catch (throwable: Throwable) {
+                Timber.tag(TAG).e(throwable)
+                vm.onError(throwable)
+            }
+        }
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -46,7 +56,7 @@ abstract class BaseBottomSheetDialogFragment<STATE : Any, EVENT : Any, VB : View
         return binding.root
     }
 
-    private fun handleViewState(state: ViewState<STATE>) {
+    private fun handleViewState(state: State<STATE>) {
         state.state?.let { render(it) }
     }
 
@@ -83,5 +93,9 @@ abstract class BaseBottomSheetDialogFragment<STATE : Any, EVENT : Any, VB : View
     override fun onDestroyView() {
         dialog?.setDismissMessage(null)
         super.onDestroyView()
+    }
+
+    companion object {
+        private const val TAG = "BaseBottomSheetDialogFragmentScopeError"
     }
 }

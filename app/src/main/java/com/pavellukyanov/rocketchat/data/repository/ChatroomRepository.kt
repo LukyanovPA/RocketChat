@@ -97,8 +97,9 @@ class ChatroomRepository @Inject constructor(
         cache.chatrooms().getChatroomsStream()
             .map { rooms -> rooms.filter { it.isFavourites }.map { it.map() } }
 
-    override suspend fun getChatRoom(chatroomId: String): Chatroom =
-        cache.chatrooms().getChatRoom(chatroomId).map()
+    override suspend fun getChatRoom(chatroomId: String): Flow<Chatroom?> =
+        cache.chatrooms().getChatroomsStream()
+            .map { chat -> chat.find { it.chatroomId == chatroomId }?.map() }
 
     companion object {
         private const val PART_NAME = "chatImg"

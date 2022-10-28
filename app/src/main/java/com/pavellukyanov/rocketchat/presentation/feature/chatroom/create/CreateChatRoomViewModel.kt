@@ -41,7 +41,7 @@ class CreateChatRoomViewModel @Inject constructor(
             listFiles?.let { response ->
                 response.firstOrNull()?.getPath()?.let { uri ->
                     _uri = uri
-                    _state.postValue(getViewState(CreateChatRoomState.Img(uri)))
+                    emitState(CreateChatRoomState.Img(uri))
                 }
             }
         }
@@ -71,6 +71,6 @@ class CreateChatRoomViewModel @Inject constructor(
     }
 
     private fun setLoading(state: Boolean) {
-        _state.postValue(getViewState(CreateChatRoomState.Loading(state)))
+        emitState(CreateChatRoomState.Loading(state))
     }
 }

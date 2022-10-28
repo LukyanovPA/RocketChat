@@ -3,7 +3,6 @@ package com.pavellukyanov.rocketchat.presentation.feature.users.list
 import com.pavellukyanov.rocketchat.domain.entity.users.User
 import com.pavellukyanov.rocketchat.domain.usecase.users.GetAllUsers
 import com.pavellukyanov.rocketchat.presentation.base.BaseViewModel
-import com.pavellukyanov.rocketchat.presentation.base.ViewState
 import com.pavellukyanov.rocketchat.presentation.feature.users.UsersNavigator
 import javax.inject.Inject
 
@@ -21,8 +20,6 @@ class ListUsersViewModel @Inject constructor(
     private fun fetchUsers() = launchIO {
         getAllUsers()
             .asState()
-            .collect { users ->
-                _state.postValue(ViewState(state = users))
-            }
+            .collect(::emitState)
     }
 }

@@ -7,11 +7,15 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import com.facebook.shimmer.ShimmerFrameLayout
 import com.pavellukyanov.rocketchat.presentation.helper.ResultWrapper
 import com.pavellukyanov.rocketchat.presentation.helper.gallery.PickFileContract
 import com.pavellukyanov.rocketchat.presentation.helper.gallery.PickImageContract
 import dagger.android.support.AndroidSupportInjection
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import timber.log.Timber
 import javax.inject.Inject
 
 abstract class BaseFragment<STATE : Any, EVENT : Any, VM : BaseViewModel<STATE, EVENT, *>>(
@@ -23,7 +27,7 @@ abstract class BaseFragment<STATE : Any, EVENT : Any, VM : BaseViewModel<STATE, 
     @Inject
     protected lateinit var viewModelFactory: ViewModelFactory<VM>
 
-    protected lateinit var vm: VM
+    private lateinit var vm: VM
 
     val permissionLauncher =
         ResultWrapper(
@@ -44,10 +48,17 @@ abstract class BaseFragment<STATE : Any, EVENT : Any, VM : BaseViewModel<STATE, 
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        vm.state.observe(viewLifecycleOwner, ::handleViewState)
+        viewLifecycleOwner.lifecycleScope.launch(Dispatchers.Main) {
+            try {
+                vm.state.collect(::handleViewState)
+            } catch (throwable: Throwable) {
+                Timber.tag(TAG).e(throwable)
+                vm.onError(throwable)
+            }
+        }
     }
 
-    private fun handleViewState(state: ViewState<STATE>) {
+    private fun handleViewState(state: State<STATE>) {
         shimmer?.isVisible = state.isLoading
         state.state?.let { render(it) }
     }
@@ -80,5 +91,9 @@ abstract class BaseFragment<STATE : Any, EVENT : Any, VM : BaseViewModel<STATE, 
     override fun onStop() {
         shimmer = null
         super.onStop()
+    }
+
+    companion object {
+        private const val TAG = "BaseFragmentScopeError"
     }
 }

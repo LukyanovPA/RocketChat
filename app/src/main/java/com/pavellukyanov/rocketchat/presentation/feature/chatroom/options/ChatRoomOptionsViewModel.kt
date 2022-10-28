@@ -19,7 +19,7 @@ class ChatRoomOptionsViewModel @Inject constructor(
     }
 
     private fun start() {
-        _state.postValue(getViewState(listOf(OptionItem(OptionsType.EDIT), OptionItem(OptionsType.REMOVE))))
+        emitState(listOf(OptionItem(OptionsType.EDIT), OptionItem(OptionsType.REMOVE)))
     }
 
     private fun onOptionClicked(item: OptionItem) {

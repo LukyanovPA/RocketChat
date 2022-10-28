@@ -2,7 +2,6 @@ package com.pavellukyanov.rocketchat.presentation.feature.auth.signup
 
 import com.pavellukyanov.rocketchat.domain.usecase.auth.Registration
 import com.pavellukyanov.rocketchat.presentation.base.BaseViewModel
-import com.pavellukyanov.rocketchat.presentation.base.ViewState
 import com.pavellukyanov.rocketchat.presentation.feature.auth.AuthNavigator
 import com.pavellukyanov.rocketchat.utils.Constants.EMPTY_STRING
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -38,9 +37,7 @@ class SignUpViewModel @Inject constructor(
             .combine(nickname) { state, nick ->
                 nick.isNotEmpty() && state
             }
-            .collect { state ->
-                _state.postValue(ViewState(state = state))
-            }
+            .collect(::emitState)
     }
 
     private fun setEmail(value: String) = launchCPU {

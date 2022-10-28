@@ -9,7 +9,6 @@ import com.pavellukyanov.rocketchat.domain.usecase.profile.ChangeAvatar
 import com.pavellukyanov.rocketchat.domain.usecase.profile.GetMyAccount
 import com.pavellukyanov.rocketchat.domain.utils.ObjectStorage
 import com.pavellukyanov.rocketchat.presentation.base.BaseViewModel
-import com.pavellukyanov.rocketchat.presentation.base.ViewState
 import com.pavellukyanov.rocketchat.presentation.helper.gallery.GalleryHelper
 import javax.inject.Inject
 
@@ -64,9 +63,7 @@ class HomeViewModel @Inject constructor(
     private fun setAvatar(uri: Uri) = launchIO { changeAvatar(uri) }
 
     private fun fetchMyAccount() = launchIO {
-        getMyAccount().collect { myAccount ->
-            _state.postValue(ViewState(state = myAccount))
-        }
+        getMyAccount().collect(::emitState)
     }
 
     private fun refreshCache() = launchIO {

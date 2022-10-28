@@ -27,6 +27,9 @@ class ChatFragment : BaseFragment<ChatState, ChatEvent, ChatViewModel>(
         super.onViewCreated(view, savedInstanceState)
         setShimmer(binding.phMessageList)
         bind()
+        (requireArguments().getParcelable(CHAT_ROOM_ID_ARG) as? Chatroom)?.let {
+            handleChatroomValue(it)
+        }
     }
 
     private fun bind() = with(binding) {
@@ -72,7 +75,6 @@ class ChatFragment : BaseFragment<ChatState, ChatEvent, ChatViewModel>(
     }
 
     private fun handleChatroomValue(chatroom: Chatroom) = with(binding) {
-        Timber.d("Smotrim frag $chatroom")
         chatName.text = chatroom.name
         chatDescription.text = chatroom.description
         chatroomIsFavourites.setImageResource(if (chatroom.isFavourites) R.drawable.ic_is_favourites else R.drawable.ic_is_not_favourites)

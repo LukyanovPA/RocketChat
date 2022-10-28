@@ -2,7 +2,6 @@ package com.pavellukyanov.rocketchat.presentation.feature.auth.signin
 
 import com.pavellukyanov.rocketchat.domain.usecase.auth.Login
 import com.pavellukyanov.rocketchat.presentation.base.BaseViewModel
-import com.pavellukyanov.rocketchat.presentation.base.ViewState
 import com.pavellukyanov.rocketchat.presentation.feature.auth.AuthNavigator
 import com.pavellukyanov.rocketchat.utils.Constants.EMPTY_STRING
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -32,9 +31,7 @@ class SignInViewModel @Inject constructor(
     private fun handleButtonState() = launchCPU {
         email.combine(password) { email, password ->
             email.isNotEmpty() && password.isNotEmpty()
-        }.collect { state ->
-            _state.postValue(ViewState(state = state))
-        }
+        }.collect(::emitState)
     }
 
     private fun setEmail(value: String) = launchCPU {

@@ -37,13 +37,9 @@ class FavouritesChatRoomsViewModel @Inject constructor(
             .asState()
             .collect { list ->
                 if (list.isEmpty()) {
-                    _state.postValue(getViewState(ChatRoomsState.EmptyList))
+                    emitState(ChatRoomsState.EmptyList)
                 } else {
-                    _state.postValue(
-                        getViewState(
-                            ChatRoomsState.Success(list)
-                        )
-                    )
+                    emitState(ChatRoomsState.Success(list))
                 }
             }
     }

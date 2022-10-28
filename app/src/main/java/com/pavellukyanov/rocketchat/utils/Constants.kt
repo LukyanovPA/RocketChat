@@ -7,6 +7,7 @@ object Constants {
     const val INT_ZERO = 0
     const val INT_ONE = 1
     const val INT_TWO = 2
+    const val INT_THREE = 3
     const val INT_TWENTY = 20
 
     //Long

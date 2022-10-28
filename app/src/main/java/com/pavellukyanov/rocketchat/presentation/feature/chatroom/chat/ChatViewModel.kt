@@ -11,7 +11,6 @@ import com.pavellukyanov.rocketchat.presentation.base.BaseViewModel
 import com.pavellukyanov.rocketchat.presentation.feature.chatroom.ChatRoomNavigator
 import com.pavellukyanov.rocketchat.utils.Constants.EMPTY_STRING
 import kotlinx.coroutines.flow.MutableStateFlow
-import timber.log.Timber
 import javax.inject.Inject
 
 class ChatViewModel @Inject constructor(
@@ -27,12 +26,11 @@ class ChatViewModel @Inject constructor(
     private var temChatroom: Chatroom? = null
 
     init {
-        _state.postValue(getViewState(ChatState.ChatValue(chatroom!!)))
+        fetchChatRoom()
         initSession()
         refreshCache()
         fetchMessages()
         handleButtonState()
-        fetchChatRoom()
     }
 
     override fun action(event: ChatEvent) {
@@ -65,23 +63,28 @@ class ChatViewModel @Inject constructor(
     }
 
     private fun fetchChatRoom() = launchIO {
-        val refreshChat = getChatRoom(chatroom?.id!!)
-        temChatroom = refreshChat
-        _state.postValue(getViewState(ChatState.ChatValue(refreshChat)))
-        Timber.d("Smotrim vm $refreshChat")
+        getChatRoom(chatroom?.id!!)
+            .asState()
+            .collect { refreshChat ->
+                refreshChat?.let {
+                    temChatroom = it
+                    emitState(ChatState.ChatValue(it))
+                }
+            }
     }
 
     private fun handleButtonState() = launchCPU {
         message.collect { mess ->
-            _state.postValue(getViewState(ChatState.ButtonState(mess.isNotBlank() && mess.isNotEmpty())))
+            emitState(ChatState.ButtonState(mess.isNotBlank() && mess.isNotEmpty()))
         }
     }
 
     private fun fetchMessages() = launchIO {
         getMessages(chatroom?.id!!)
+//            .onEach { fetchChatRoom() }
             .asState()
             .collect { list ->
-                _state.postValue(getViewState(ChatState.Messages(list)))
+                emitState(ChatState.Messages(list))
             }
     }
 
