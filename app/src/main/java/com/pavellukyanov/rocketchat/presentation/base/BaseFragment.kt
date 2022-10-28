@@ -13,7 +13,6 @@ import com.pavellukyanov.rocketchat.presentation.helper.ResultWrapper
 import com.pavellukyanov.rocketchat.presentation.helper.gallery.PickFileContract
 import com.pavellukyanov.rocketchat.presentation.helper.gallery.PickImageContract
 import dagger.android.support.AndroidSupportInjection
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import timber.log.Timber
 import javax.inject.Inject
@@ -48,7 +47,7 @@ abstract class BaseFragment<STATE : Any, EVENT : Any, VM : BaseViewModel<STATE, 
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        viewLifecycleOwner.lifecycleScope.launch(Dispatchers.Main) {
+        lifecycleScope.launch {
             try {
                 vm.state.collect(::handleViewState)
             } catch (throwable: Throwable) {

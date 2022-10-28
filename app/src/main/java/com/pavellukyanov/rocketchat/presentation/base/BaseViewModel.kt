@@ -62,9 +62,7 @@ abstract class BaseViewModel<STATE : Any, EVENT : Any, N : BaseNavigator>(protec
     @OptIn(FlowPreview::class)
     protected fun <T> Flow<T>.asState(): Flow<T> =
         this.onStart { _state.emit(State(isLoading = true)) }
-            .flatMapMerge { t ->
-                flowOf(t)
-            }.flowOn(Dispatchers.Default)
+            .flatMapMerge { t -> flowOf(t) }
 
     private fun getViewState(state: STATE): State<STATE> =
         State(isLoading = false, state = state)

@@ -23,7 +23,7 @@ class ChatViewModel @Inject constructor(
     private val getChatRoom: GetChatRoom
 ) : BaseViewModel<ChatState, ChatEvent, ChatRoomNavigator>(navigator) {
     private val message = MutableStateFlow(EMPTY_STRING)
-    private var temChatroom: Chatroom? = null
+    private var tempChatroom: Chatroom? = null
 
     init {
         fetchChatRoom()
@@ -43,8 +43,8 @@ class ChatViewModel @Inject constructor(
     }
 
     private fun handleFavouritesState() = launchIO {
-        val state = temChatroom!!.isFavourites
-        val newChatroom = temChatroom!!.copy(isFavourites = !state)
+        val state = tempChatroom!!.isFavourites
+        val newChatroom = tempChatroom!!.copy(isFavourites = !state)
         changeFavouritesState(newChatroom)
     }
 
@@ -67,7 +67,7 @@ class ChatViewModel @Inject constructor(
             .asState()
             .collect { refreshChat ->
                 refreshChat?.let {
-                    temChatroom = it
+                    tempChatroom = it
                     emitState(ChatState.ChatValue(it))
                 }
             }
@@ -81,7 +81,6 @@ class ChatViewModel @Inject constructor(
 
     private fun fetchMessages() = launchIO {
         getMessages(chatroom?.id!!)
-//            .onEach { fetchChatRoom() }
             .asState()
             .collect { list ->
                 emitState(ChatState.Messages(list))
