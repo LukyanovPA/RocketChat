@@ -5,15 +5,7 @@ import com.pavellukyanov.rocketchat.data.utils.networkadapter.NetworkResponse
 import retrofit2.Call
 import timber.log.Timber
 
-internal fun <T : Any> NetworkResponse<T>.asData(): T =
-    when (this) {
-        is NetworkResponse.Success -> this.body
-        is NetworkResponse.ApiError -> throw ApiException.ServerException(code, body.toString())
-        is NetworkResponse.NetworkError -> throw ApiException.ConnectionException(error.message)
-        is NetworkResponse.UnknownError -> throw ApiException.UndefinedException(error!!)
-    }
-
-internal fun <T : Any> NetworkResponse<BaseResponse<T>>.asResponse(): T =
+internal fun <T : Any> NetworkResponse<BaseResponse<T>>.asData(): T =
     when (this) {
         is NetworkResponse.Success -> this.body.data!!
         is NetworkResponse.ApiError -> throw ApiException.ServerException(code, body.errorMessage)

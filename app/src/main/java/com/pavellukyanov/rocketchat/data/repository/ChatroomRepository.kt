@@ -6,7 +6,6 @@ import com.pavellukyanov.rocketchat.data.cache.LocalDatabase
 import com.pavellukyanov.rocketchat.data.cache.entity.ChatroomLocal
 import com.pavellukyanov.rocketchat.data.utils.ApiParams
 import com.pavellukyanov.rocketchat.data.utils.asData
-import com.pavellukyanov.rocketchat.data.utils.asResponse
 import com.pavellukyanov.rocketchat.data.utils.file.FileInfoHelper
 import com.pavellukyanov.rocketchat.data.utils.file.RequestHelper
 import com.pavellukyanov.rocketchat.data.utils.map
@@ -47,7 +46,7 @@ class ChatroomRepository @Inject constructor(
                 MultipartBody.Part.createFormData(PART_NAME, fileName, it)
             }
         }
-        return api.createChatroom(partMap, file).asResponse()
+        return api.createChatroom(partMap, file).asData()
     }
 
     override suspend fun getChatrooms(): Flow<List<Chatroom>> =

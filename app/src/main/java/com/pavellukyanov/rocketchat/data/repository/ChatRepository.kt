@@ -2,7 +2,7 @@ package com.pavellukyanov.rocketchat.data.repository
 
 import com.pavellukyanov.rocketchat.data.api.ChatApi
 import com.pavellukyanov.rocketchat.data.cache.LocalDatabase
-import com.pavellukyanov.rocketchat.data.utils.asResponse
+import com.pavellukyanov.rocketchat.data.utils.asData
 import com.pavellukyanov.rocketchat.domain.entity.chatroom.chat.ChatMessage
 import com.pavellukyanov.rocketchat.domain.entity.chatroom.chat.SocketMessage
 import com.pavellukyanov.rocketchat.domain.repository.ChatWebSocket
@@ -32,7 +32,7 @@ class ChatRepository @Inject constructor(
         cache.messages().getMessages(chatroomId)
 
     override suspend fun updateCache(chatroomId: String) {
-        val messages = api.getMessages(chatroomId).asResponse()
+        val messages = api.getMessages(chatroomId).asData()
         cache.messages().insert(messages)
     }
 }

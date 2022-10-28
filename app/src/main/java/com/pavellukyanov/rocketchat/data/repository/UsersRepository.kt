@@ -2,7 +2,7 @@ package com.pavellukyanov.rocketchat.data.repository
 
 import com.pavellukyanov.rocketchat.data.api.UsersApi
 import com.pavellukyanov.rocketchat.data.cache.LocalDatabase
-import com.pavellukyanov.rocketchat.data.utils.asResponse
+import com.pavellukyanov.rocketchat.data.utils.asData
 import com.pavellukyanov.rocketchat.domain.entity.users.User
 import com.pavellukyanov.rocketchat.domain.repository.IUsers
 import com.pavellukyanov.rocketchat.presentation.helper.NetworkMonitor
@@ -26,7 +26,7 @@ class UsersRepository @Inject constructor(
         networkMonitor.handleInternetConnection()
             .flatMapMerge {
                 flow {
-                    val users = api.getAllUsers().asResponse()
+                    val users = api.getAllUsers().asData()
                     cache.users().insert(users)
                     emit(Unit)
                 }

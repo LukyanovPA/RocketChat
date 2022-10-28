@@ -17,10 +17,10 @@ interface ChatroomApi {
     ): NetworkResponse<BaseResponse<Boolean>>
 
     @GET("chatrooms/getAllChatrooms")
-    suspend fun getAllChatRooms(): NetworkResponse<List<Chatroom>>
+    suspend fun getAllChatRooms(): NetworkResponse<BaseResponse<List<Chatroom>>>
 
     @POST("chatrooms/delete/{chatroomId}")
     suspend fun deleteChatRoom(
         @Path(ApiParams.CHAT_ROOM_ID) chatroomId: String
-    ): NetworkResponse<Boolean>
+    ): NetworkResponse<BaseResponse<Boolean>>
 }
