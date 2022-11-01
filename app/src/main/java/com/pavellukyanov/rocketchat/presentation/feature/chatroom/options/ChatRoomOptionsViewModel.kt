@@ -18,9 +18,7 @@ class ChatRoomOptionsViewModel @Inject constructor(
         }
     }
 
-    private fun start() {
-        emitState(listOf(OptionItem(OptionsType.EDIT), OptionItem(OptionsType.REMOVE)))
-    }
+    private fun start() = launchCPU { emitState(listOf(OptionItem(OptionsType.EDIT), OptionItem(OptionsType.REMOVE))) }
 
     private fun onOptionClicked(item: OptionItem) {
         sendResult(item.type)

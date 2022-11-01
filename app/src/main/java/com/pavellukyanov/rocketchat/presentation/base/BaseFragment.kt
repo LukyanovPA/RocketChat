@@ -58,8 +58,13 @@ abstract class BaseFragment<STATE : Any, EVENT : Any, VM : BaseViewModel<STATE, 
     }
 
     private fun handleViewState(state: State<STATE>) {
-        shimmer?.isVisible = state.isLoading
-        state.state?.let { render(it) }
+        when (state) {
+            is State.Loading -> shimmer?.isVisible = true
+            is State.Success -> {
+                shimmer?.isVisible = false
+                render(state.state)
+            }
+        }
     }
 
     open fun action(event: EVENT) {

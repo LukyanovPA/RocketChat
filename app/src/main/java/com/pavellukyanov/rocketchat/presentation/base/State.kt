@@ -1,6 +1,6 @@
 package com.pavellukyanov.rocketchat.presentation.base
 
-data class State<STATE>(
-    val isLoading: Boolean = false,
-    val state: STATE? = null
-)
+sealed class State<out STATE> {
+    object Loading : State<Nothing>()
+    data class Success<out STATE>(val state: STATE) : State<STATE>()
+}

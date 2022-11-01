@@ -63,7 +63,8 @@ class HomeViewModel @Inject constructor(
     private fun setAvatar(uri: Uri) = launchIO { changeAvatar(uri) }
 
     private fun fetchMyAccount() = launchIO {
-        getMyAccount().collect(::emitState)
+        getMyAccount()
+            .collect(::emitState)
     }
 
     private fun refreshCache() = launchIO {

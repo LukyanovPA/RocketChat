@@ -25,7 +25,7 @@ class WebSocketClient @Inject constructor(
 
         return OkHttpClient()
             .newBuilder()
-            .pingInterval(15, TimeUnit.SECONDS)
+            .pingInterval(INTERVAL, TimeUnit.SECONDS)
             .addInterceptor(httpInterceptor)
             .addInterceptor(httpLoggingInterceptor)
             .build()
@@ -77,5 +77,6 @@ class WebSocketClient @Inject constructor(
         private const val NORMAL_REASON = "Close"
         private const val SOCKET_ERROR_TAG = "SocketError"
         private const val SOCKET_SUCCESS_TAG = "SocketMessage"
+        private const val INTERVAL = 15L
     }
 }

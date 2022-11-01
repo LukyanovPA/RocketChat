@@ -67,7 +67,6 @@ class ChatRoomsViewModel @Inject constructor(
             .flatMapMerge { query ->
                 getChatrooms(query)
             }
-            .asState()
             .collect { list ->
                 if (list.isEmpty()) {
                     emitState(ChatRoomsState.EmptyList)

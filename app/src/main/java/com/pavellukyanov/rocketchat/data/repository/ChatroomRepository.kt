@@ -84,7 +84,9 @@ class ChatroomRepository @Inject constructor(
         val state = api.deleteChatRoom(chatroomId).asData()
         if (state) {
             val chatRoomLocal = cache.chatrooms().getChatRoom(chatroomId)
-            cache.chatrooms().delete(chatRoomLocal)
+            if (chatRoomLocal != null) {
+                cache.chatrooms().delete(chatRoomLocal)
+            }
         }
     }
 
@@ -98,7 +100,7 @@ class ChatroomRepository @Inject constructor(
 
     override suspend fun getChatRoom(chatroomId: String): Flow<Chatroom?> =
         cache.chatrooms().getChatroomsStream()
-            .map { chat -> chat.find { it.chatroomId == chatroomId }?.map() }
+            .map { rooms -> rooms.find { it.chatroomId == chatroomId }?.map() }
 
     companion object {
         private const val PART_NAME = "chatImg"

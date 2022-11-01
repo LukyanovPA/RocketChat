@@ -4,20 +4,22 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.pavellukyanov.rocketchat.data.utils.ResponseState
 import com.pavellukyanov.rocketchat.data.utils.errors.ApiException
-import com.pavellukyanov.rocketchat.utils.Constants.INT_ONE
-import com.pavellukyanov.rocketchat.utils.Constants.INT_THREE
-import kotlinx.coroutines.*
-import kotlinx.coroutines.channels.BufferOverflow
-import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.SharedFlow
+import kotlinx.coroutines.flow.asSharedFlow
+import kotlinx.coroutines.launch
 import timber.log.Timber
 
 abstract class BaseViewModel<STATE : Any, EVENT : Any, N : BaseNavigator>(protected val navigator: N) : ViewModel() {
-    private val _state = MutableSharedFlow<State<STATE>>(
-        replay = INT_ONE,
-        extraBufferCapacity = INT_THREE,
-        onBufferOverflow = BufferOverflow.DROP_OLDEST
-    )
+    private val _state = MutableSharedFlow<State<STATE>>()
     val state: SharedFlow<State<STATE>> = _state.asSharedFlow()
+
+    init {
+        _state.tryEmit(State.Loading)
+    }
 
     abstract fun action(event: EVENT)
 
@@ -55,17 +57,9 @@ abstract class BaseViewModel<STATE : Any, EVENT : Any, N : BaseNavigator>(protec
         }
     }
 
-    protected fun emitState(state: STATE) = launchCPU {
-        _state.emit(getViewState(state))
+    protected suspend fun emitState(state: STATE) {
+        _state.emit(State.Success(state))
     }
-
-    @OptIn(FlowPreview::class)
-    protected fun <T> Flow<T>.asState(): Flow<T> =
-        this.onStart { _state.emit(State(isLoading = true)) }
-            .flatMapMerge { t -> flowOf(t) }
-
-    private fun getViewState(state: STATE): State<STATE> =
-        State(isLoading = false, state = state)
 
     companion object {
         private const val TAG = "ViewModelScopeError"

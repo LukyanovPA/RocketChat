@@ -19,7 +19,6 @@ class ListUsersViewModel @Inject constructor(
 
     private fun fetchUsers() = launchIO {
         getAllUsers()
-            .asState()
             .collect(::emitState)
     }
 }

@@ -30,11 +30,7 @@ class ListUsersFragment : ListUsersAdapter.ListUsersListener, BaseFragment<List<
     }
 
     override fun render(state: List<User>) {
-        handleUsersList(state)
-    }
-
-    private fun handleUsersList(users: List<User>) {
-        listUsersAdapter.data = users
+        listUsersAdapter.data = state
     }
 
     override fun onItemClicked(item: User) {

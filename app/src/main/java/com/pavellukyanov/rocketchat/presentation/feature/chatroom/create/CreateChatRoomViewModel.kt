@@ -19,7 +19,7 @@ class CreateChatRoomViewModel @Inject constructor(
     private var _uri: Uri? = null
 
     init {
-        setLoading(false)
+        launchCPU { setLoading(false) }
     }
 
     override fun action(event: CreateChatRoomEvent) {
@@ -41,7 +41,7 @@ class CreateChatRoomViewModel @Inject constructor(
             listFiles?.let { response ->
                 response.firstOrNull()?.getPath()?.let { uri ->
                     _uri = uri
-                    emitState(CreateChatRoomState.Img(uri))
+                    launchCPU { emitState(CreateChatRoomState.Img(uri)) }
                 }
             }
         }
@@ -70,7 +70,7 @@ class CreateChatRoomViewModel @Inject constructor(
         }
     }
 
-    private fun setLoading(state: Boolean) {
+    private suspend fun setLoading(state: Boolean) {
         emitState(CreateChatRoomState.Loading(state))
     }
 }

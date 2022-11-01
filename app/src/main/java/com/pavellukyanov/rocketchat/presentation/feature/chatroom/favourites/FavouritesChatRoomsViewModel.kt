@@ -34,7 +34,6 @@ class FavouritesChatRoomsViewModel @Inject constructor(
             .flatMapMerge { query ->
                 getFavourites(query)
             }
-            .asState()
             .collect { list ->
                 if (list.isEmpty()) {
                     emitState(ChatRoomsState.EmptyList)

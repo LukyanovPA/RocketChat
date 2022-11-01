@@ -11,11 +11,12 @@ import com.pavellukyanov.rocketchat.presentation.base.BaseViewModel
 import com.pavellukyanov.rocketchat.presentation.feature.chatroom.ChatRoomNavigator
 import com.pavellukyanov.rocketchat.utils.Constants.EMPTY_STRING
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.combine
 import javax.inject.Inject
 
 class ChatViewModel @Inject constructor(
     private val changeFavouritesState: ChangeFavouritesState,
-    private val chatroom: Chatroom?,
+    private var chatroom: Chatroom?,
     navigator: ChatRoomNavigator,
     private val getMessages: GetMessages,
     private val chatInteractor: ChatInteractor,
@@ -23,10 +24,8 @@ class ChatViewModel @Inject constructor(
     private val getChatRoom: GetChatRoom
 ) : BaseViewModel<ChatState, ChatEvent, ChatRoomNavigator>(navigator) {
     private val message = MutableStateFlow(EMPTY_STRING)
-    private var tempChatroom: Chatroom? = null
 
     init {
-        fetchChatRoom()
         initSession()
         refreshCache()
         fetchMessages()
@@ -35,16 +34,21 @@ class ChatViewModel @Inject constructor(
 
     override fun action(event: ChatEvent) {
         when (event) {
-            is ChatEvent.GoBack -> navigator.back()
+            is ChatEvent.GoBack -> goBack()
             is ChatEvent.Message -> writeMessage(event.message)
             is ChatEvent.SendMessage -> sendMes()
             is ChatEvent.ChangeFavourites -> handleFavouritesState()
         }
     }
 
+    private fun goBack() {
+        launchIO { chatInteractor.closeSession() }
+        navigator.back()
+    }
+
     private fun handleFavouritesState() = launchIO {
-        val state = tempChatroom!!.isFavourites
-        val newChatroom = tempChatroom!!.copy(isFavourites = !state)
+        val state = chatroom!!.isFavourites
+        val newChatroom = chatroom!!.copy(isFavourites = !state)
         changeFavouritesState(newChatroom)
     }
 
@@ -62,17 +66,6 @@ class ChatViewModel @Inject constructor(
         chatInteractor.initSession()
     }
 
-    private fun fetchChatRoom() = launchIO {
-        getChatRoom(chatroom?.id!!)
-            .asState()
-            .collect { refreshChat ->
-                refreshChat?.let {
-                    tempChatroom = it
-                    emitState(ChatState.ChatValue(it))
-                }
-            }
-    }
-
     private fun handleButtonState() = launchCPU {
         message.collect { mess ->
             emitState(ChatState.ButtonState(mess.isNotBlank() && mess.isNotEmpty()))
@@ -81,7 +74,11 @@ class ChatViewModel @Inject constructor(
 
     private fun fetchMessages() = launchIO {
         getMessages(chatroom?.id!!)
-            .asState()
+            .combine(getChatRoom(chatroom?.id!!)) { messages, room ->
+                chatroom = room
+                if (room != null) emitState(ChatState.ChatValue(room))
+                messages
+            }
             .collect { list ->
                 emitState(ChatState.Messages(list))
             }
