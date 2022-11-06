@@ -3,37 +3,24 @@ package com.pavellukyanov.rocketchat.presentation.base
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.pavellukyanov.rocketchat.data.utils.ResponseState
-import com.pavellukyanov.rocketchat.data.utils.errors.ApiException
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.flow.SharedFlow
-import kotlinx.coroutines.flow.asSharedFlow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import timber.log.Timber
 
-abstract class BaseViewModel<STATE : Any, EVENT : Any, N : BaseNavigator>(protected val navigator: N) : ViewModel() {
-    private val _state = MutableSharedFlow<State<STATE>>()
-    val state: SharedFlow<State<STATE>> = _state.asSharedFlow()
-
-    init {
-        _state.tryEmit(State.Loading)
-    }
+abstract class BaseViewModel<STATE : Any, EVENT : Any> : ViewModel() {
+    private val _state = MutableStateFlow<State<STATE>>(State.Loading)
+    val state: StateFlow<State<STATE>> = _state
 
     abstract fun action(event: EVENT)
-
-    fun onError(error: Throwable) = launchUI {
-        when (error) {
-            is ApiException.UnauthorizedException -> navigator.toSignIn()
-            else -> error.message?.let(navigator::showGlobalErrorDialog)
-        }
-    }
 
     protected open fun <T> handleResponseState(state: ResponseState<T>, onSuccess: (T) -> Unit) {
         when (state) {
             is ResponseState.Success -> onSuccess(state.data)
-            is ResponseState.ServerErrors -> launchUI { navigator.showGlobalErrorDialog(state.errorMessage!!) }
+            is ResponseState.ServerErrors -> launchCPU { emitErrorMessageState(state.errorMessage!!) }
         }
     }
 
@@ -52,13 +39,25 @@ abstract class BaseViewModel<STATE : Any, EVENT : Any, N : BaseNavigator>(protec
                 action()
             } catch (throwable: Throwable) {
                 Timber.tag(TAG).e(throwable)
-                onError(throwable)
+                emitErrorState(throwable)
             }
         }
     }
 
-    protected suspend fun emitState(state: STATE) {
-        _state.emit(State.Success(state))
+    protected fun reduce(reducer: State<STATE>.() -> State<STATE>) = launchCPU {
+        _state.value = _state.value.reducer()
+    }
+
+    protected fun emitState(state: STATE) = launchCPU {
+        _state.compareAndSet(_state.value, State.Success(state))
+    }
+
+    private suspend fun emitErrorMessageState(message: String) {
+        _state.emit(State.ErrorMessage(message))
+    }
+
+    private fun emitErrorState(error: Throwable) {
+        _state.tryEmit(State.Error(error))
     }
 
     companion object {

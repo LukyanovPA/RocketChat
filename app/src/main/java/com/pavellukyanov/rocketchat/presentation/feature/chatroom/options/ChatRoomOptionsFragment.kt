@@ -9,7 +9,7 @@ import com.pavellukyanov.rocketchat.databinding.FragmentChatroomOptionsBinding
 import com.pavellukyanov.rocketchat.presentation.base.BaseBottomSheetDialogFragment
 
 class ChatRoomOptionsFragment :
-    BaseBottomSheetDialogFragment<List<OptionItem>, OptionsEvent, FragmentChatroomOptionsBinding, ChatRoomOptionsViewModel>(
+    BaseBottomSheetDialogFragment<OptionsState, OptionsEvent, FragmentChatroomOptionsBinding, ChatRoomOptionsViewModel>(
         ChatRoomOptionsViewModel::class.java
     ), ChatRoomOptionsAdapter.ChatRoomOptionsListener {
     private val optionsAdapter by lazy(LazyThreadSafetyMode.NONE) { ChatRoomOptionsAdapter(this) }
@@ -31,8 +31,11 @@ class ChatRoomOptionsFragment :
         }
     }
 
-    override fun render(state: List<OptionItem>) {
-        optionsAdapter.data = state
+    override fun render(state: OptionsState) {
+        when (state) {
+            is OptionsState.OptionsList -> optionsAdapter.data = state.list
+            is OptionsState.Back -> navigator.back()
+        }
     }
 
     override fun onItemClicked(item: OptionItem) {

@@ -2,7 +2,6 @@ package com.pavellukyanov.rocketchat.presentation.feature.home
 
 import android.net.Uri
 import com.pavellukyanov.rocketchat.core.di.qualifiers.HomeSearchQ
-import com.pavellukyanov.rocketchat.domain.entity.home.MyAccount
 import com.pavellukyanov.rocketchat.domain.usecase.auth.LogOut
 import com.pavellukyanov.rocketchat.domain.usecase.home.RefreshChatroomsCache
 import com.pavellukyanov.rocketchat.domain.usecase.profile.ChangeAvatar
@@ -13,14 +12,13 @@ import com.pavellukyanov.rocketchat.presentation.helper.gallery.GalleryHelper
 import javax.inject.Inject
 
 class HomeViewModel @Inject constructor(
-    navigator: HomeNavigator,
     private val galleryHelper: GalleryHelper,
     private val changeAvatar: ChangeAvatar,
     private val getMyAccount: GetMyAccount,
     private val refreshChatroomsCache: RefreshChatroomsCache,
     private val logOut: LogOut,
     @HomeSearchQ private val searchStorage: ObjectStorage<String>
-) : BaseViewModel<MyAccount, HomeEvent, HomeNavigator>(navigator) {
+) : BaseViewModel<HomeState, HomeEvent>() {
 
     init {
         fetchMyAccount()
@@ -29,7 +27,6 @@ class HomeViewModel @Inject constructor(
     override fun action(event: HomeEvent) {
         when (event) {
             is HomeEvent.RefreshCache -> refreshCache()
-            is HomeEvent.CreateNewChatRom -> createNewChatRoom()
             is HomeEvent.ChangeAvatar -> changeAvatar()
             is HomeEvent.Search -> search(event.query)
             is HomeEvent.LogOut -> onClickLogOut()
@@ -39,8 +36,6 @@ class HomeViewModel @Inject constructor(
     private fun search(query: String) = launchCPU {
         searchStorage.setObject(query)
     }
-
-    private fun createNewChatRoom() = navigator.forwardToCreateChatroom()
 
     private fun changeAvatar() = launchCPU {
         galleryHelper.pickImagesWithCheckPermission(
@@ -56,7 +51,7 @@ class HomeViewModel @Inject constructor(
 
     private fun onClickLogOut() = launchIO {
         handleResponseState(logOut()) {
-            launchUI { navigator.forwardToSignIn() }
+            launchCPU { emitState(HomeState.SignIn) }
         }
     }
 
@@ -64,7 +59,7 @@ class HomeViewModel @Inject constructor(
 
     private fun fetchMyAccount() = launchIO {
         getMyAccount()
-            .collect(::emitState)
+            .collect { state -> emitState(HomeState.Account(state)) }
     }
 
     private fun refreshCache() = launchIO {

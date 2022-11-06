@@ -7,7 +7,6 @@ import com.pavellukyanov.rocketchat.domain.usecase.chatroom.GetChatRooms
 import com.pavellukyanov.rocketchat.domain.utils.ObjectStorage
 import com.pavellukyanov.rocketchat.domain.utils.UserInfo
 import com.pavellukyanov.rocketchat.presentation.base.BaseViewModel
-import com.pavellukyanov.rocketchat.presentation.feature.chatroom.ChatRoomNavigator
 import com.pavellukyanov.rocketchat.presentation.feature.chatroom.options.ChatRoomOptionsFragment
 import com.pavellukyanov.rocketchat.presentation.feature.chatroom.options.OptionsType
 import com.pavellukyanov.rocketchat.presentation.feature.home.HomeFragment
@@ -17,32 +16,26 @@ import kotlinx.coroutines.flow.flatMapMerge
 import javax.inject.Inject
 
 class ChatRoomsViewModel @Inject constructor(
-    navigator: ChatRoomNavigator,
     private val chatRoomDelete: ChatRoomDelete,
     private val fragmentResultHelper: FragmentResultHelper,
     private val userInfo: UserInfo,
     private val getChatrooms: GetChatRooms,
     @HomeSearchQ private val searchStorage: ObjectStorage<String>
-) : BaseViewModel<ChatRoomsState, ChatRoomsEvent, ChatRoomNavigator>(navigator) {
+) : BaseViewModel<ChatRoomsState, ChatRoomsEvent>() {
     init {
-        fetchChatrooms()
+        fetchChatRooms()
     }
 
     override fun action(event: ChatRoomsEvent) {
         when (event) {
-            is ChatRoomsEvent.GoToChatRoom -> forwardToChatroom(event.chatroom)
             is ChatRoomsEvent.DeleteChatRoom -> onChatRoomLongClicked(event.chatroom)
         }
-    }
-
-    private fun forwardToChatroom(chatroom: Chatroom) {
-        navigator.forwardToChat(chatroom)
     }
 
     private fun onChatRoomLongClicked(item: Chatroom) {
         if (item.ownerId == userInfo.user?.uuid) {
             handleOptionsType(item.id)
-            navigator.forwardToChatRoomOptions()
+            launchCPU { emitState(ChatRoomsState.ForwardToChatRoomOptions) }
         }
     }
 
@@ -62,7 +55,7 @@ class ChatRoomsViewModel @Inject constructor(
     }
 
     @OptIn(FlowPreview::class)
-    private fun fetchChatrooms() = launchIO {
+    private fun fetchChatRooms() = launchIO {
         searchStorage.observ
             .flatMapMerge { query ->
                 getChatrooms(query)

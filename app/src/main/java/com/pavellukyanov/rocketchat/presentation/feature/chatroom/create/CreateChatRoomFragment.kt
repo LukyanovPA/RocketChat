@@ -8,6 +8,7 @@ import by.kirich1409.viewbindingdelegate.viewBinding
 import com.pavellukyanov.rocketchat.R
 import com.pavellukyanov.rocketchat.databinding.FragmentCreateChatroomBinding
 import com.pavellukyanov.rocketchat.presentation.base.BaseFragment
+import com.pavellukyanov.rocketchat.presentation.base.SimpleDialogFragment
 import com.pavellukyanov.rocketchat.presentation.helper.ext.load
 import com.pavellukyanov.rocketchat.presentation.helper.ext.setOnTextChangeListener
 
@@ -23,7 +24,7 @@ class CreateChatRoomFragment : BaseFragment<CreateChatRoomState, CreateChatRoomE
     }
 
     private fun bind() = with(binding) {
-        createChatroomArrowBack.setOnClickListener { action(CreateChatRoomEvent.GoBack) }
+        createChatroomArrowBack.setOnClickListener { navigator.back() }
         addChatroomImage.setOnClickListener { action(CreateChatRoomEvent.ChangeImg) }
         createChatroomCheck.setOnClickListener { action(CreateChatRoomEvent.Create) }
         createChatroomName.setOnTextChangeListener { action(CreateChatRoomEvent.Name(it)) }
@@ -34,6 +35,8 @@ class CreateChatRoomFragment : BaseFragment<CreateChatRoomState, CreateChatRoomE
         when (state) {
             is CreateChatRoomState.Loading -> handleLoadingState(state.state)
             is CreateChatRoomState.Img -> handleChatroomImg(state.uri)
+            is CreateChatRoomState.EmptyNameError -> showEmptyChatroomNameErrorDialog()
+            is CreateChatRoomState.Success -> navigator.back()
         }
     }
 
@@ -43,6 +46,16 @@ class CreateChatRoomFragment : BaseFragment<CreateChatRoomState, CreateChatRoomE
 
     private fun handleLoadingState(state: Boolean) {
         binding.createChatRoomLoading.isVisible = state
+    }
+
+    private fun showEmptyChatroomNameErrorDialog() {
+        navigator.showDialog(
+            SimpleDialogFragment.newInstance(
+                titleRes = R.string.global_error_title,
+                messageRes = R.string.create_chatroom_empty_name_error,
+                closeButtonRes = R.string.global_error_button_close
+            ), SimpleDialogFragment.TAG
+        )
     }
 
     companion object {

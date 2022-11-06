@@ -11,14 +11,16 @@ import com.pavellukyanov.rocketchat.databinding.TabHomePagerBinding
 import com.pavellukyanov.rocketchat.domain.entity.home.MyAccount
 import com.pavellukyanov.rocketchat.presentation.base.BaseFragment
 import com.pavellukyanov.rocketchat.presentation.base.PagerFragmentAdapter
+import com.pavellukyanov.rocketchat.presentation.feature.auth.signin.SignInFragment
 import com.pavellukyanov.rocketchat.presentation.feature.chatroom.chatrooms.ChatRoomsFragment
+import com.pavellukyanov.rocketchat.presentation.feature.chatroom.create.CreateChatRoomFragment
 import com.pavellukyanov.rocketchat.presentation.feature.chatroom.favourites.FavouritesChatRoomsFragment
 import com.pavellukyanov.rocketchat.presentation.feature.users.list.ListUsersFragment
 import com.pavellukyanov.rocketchat.presentation.helper.ext.load
 import com.pavellukyanov.rocketchat.presentation.helper.ext.onTableSelected
 import com.pavellukyanov.rocketchat.presentation.helper.ext.setOnTextChangeListener
 
-class HomeFragment : BaseFragment<MyAccount, HomeEvent, HomeViewModel>(
+class HomeFragment : BaseFragment<HomeState, HomeEvent, HomeViewModel>(
     HomeViewModel::class.java,
     R.layout.fragment_home
 ) {
@@ -30,12 +32,15 @@ class HomeFragment : BaseFragment<MyAccount, HomeEvent, HomeViewModel>(
         action(HomeEvent.RefreshCache)
     }
 
-    override fun render(state: MyAccount) {
-        setMyAccountData(state)
+    override fun render(state: HomeState) {
+        when (state) {
+            is HomeState.Account -> setMyAccountData(state.myAccount)
+            is HomeState.SignIn -> navigator.replace(SignInFragment.newInstance(), SignInFragment.TAG)
+        }
     }
 
     private fun bind() = with(binding) {
-        createChatroomContainer.setOnClickListener { action(HomeEvent.CreateNewChatRom) }
+        createChatroomContainer.setOnClickListener { forwardToCreateChatroom() }
         mainAvatar.setOnClickListener { action(HomeEvent.ChangeAvatar) }
         mainSearch.setOnTextChangeListener { action(HomeEvent.Search(it)) }
         mainLogout.setOnClickListener { action(HomeEvent.LogOut) }
@@ -82,6 +87,10 @@ class HomeFragment : BaseFragment<MyAccount, HomeEvent, HomeViewModel>(
     private fun setMyAccountData(myAccount: MyAccount) = with(binding) {
         mainAvatar.load(myAccount.avatar, circleCrop = true)
         mainHeader.text = getString(R.string.home_header, myAccount.username)
+    }
+
+    private fun forwardToCreateChatroom() {
+        navigator.forward(CreateChatRoomFragment.newInstance(), CreateChatRoomFragment.TAG)
     }
 
     companion object {

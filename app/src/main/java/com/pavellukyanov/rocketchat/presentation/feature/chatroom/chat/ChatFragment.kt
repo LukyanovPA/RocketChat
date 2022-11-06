@@ -2,6 +2,7 @@ package com.pavellukyanov.rocketchat.presentation.feature.chatroom.chat
 
 import android.os.Bundle
 import android.view.View
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.pavellukyanov.rocketchat.R
@@ -29,6 +30,11 @@ class ChatFragment : BaseFragment<ChatState, ChatEvent, ChatViewModel>(
         bind()
         (requireArguments().getParcelable(CHAT_ROOM_ID_ARG) as? Chatroom)?.let {
             handleChatroomValue(it)
+        }
+        lifecycleScope.launchWhenCreated {
+            vm.effect.collect {
+                if (it is ChatEffect.Back) navigator.back()
+            }
         }
     }
 
@@ -58,6 +64,7 @@ class ChatFragment : BaseFragment<ChatState, ChatEvent, ChatViewModel>(
             is ChatState.Messages -> handleMessagesList(state.messages)
             is ChatState.ChatValue -> handleChatroomValue(state.chatRoom)
             is ChatState.ButtonState -> handleButtonSendState(state.state)
+//            is ChatState.Back -> navigator.back()
         }
     }
 

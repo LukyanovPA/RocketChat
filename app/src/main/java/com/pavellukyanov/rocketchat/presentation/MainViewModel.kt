@@ -1,19 +1,24 @@
 package com.pavellukyanov.rocketchat.presentation
 
-import androidx.lifecycle.ViewModel
 import com.pavellukyanov.rocketchat.domain.utils.UserInfo
+import com.pavellukyanov.rocketchat.presentation.base.BaseViewModel
 import javax.inject.Inject
 
 class MainViewModel @Inject constructor(
-    private val navigator: MainNavigator,
     private val userInfo: UserInfo
-) : ViewModel() {
+) : BaseViewModel<MainState, MainEvent>() {
 
-    fun checkAuth() {
+    override fun action(event: MainEvent) {
+        when (event) {
+            is MainEvent.CheckAuth -> checkAuth()
+        }
+    }
+
+    private fun checkAuth() = launchCPU {
         if (userInfo.tokens?.token != null && userInfo.tokens?.refreshToken != null) {
-            navigator.forwardToHome()
+            emitState(MainState.Home)
         } else {
-            navigator.forwardToSignIn()
+            emitState(MainState.SignIn)
         }
     }
 }

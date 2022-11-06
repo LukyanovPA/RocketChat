@@ -6,9 +6,12 @@ import by.kirich1409.viewbindingdelegate.viewBinding
 import com.pavellukyanov.rocketchat.R
 import com.pavellukyanov.rocketchat.databinding.FragmentSignInBinding
 import com.pavellukyanov.rocketchat.presentation.base.BaseFragment
+import com.pavellukyanov.rocketchat.presentation.feature.auth.AuthState
+import com.pavellukyanov.rocketchat.presentation.feature.auth.signup.SignUpFragment
+import com.pavellukyanov.rocketchat.presentation.feature.home.HomeFragment
 import com.pavellukyanov.rocketchat.presentation.helper.ext.setOnTextChangeListener
 
-class SignInFragment : BaseFragment<Boolean, SignInEvent, SignInViewModel>(
+class SignInFragment : BaseFragment<AuthState, SignInEvent, SignInViewModel>(
     SignInViewModel::class.java,
     R.layout.fragment_sign_in
 ) {
@@ -22,12 +25,19 @@ class SignInFragment : BaseFragment<Boolean, SignInEvent, SignInViewModel>(
     private fun bind() = with(binding) {
         loginInputEmail.setOnTextChangeListener { action(SignInEvent.Email(it)) }
         loginInputPassword.setOnTextChangeListener { action(SignInEvent.Password(it)) }
-        loginSignUpLink.setOnClickListener { action(SignInEvent.GoToSignUp) }
+        loginSignUpLink.setOnClickListener { forwardToSignUp() }
         loginButton.setOnClickListener { action(SignInEvent.SignIn) }
     }
 
-    override fun render(state: Boolean) {
-        binding.loginButton.isEnabled = state
+    private fun forwardToSignUp() {
+        navigator.forward(SignUpFragment.newInstance(), SignUpFragment.TAG)
+    }
+
+    override fun render(state: AuthState) {
+        when (state) {
+            is AuthState.ButtonState -> binding.loginButton.isEnabled = state.state
+            is AuthState.Success -> navigator.forward(HomeFragment.newInstance(), HomeFragment.TAG)
+        }
     }
 
     companion object {

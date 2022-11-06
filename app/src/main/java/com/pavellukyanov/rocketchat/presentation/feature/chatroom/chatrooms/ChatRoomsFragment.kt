@@ -8,6 +8,8 @@ import com.pavellukyanov.rocketchat.R
 import com.pavellukyanov.rocketchat.databinding.FragmentChatroomsBinding
 import com.pavellukyanov.rocketchat.domain.entity.chatroom.Chatroom
 import com.pavellukyanov.rocketchat.presentation.base.BaseFragment
+import com.pavellukyanov.rocketchat.presentation.feature.chatroom.chat.ChatFragment
+import com.pavellukyanov.rocketchat.presentation.feature.chatroom.options.ChatRoomOptionsFragment
 
 class ChatRoomsFragment : ChatRoomsAdapter.ChatRoomListener, BaseFragment<ChatRoomsState, ChatRoomsEvent, ChatRoomsViewModel>(
     ChatRoomsViewModel::class.java,
@@ -35,6 +37,7 @@ class ChatRoomsFragment : ChatRoomsAdapter.ChatRoomListener, BaseFragment<ChatRo
             is ChatRoomsState.EmptyList -> {
                 //TODO: - добавить заглушку для пустого списка
             }
+            is ChatRoomsState.ForwardToChatRoomOptions -> forwardToChatRoomOptions()
         }
     }
 
@@ -42,8 +45,12 @@ class ChatRoomsFragment : ChatRoomsAdapter.ChatRoomListener, BaseFragment<ChatRo
         chatroomAdapter.data = listChatroom
     }
 
+    private fun forwardToChatRoomOptions() {
+        navigator.showDialog(ChatRoomOptionsFragment.newInstance(), ChatRoomOptionsFragment.TAG)
+    }
+
     override fun onItemClicked(item: Chatroom) {
-        action(ChatRoomsEvent.GoToChatRoom(item))
+        navigator.forward(ChatFragment.newInstance(item), ChatFragment.TAG)
     }
 
     //TODO: - переделать на удаление по свайпу

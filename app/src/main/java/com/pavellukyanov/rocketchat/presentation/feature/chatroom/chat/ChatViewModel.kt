@@ -8,22 +8,25 @@ import com.pavellukyanov.rocketchat.domain.usecase.chatroom.chat.ChatInteractor
 import com.pavellukyanov.rocketchat.domain.usecase.chatroom.chat.GetMessages
 import com.pavellukyanov.rocketchat.domain.usecase.chatroom.chat.RefreshChatCache
 import com.pavellukyanov.rocketchat.presentation.base.BaseViewModel
-import com.pavellukyanov.rocketchat.presentation.feature.chatroom.ChatRoomNavigator
 import com.pavellukyanov.rocketchat.utils.Constants.EMPTY_STRING
+import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.receiveAsFlow
 import javax.inject.Inject
 
 class ChatViewModel @Inject constructor(
     private val changeFavouritesState: ChangeFavouritesState,
     private var chatroom: Chatroom?,
-    navigator: ChatRoomNavigator,
     private val getMessages: GetMessages,
     private val chatInteractor: ChatInteractor,
     private val refreshChatCache: RefreshChatCache,
     private val getChatRoom: GetChatRoom
-) : BaseViewModel<ChatState, ChatEvent, ChatRoomNavigator>(navigator) {
+) : BaseViewModel<ChatState, ChatEvent>() {
     private val message = MutableStateFlow(EMPTY_STRING)
+    private val _effect = Channel<ChatEffect>(Channel.BUFFERED)
+    val effect: Flow<ChatEffect> = _effect.receiveAsFlow()
 
     init {
         initSession()
@@ -41,9 +44,10 @@ class ChatViewModel @Inject constructor(
         }
     }
 
-    private fun goBack() {
-        launchIO { chatInteractor.closeSession() }
-        navigator.back()
+    private fun goBack() = launchIO {
+        chatInteractor.closeSession()
+//        emitState(ChatState.Back)
+        _effect.send(ChatEffect.Back)
     }
 
     private fun handleFavouritesState() = launchIO {

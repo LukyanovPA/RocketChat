@@ -8,11 +8,12 @@ import com.pavellukyanov.rocketchat.R
 import com.pavellukyanov.rocketchat.databinding.FragmentFavouritesChatroomsBinding
 import com.pavellukyanov.rocketchat.domain.entity.chatroom.Chatroom
 import com.pavellukyanov.rocketchat.presentation.base.BaseFragment
+import com.pavellukyanov.rocketchat.presentation.feature.chatroom.chat.ChatFragment
 import com.pavellukyanov.rocketchat.presentation.feature.chatroom.chatrooms.ChatRoomsAdapter
 import com.pavellukyanov.rocketchat.presentation.feature.chatroom.chatrooms.ChatRoomsState
 
 class FavouritesChatRoomsFragment : ChatRoomsAdapter.ChatRoomListener,
-    BaseFragment<ChatRoomsState, Chatroom, FavouritesChatRoomsViewModel>(
+    BaseFragment<ChatRoomsState, Any, FavouritesChatRoomsViewModel>(
         FavouritesChatRoomsViewModel::class.java,
         R.layout.fragment_favourites_chatrooms
     ) {
@@ -38,6 +39,7 @@ class FavouritesChatRoomsFragment : ChatRoomsAdapter.ChatRoomListener,
             is ChatRoomsState.EmptyList -> {
                 //TODO: - добавить заглушку для пустого списка
             }
+            is ChatRoomsState.ForwardToChatRoomOptions -> {} //TODO временно
         }
     }
 
@@ -46,7 +48,7 @@ class FavouritesChatRoomsFragment : ChatRoomsAdapter.ChatRoomListener,
     }
 
     override fun onItemClicked(item: Chatroom) {
-        action(item)
+        navigator.forward(ChatFragment.newInstance(item), ChatFragment.TAG)
     }
 
     companion object {

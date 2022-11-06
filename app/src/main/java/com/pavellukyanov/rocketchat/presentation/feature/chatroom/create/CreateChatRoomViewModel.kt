@@ -3,17 +3,15 @@ package com.pavellukyanov.rocketchat.presentation.feature.chatroom.create
 import android.net.Uri
 import com.pavellukyanov.rocketchat.domain.usecase.chatroom.ChatroomCreate
 import com.pavellukyanov.rocketchat.presentation.base.BaseViewModel
-import com.pavellukyanov.rocketchat.presentation.feature.chatroom.ChatRoomNavigator
 import com.pavellukyanov.rocketchat.presentation.helper.gallery.GalleryHelper
 import com.pavellukyanov.rocketchat.utils.Constants.EMPTY_STRING
 import kotlinx.coroutines.flow.MutableStateFlow
 import javax.inject.Inject
 
 class CreateChatRoomViewModel @Inject constructor(
-    navigator: ChatRoomNavigator,
     private val galleryHelper: GalleryHelper,
     private val chatroomCreate: ChatroomCreate
-) : BaseViewModel<CreateChatRoomState, CreateChatRoomEvent, ChatRoomNavigator>(navigator) {
+) : BaseViewModel<CreateChatRoomState, CreateChatRoomEvent>() {
     private val chatroomName = MutableStateFlow(EMPTY_STRING)
     private val chatroomDescription = MutableStateFlow(EMPTY_STRING)
     private var _uri: Uri? = null
@@ -24,7 +22,6 @@ class CreateChatRoomViewModel @Inject constructor(
 
     override fun action(event: CreateChatRoomEvent) {
         when (event) {
-            is CreateChatRoomEvent.GoBack -> navigator.back()
             is CreateChatRoomEvent.ChangeImg -> changeChatroomImg()
             is CreateChatRoomEvent.Create -> createChatroom()
             is CreateChatRoomEvent.Name -> setChatroomName(event.name)
@@ -59,13 +56,13 @@ class CreateChatRoomViewModel @Inject constructor(
         setLoading(true)
         if (chatroomName.value.isEmpty()) {
             setLoading(false)
-            launchUI { navigator.showEmptyChatroomNameErrorDialog() }
+            emitState(CreateChatRoomState.EmptyNameError)
         } else {
             chatroomCreate(
                 chatroomName.value,
                 chatroomDescription.value,
                 _uri
-            ).also { if (it) navigator.back() }
+            ).also { if (it) emitState(CreateChatRoomState.Success) }
             setLoading(false)
         }
     }

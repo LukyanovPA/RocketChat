@@ -9,6 +9,8 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import com.facebook.shimmer.ShimmerFrameLayout
+import com.pavellukyanov.rocketchat.data.utils.errors.ApiException
+import com.pavellukyanov.rocketchat.presentation.feature.auth.signin.SignInFragment
 import com.pavellukyanov.rocketchat.presentation.helper.ResultWrapper
 import com.pavellukyanov.rocketchat.presentation.helper.gallery.PickFileContract
 import com.pavellukyanov.rocketchat.presentation.helper.gallery.PickImageContract
@@ -17,16 +19,17 @@ import kotlinx.coroutines.launch
 import timber.log.Timber
 import javax.inject.Inject
 
-abstract class BaseFragment<STATE : Any, EVENT : Any, VM : BaseViewModel<STATE, EVENT, *>>(
+abstract class BaseFragment<STATE : Any, EVENT : Any, VM : BaseViewModel<STATE, EVENT>>(
     private val viewModelClass: Class<VM>,
     layoutRes: Int
 ) : Fragment(layoutRes) {
     private var shimmer: ShimmerFrameLayout? = null
+    protected val navigator by lazy(LazyThreadSafetyMode.NONE) { BaseNavigator(requireActivity().supportFragmentManager) }
 
     @Inject
     protected lateinit var viewModelFactory: ViewModelFactory<VM>
 
-    private lateinit var vm: VM
+    protected lateinit var vm: VM
 
     val permissionLauncher =
         ResultWrapper(
@@ -47,23 +50,30 @@ abstract class BaseFragment<STATE : Any, EVENT : Any, VM : BaseViewModel<STATE, 
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        lifecycleScope.launch {
+        viewLifecycleOwner.lifecycleScope.launch {
             try {
                 vm.state.collect(::handleViewState)
             } catch (throwable: Throwable) {
                 Timber.tag(TAG).e(throwable)
-                vm.onError(throwable)
+                onError(throwable)
             }
         }
     }
 
     private fun handleViewState(state: State<STATE>) {
+        shimmer?.isVisible = state is State.Loading
         when (state) {
-            is State.Loading -> shimmer?.isVisible = true
-            is State.Success -> {
-                shimmer?.isVisible = false
-                render(state.state)
-            }
+            is State.Loading -> {}
+            is State.Success -> render(state.state)
+            is State.Error -> onError(state.error)
+            is State.ErrorMessage -> navigator.showGlobalErrorDialog(state.errorMessage)
+        }
+    }
+
+    private fun onError(error: Throwable) {
+        when (error) {
+            is ApiException.UnauthorizedException -> navigator.replace(SignInFragment.newInstance(), SignInFragment.TAG)
+            else -> error.message?.let(navigator::showGlobalErrorDialog)
         }
     }
 

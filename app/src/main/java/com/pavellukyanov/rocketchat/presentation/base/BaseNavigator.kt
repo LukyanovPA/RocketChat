@@ -4,26 +4,25 @@ import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import com.pavellukyanov.rocketchat.R
-import com.pavellukyanov.rocketchat.presentation.feature.auth.signin.SignInFragment
 
-abstract class BaseNavigator(
-    val fragmentManager: FragmentManager
+class BaseNavigator(
+    private val fragmentManager: FragmentManager
 ) {
 
-    protected fun add(fragment: Fragment, tag: String) {
+    fun add(fragment: Fragment, tag: String) {
         fragmentManager.beginTransaction()
             .add(R.id.base_container, fragment, tag)
             .commit()
     }
 
-    protected fun forward(fragment: Fragment, tag: String) {
+    fun forward(fragment: Fragment, tag: String) {
         fragmentManager.beginTransaction()
             .replace(R.id.base_container, fragment, tag)
             .addToBackStack(tag)
             .commit()
     }
 
-    protected fun replace(fragment: Fragment, tag: String) {
+    fun replace(fragment: Fragment, tag: String) {
         fragmentManager.beginTransaction()
             .replace(R.id.base_container, fragment, tag)
             .commit()
@@ -33,7 +32,7 @@ abstract class BaseNavigator(
         fragmentManager.popBackStack()
     }
 
-    protected fun showDialog(dialog: DialogFragment, tag: String) {
+    fun showDialog(dialog: DialogFragment, tag: String) {
         dialog.show(
             fragmentManager.beginTransaction().addToBackStack(tag),
             tag
@@ -48,9 +47,5 @@ abstract class BaseNavigator(
                 closeButtonRes = R.string.global_error_button_close
             ), SimpleDialogFragment.TAG
         )
-    }
-
-    fun toSignIn() {
-        replace(SignInFragment.newInstance(), SignInFragment.TAG)
     }
 }

@@ -2,16 +2,15 @@ package com.pavellukyanov.rocketchat.presentation.feature.auth.signin
 
 import com.pavellukyanov.rocketchat.domain.usecase.auth.Login
 import com.pavellukyanov.rocketchat.presentation.base.BaseViewModel
-import com.pavellukyanov.rocketchat.presentation.feature.auth.AuthNavigator
+import com.pavellukyanov.rocketchat.presentation.feature.auth.AuthState
 import com.pavellukyanov.rocketchat.utils.Constants.EMPTY_STRING
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.combine
 import javax.inject.Inject
 
 class SignInViewModel @Inject constructor(
-    navigator: AuthNavigator,
     private val login: Login
-) : BaseViewModel<Boolean, SignInEvent, AuthNavigator>(navigator) {
+) : BaseViewModel<AuthState, SignInEvent>() {
     private val email = MutableStateFlow(EMPTY_STRING)
     private val password = MutableStateFlow(EMPTY_STRING)
 
@@ -23,7 +22,6 @@ class SignInViewModel @Inject constructor(
         when (event) {
             is SignInEvent.Email -> setEmail(event.email)
             is SignInEvent.Password -> setPassword(event.password)
-            is SignInEvent.GoToSignUp -> forwardToSignUp()
             is SignInEvent.SignIn -> signIn()
         }
     }
@@ -31,7 +29,7 @@ class SignInViewModel @Inject constructor(
     private fun handleButtonState() = launchCPU {
         email.combine(password) { email, password ->
             email.isNotEmpty() && password.isNotEmpty()
-        }.collect(::emitState)
+        }.collect { state -> emitState(AuthState.ButtonState(state)) }
     }
 
     private fun setEmail(value: String) = launchCPU {
@@ -44,9 +42,7 @@ class SignInViewModel @Inject constructor(
 
     private fun signIn() = launchIO {
         handleResponseState(login(email.value, password.value)) {
-            launchUI { navigator.forwardToHome() }
+            launchCPU { emitState(AuthState.Success) }
         }
     }
-
-    private fun forwardToSignUp() = navigator.forwardToSignUp()
 }

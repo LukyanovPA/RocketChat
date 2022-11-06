@@ -11,13 +11,15 @@ import androidx.lifecycle.lifecycleScope
 import androidx.viewbinding.ViewBinding
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.pavellukyanov.rocketchat.R
+import com.pavellukyanov.rocketchat.data.utils.errors.ApiException
+import com.pavellukyanov.rocketchat.presentation.feature.auth.signin.SignInFragment
 import dagger.android.support.AndroidSupportInjection
 import fr.tvbarthel.lib.blurdialogfragment.BlurDialogEngine
 import kotlinx.coroutines.launch
 import timber.log.Timber
 import javax.inject.Inject
 
-abstract class BaseBottomSheetDialogFragment<STATE : Any, EVENT : Any, VB : ViewBinding, VM : BaseViewModel<STATE, EVENT, *>>(
+abstract class BaseBottomSheetDialogFragment<STATE : Any, EVENT : Any, VB : ViewBinding, VM : BaseViewModel<STATE, EVENT>>(
     private val viewModelClass: Class<VM>
 ) : BottomSheetDialogFragment() {
     lateinit var binding: VB
@@ -28,6 +30,8 @@ abstract class BaseBottomSheetDialogFragment<STATE : Any, EVENT : Any, VB : View
     protected lateinit var vm: VM
 
     private lateinit var blurEngine: BlurDialogEngine
+
+    protected val navigator = BaseNavigator(childFragmentManager)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -44,7 +48,7 @@ abstract class BaseBottomSheetDialogFragment<STATE : Any, EVENT : Any, VB : View
                 vm.state.collect(::handleViewState)
             } catch (throwable: Throwable) {
                 Timber.tag(TAG).e(throwable)
-                vm.onError(throwable)
+                onError(throwable)
             }
         }
     }
@@ -56,11 +60,25 @@ abstract class BaseBottomSheetDialogFragment<STATE : Any, EVENT : Any, VB : View
     }
 
     private fun handleViewState(state: State<STATE>) {
-        state.state?.let { render(it) }
+        when (state) {
+            is State.Loading -> {}
+            is State.Success -> {
+                render(state.state)
+            }
+            is State.Error -> onError(state.error)
+            is State.ErrorMessage -> navigator.showGlobalErrorDialog(state.errorMessage)
+        }
     }
 
     open fun action(event: EVENT) {
         vm.action(event)
+    }
+
+    private fun onError(error: Throwable) {
+        when (error) {
+            is ApiException.UnauthorizedException -> navigator.replace(SignInFragment.newInstance(), SignInFragment.TAG)
+            else -> error.message?.let(navigator::showGlobalErrorDialog)
+        }
     }
 
     abstract fun render(state: STATE)

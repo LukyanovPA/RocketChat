@@ -5,4 +5,6 @@ import android.net.Uri
 sealed class CreateChatRoomState {
     data class Loading(val state: Boolean) : CreateChatRoomState()
     data class Img(val uri: Uri) : CreateChatRoomState()
+    object EmptyNameError : CreateChatRoomState()
+    object Success : CreateChatRoomState()
 }
