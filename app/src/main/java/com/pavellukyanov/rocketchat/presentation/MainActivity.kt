@@ -18,7 +18,6 @@ import dagger.android.AndroidInjector
 import dagger.android.DispatchingAndroidInjector
 import dagger.android.HasAndroidInjector
 import kotlinx.coroutines.launch
-import timber.log.Timber
 import javax.inject.Inject
 
 class MainActivity : AppCompatActivity(), HasAndroidInjector {
@@ -43,25 +42,22 @@ class MainActivity : AppCompatActivity(), HasAndroidInjector {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         vm = ViewModelProvider(this, activityViewModelFactory)[MainViewModel::class.java]
+        lifecycleScope.launch {
+            vm.state.collect(::handleViewState)
+        }
+        lifecycleScope.launch {
+            vm.effect.collect(::effect)
+        }
 
         if (savedInstanceState == null) {
             vm.action(MainEvent.CheckAuth)
-
-            lifecycleScope.launchWhenCreated {
-                try {
-                    vm.state.collect(::handleViewState)
-                } catch (throwable: Throwable) {
-                    Timber.tag(TAG).e(throwable)
-                    onError(throwable)
-                }
-            }
         }
     }
 
-    private fun handleViewState(state: State<MainState>) {
+    private fun handleViewState(state: State<Any>) {
         when (state) {
             is State.Loading -> {}
-            is State.Success -> render(state.state)
+            is State.Success -> {}
             is State.Error -> onError(state.error)
             is State.ErrorMessage -> navigator.showGlobalErrorDialog(state.errorMessage)
         }
@@ -74,16 +70,12 @@ class MainActivity : AppCompatActivity(), HasAndroidInjector {
         }
     }
 
-    private fun render(state: MainState) {
-        when (state) {
-            is MainState.Home -> navigator.add(HomeFragment.newInstance(), HomeFragment.TAG)
-            is MainState.SignIn -> navigator.add(SignInFragment.newInstance(), SignInFragment.TAG)
+    private fun effect(effect: MainEffect) {
+        when (effect) {
+            is MainEffect.Home -> navigator.add(HomeFragment.newInstance(), HomeFragment.TAG)
+            is MainEffect.SignIn -> navigator.add(SignInFragment.newInstance(), SignInFragment.TAG)
         }
     }
 
     override fun androidInjector(): AndroidInjector<Any> = androidInjector
-
-    companion object {
-        private const val TAG = "MainActivityScopeError"
-    }
 }

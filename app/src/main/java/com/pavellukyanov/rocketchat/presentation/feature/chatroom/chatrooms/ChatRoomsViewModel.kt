@@ -21,7 +21,7 @@ class ChatRoomsViewModel @Inject constructor(
     private val userInfo: UserInfo,
     private val getChatrooms: GetChatRooms,
     @HomeSearchQ private val searchStorage: ObjectStorage<String>
-) : BaseViewModel<ChatRoomsState, ChatRoomsEvent>() {
+) : BaseViewModel<ChatRoomsState, ChatRoomsEvent, ChatRoomEffect>() {
     init {
         fetchChatRooms()
     }
@@ -35,7 +35,7 @@ class ChatRoomsViewModel @Inject constructor(
     private fun onChatRoomLongClicked(item: Chatroom) {
         if (item.ownerId == userInfo.user?.uuid) {
             handleOptionsType(item.id)
-            launchCPU { emitState(ChatRoomsState.ForwardToChatRoomOptions) }
+            sendEffect(ChatRoomEffect.ForwardToChatRoomOptions)
         }
     }
 
@@ -56,6 +56,7 @@ class ChatRoomsViewModel @Inject constructor(
 
     @OptIn(FlowPreview::class)
     private fun fetchChatRooms() = launchIO {
+        emitLoading()
         searchStorage.observ
             .flatMapMerge { query ->
                 getChatrooms(query)

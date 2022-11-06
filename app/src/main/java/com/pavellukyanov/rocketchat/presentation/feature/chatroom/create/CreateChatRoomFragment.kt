@@ -12,7 +12,7 @@ import com.pavellukyanov.rocketchat.presentation.base.SimpleDialogFragment
 import com.pavellukyanov.rocketchat.presentation.helper.ext.load
 import com.pavellukyanov.rocketchat.presentation.helper.ext.setOnTextChangeListener
 
-class CreateChatRoomFragment : BaseFragment<CreateChatRoomState, CreateChatRoomEvent, CreateChatRoomViewModel>(
+class CreateChatRoomFragment : BaseFragment<CreateChatRoomState, CreateChatRoomEvent, CreateChatEffect, CreateChatRoomViewModel>(
     CreateChatRoomViewModel::class.java,
     R.layout.fragment_create_chatroom
 ) {
@@ -33,19 +33,18 @@ class CreateChatRoomFragment : BaseFragment<CreateChatRoomState, CreateChatRoomE
 
     override fun render(state: CreateChatRoomState) {
         when (state) {
-            is CreateChatRoomState.Loading -> handleLoadingState(state.state)
             is CreateChatRoomState.Img -> handleChatroomImg(state.uri)
             is CreateChatRoomState.EmptyNameError -> showEmptyChatroomNameErrorDialog()
-            is CreateChatRoomState.Success -> navigator.back()
         }
+    }
+
+    override fun effect(effect: CreateChatEffect) {
+        binding.createChatRoomLoading.isVisible = effect is CreateChatEffect.Loading
+        if (effect is CreateChatEffect.Success) navigator.back()
     }
 
     private fun handleChatroomImg(uri: Uri) {
         binding.addChatroomImage.load(uri, circleCrop = true)
-    }
-
-    private fun handleLoadingState(state: Boolean) {
-        binding.createChatRoomLoading.isVisible = state
     }
 
     private fun showEmptyChatroomNameErrorDialog() {

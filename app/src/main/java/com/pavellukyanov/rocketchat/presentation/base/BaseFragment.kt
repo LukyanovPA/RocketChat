@@ -16,20 +16,20 @@ import com.pavellukyanov.rocketchat.presentation.helper.gallery.PickFileContract
 import com.pavellukyanov.rocketchat.presentation.helper.gallery.PickImageContract
 import dagger.android.support.AndroidSupportInjection
 import kotlinx.coroutines.launch
-import timber.log.Timber
 import javax.inject.Inject
 
-abstract class BaseFragment<STATE : Any, EVENT : Any, VM : BaseViewModel<STATE, EVENT>>(
+abstract class BaseFragment<STATE : Any, EVENT : Any, EFFECT : Any, VM : BaseViewModel<STATE, EVENT, EFFECT>>(
     private val viewModelClass: Class<VM>,
     layoutRes: Int
 ) : Fragment(layoutRes) {
     private var shimmer: ShimmerFrameLayout? = null
+
     protected val navigator by lazy(LazyThreadSafetyMode.NONE) { BaseNavigator(requireActivity().supportFragmentManager) }
 
     @Inject
     protected lateinit var viewModelFactory: ViewModelFactory<VM>
 
-    protected lateinit var vm: VM
+    private lateinit var vm: VM
 
     val permissionLauncher =
         ResultWrapper(
@@ -50,13 +50,11 @@ abstract class BaseFragment<STATE : Any, EVENT : Any, VM : BaseViewModel<STATE, 
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        viewLifecycleOwner.lifecycleScope.launch {
-            try {
-                vm.state.collect(::handleViewState)
-            } catch (throwable: Throwable) {
-                Timber.tag(TAG).e(throwable)
-                onError(throwable)
-            }
+        lifecycleScope.launch {
+            vm.state.collect(::handleViewState)
+        }
+        lifecycleScope.launch {
+            vm.effect.collect(::effect)
         }
     }
 
@@ -83,11 +81,6 @@ abstract class BaseFragment<STATE : Any, EVENT : Any, VM : BaseViewModel<STATE, 
 
     abstract fun render(state: STATE)
 
-    override fun onAttach(context: Context) {
-        AndroidSupportInjection.inject(this)
-        super.onAttach(context)
-    }
-
     protected fun setShimmer(shimmer: ShimmerFrameLayout) {
         this.shimmer = shimmer
     }
@@ -107,7 +100,10 @@ abstract class BaseFragment<STATE : Any, EVENT : Any, VM : BaseViewModel<STATE, 
         super.onStop()
     }
 
-    companion object {
-        private const val TAG = "BaseFragmentScopeError"
+    protected open fun effect(effect: EFFECT) {}
+
+    override fun onAttach(context: Context) {
+        AndroidSupportInjection.inject(this)
+        super.onAttach(context)
     }
 }

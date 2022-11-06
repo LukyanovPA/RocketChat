@@ -52,7 +52,7 @@ class PermissionHelper @Inject constructor() {
         permissions: Array<String>,
         permissionsResultHandler: () -> Unit
     ) {
-        (fragment as? BaseFragment<*, *, *>)?.permissionLauncher?.launch(permissions) { grantResult ->
+        (fragment as? BaseFragment<*, *, *, *>)?.permissionLauncher?.launch(permissions) { grantResult ->
             if (grantResult.isNotEmpty() && grantResult.all { it.value }) permissionsResultHandler()
             else showAccessDeniedMessage(fragment.requireContext())
         }

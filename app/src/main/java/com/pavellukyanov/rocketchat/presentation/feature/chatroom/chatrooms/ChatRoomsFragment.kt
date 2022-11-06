@@ -11,16 +11,17 @@ import com.pavellukyanov.rocketchat.presentation.base.BaseFragment
 import com.pavellukyanov.rocketchat.presentation.feature.chatroom.chat.ChatFragment
 import com.pavellukyanov.rocketchat.presentation.feature.chatroom.options.ChatRoomOptionsFragment
 
-class ChatRoomsFragment : ChatRoomsAdapter.ChatRoomListener, BaseFragment<ChatRoomsState, ChatRoomsEvent, ChatRoomsViewModel>(
-    ChatRoomsViewModel::class.java,
-    R.layout.fragment_chatrooms
-) {
+class ChatRoomsFragment : ChatRoomsAdapter.ChatRoomListener,
+    BaseFragment<ChatRoomsState, ChatRoomsEvent, ChatRoomEffect, ChatRoomsViewModel>(
+        ChatRoomsViewModel::class.java,
+        R.layout.fragment_chatrooms
+    ) {
     private val binding by viewBinding(FragmentChatroomsBinding::bind)
     private val chatroomAdapter by lazy(LazyThreadSafetyMode.NONE) { ChatRoomsAdapter(this) }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
         setShimmer(binding.phHomeChatroomList)
+        super.onViewCreated(view, savedInstanceState)
         bind()
     }
 
@@ -37,12 +38,15 @@ class ChatRoomsFragment : ChatRoomsAdapter.ChatRoomListener, BaseFragment<ChatRo
             is ChatRoomsState.EmptyList -> {
                 //TODO: - добавить заглушку для пустого списка
             }
-            is ChatRoomsState.ForwardToChatRoomOptions -> forwardToChatRoomOptions()
         }
     }
 
     private fun handleChatroomList(listChatroom: List<Chatroom>) {
         chatroomAdapter.data = listChatroom
+    }
+
+    override fun effect(effect: ChatRoomEffect) {
+        if (effect is ChatRoomEffect.ForwardToChatRoomOptions) forwardToChatRoomOptions()
     }
 
     private fun forwardToChatRoomOptions() {

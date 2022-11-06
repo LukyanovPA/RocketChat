@@ -20,7 +20,7 @@ import com.pavellukyanov.rocketchat.presentation.helper.ext.load
 import com.pavellukyanov.rocketchat.presentation.helper.ext.onTableSelected
 import com.pavellukyanov.rocketchat.presentation.helper.ext.setOnTextChangeListener
 
-class HomeFragment : BaseFragment<HomeState, HomeEvent, HomeViewModel>(
+class HomeFragment : BaseFragment<HomeState, HomeEvent, HomeEffect, HomeViewModel>(
     HomeViewModel::class.java,
     R.layout.fragment_home
 ) {
@@ -35,7 +35,6 @@ class HomeFragment : BaseFragment<HomeState, HomeEvent, HomeViewModel>(
     override fun render(state: HomeState) {
         when (state) {
             is HomeState.Account -> setMyAccountData(state.myAccount)
-            is HomeState.SignIn -> navigator.replace(SignInFragment.newInstance(), SignInFragment.TAG)
         }
     }
 
@@ -91,6 +90,10 @@ class HomeFragment : BaseFragment<HomeState, HomeEvent, HomeViewModel>(
 
     private fun forwardToCreateChatroom() {
         navigator.forward(CreateChatRoomFragment.newInstance(), CreateChatRoomFragment.TAG)
+    }
+
+    override fun effect(effect: HomeEffect) {
+        if (effect is HomeEffect.Logout) navigator.replace(SignInFragment.newInstance(), SignInFragment.TAG)
     }
 
     companion object {

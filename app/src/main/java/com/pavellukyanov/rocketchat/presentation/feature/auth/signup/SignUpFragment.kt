@@ -10,8 +10,9 @@ import com.pavellukyanov.rocketchat.presentation.feature.auth.AuthState
 import com.pavellukyanov.rocketchat.presentation.feature.auth.signin.SignInFragment
 import com.pavellukyanov.rocketchat.presentation.feature.home.HomeFragment
 import com.pavellukyanov.rocketchat.presentation.helper.ext.setOnTextChangeListener
+import com.pavellukyanov.rocketchat.presentation.widget.SuccessEffect
 
-class SignUpFragment : BaseFragment<AuthState, SignUpEvent, SignUpViewModel>(
+class SignUpFragment : BaseFragment<AuthState, SignUpEvent, SuccessEffect, SignUpViewModel>(
     SignUpViewModel::class.java,
     R.layout.fragment_sign_up
 ) {
@@ -37,8 +38,11 @@ class SignUpFragment : BaseFragment<AuthState, SignUpEvent, SignUpViewModel>(
     override fun render(state: AuthState) {
         when (state) {
             is AuthState.ButtonState -> binding.regButton.isEnabled = state.state
-            is AuthState.Success -> navigator.forward(HomeFragment.newInstance(), HomeFragment.TAG)
         }
+    }
+
+    override fun effect(effect: SuccessEffect) {
+        navigator.forward(HomeFragment.newInstance(), HomeFragment.TAG)
     }
 
     companion object {

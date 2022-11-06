@@ -10,7 +10,7 @@ import com.pavellukyanov.rocketchat.domain.entity.users.User
 import com.pavellukyanov.rocketchat.presentation.base.BaseFragment
 import timber.log.Timber
 
-class ListUsersFragment : ListUsersAdapter.ListUsersListener, BaseFragment<List<User>, Any, ListUsersViewModel>(
+class ListUsersFragment : ListUsersAdapter.ListUsersListener, BaseFragment<List<User>, Any, Any, ListUsersViewModel>(
     ListUsersViewModel::class.java,
     R.layout.fragment_list_users
 ) {

@@ -18,7 +18,7 @@ class HomeViewModel @Inject constructor(
     private val refreshChatroomsCache: RefreshChatroomsCache,
     private val logOut: LogOut,
     @HomeSearchQ private val searchStorage: ObjectStorage<String>
-) : BaseViewModel<HomeState, HomeEvent>() {
+) : BaseViewModel<HomeState, HomeEvent, HomeEffect>() {
 
     init {
         fetchMyAccount()
@@ -51,7 +51,7 @@ class HomeViewModel @Inject constructor(
 
     private fun onClickLogOut() = launchIO {
         handleResponseState(logOut()) {
-            launchCPU { emitState(HomeState.SignIn) }
+            sendEffect(HomeEffect.Logout)
         }
     }
 

@@ -16,10 +16,9 @@ import com.pavellukyanov.rocketchat.presentation.feature.auth.signin.SignInFragm
 import dagger.android.support.AndroidSupportInjection
 import fr.tvbarthel.lib.blurdialogfragment.BlurDialogEngine
 import kotlinx.coroutines.launch
-import timber.log.Timber
 import javax.inject.Inject
 
-abstract class BaseBottomSheetDialogFragment<STATE : Any, EVENT : Any, VB : ViewBinding, VM : BaseViewModel<STATE, EVENT>>(
+abstract class BaseBottomSheetDialogFragment<STATE : Any, EVENT : Any, EFFECT : Any, VB : ViewBinding, VM : BaseViewModel<STATE, EVENT, EFFECT>>(
     private val viewModelClass: Class<VM>
 ) : BottomSheetDialogFragment() {
     lateinit var binding: VB
@@ -44,12 +43,10 @@ abstract class BaseBottomSheetDialogFragment<STATE : Any, EVENT : Any, VB : View
         }
         vm = ViewModelProvider(this, viewModelFactory)[viewModelClass]
         lifecycleScope.launch {
-            try {
-                vm.state.collect(::handleViewState)
-            } catch (throwable: Throwable) {
-                Timber.tag(TAG).e(throwable)
-                onError(throwable)
-            }
+            vm.state.collect(::handleViewState)
+        }
+        lifecycleScope.launch {
+            vm.effect.collect(::effect)
         }
     }
 
@@ -73,6 +70,8 @@ abstract class BaseBottomSheetDialogFragment<STATE : Any, EVENT : Any, VB : View
     open fun action(event: EVENT) {
         vm.action(event)
     }
+
+    protected open fun effect(effect: EFFECT) {}
 
     private fun onError(error: Throwable) {
         when (error) {
@@ -110,9 +109,5 @@ abstract class BaseBottomSheetDialogFragment<STATE : Any, EVENT : Any, VB : View
     override fun onDestroyView() {
         dialog?.setDismissMessage(null)
         super.onDestroyView()
-    }
-
-    companion object {
-        private const val TAG = "BaseBottomSheetDialogFragmentScopeError"
     }
 }

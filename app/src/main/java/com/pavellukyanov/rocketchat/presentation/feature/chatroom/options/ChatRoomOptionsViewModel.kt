@@ -3,11 +3,12 @@ package com.pavellukyanov.rocketchat.presentation.feature.chatroom.options
 import com.pavellukyanov.rocketchat.presentation.base.BaseViewModel
 import com.pavellukyanov.rocketchat.presentation.feature.chatroom.options.ChatRoomOptionsFragment.Companion.CHATROOM_OPTIONS_REQUEST_KEY
 import com.pavellukyanov.rocketchat.presentation.helper.FragmentResultHelper
+import com.pavellukyanov.rocketchat.presentation.widget.SuccessEffect
 import javax.inject.Inject
 
 class ChatRoomOptionsViewModel @Inject constructor(
     private val fragmentResultHelper: FragmentResultHelper,
-) : BaseViewModel<OptionsState, OptionsEvent>() {
+) : BaseViewModel<OptionsState, OptionsEvent, SuccessEffect>() {
 
     override fun action(event: OptionsEvent) {
         when (event) {
@@ -24,7 +25,7 @@ class ChatRoomOptionsViewModel @Inject constructor(
 
     private fun onOptionClicked(item: OptionItem) {
         sendResult(item.type)
-        launchCPU { emitState(OptionsState.Back) }
+        sendEffect(SuccessEffect)
     }
 
     private fun sendResult(item: OptionsType) {

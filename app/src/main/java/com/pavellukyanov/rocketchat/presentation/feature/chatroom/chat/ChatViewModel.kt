@@ -9,11 +9,8 @@ import com.pavellukyanov.rocketchat.domain.usecase.chatroom.chat.GetMessages
 import com.pavellukyanov.rocketchat.domain.usecase.chatroom.chat.RefreshChatCache
 import com.pavellukyanov.rocketchat.presentation.base.BaseViewModel
 import com.pavellukyanov.rocketchat.utils.Constants.EMPTY_STRING
-import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.receiveAsFlow
 import javax.inject.Inject
 
 class ChatViewModel @Inject constructor(
@@ -23,10 +20,8 @@ class ChatViewModel @Inject constructor(
     private val chatInteractor: ChatInteractor,
     private val refreshChatCache: RefreshChatCache,
     private val getChatRoom: GetChatRoom
-) : BaseViewModel<ChatState, ChatEvent>() {
+) : BaseViewModel<ChatState, ChatEvent, ChatEffect>() {
     private val message = MutableStateFlow(EMPTY_STRING)
-    private val _effect = Channel<ChatEffect>(Channel.BUFFERED)
-    val effect: Flow<ChatEffect> = _effect.receiveAsFlow()
 
     init {
         initSession()
@@ -46,8 +41,7 @@ class ChatViewModel @Inject constructor(
 
     private fun goBack() = launchIO {
         chatInteractor.closeSession()
-//        emitState(ChatState.Back)
-        _effect.send(ChatEffect.Back)
+        sendEffect(ChatEffect.Back)
     }
 
     private fun handleFavouritesState() = launchIO {
@@ -84,7 +78,11 @@ class ChatViewModel @Inject constructor(
                 messages
             }
             .collect { list ->
-                emitState(ChatState.Messages(list))
+                if (list.isEmpty()) {
+                    emitLoading()
+                } else {
+                    emitState(ChatState.Messages(list))
+                }
             }
     }
 

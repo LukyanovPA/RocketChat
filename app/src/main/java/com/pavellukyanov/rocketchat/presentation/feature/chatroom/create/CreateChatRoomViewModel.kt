@@ -11,14 +11,10 @@ import javax.inject.Inject
 class CreateChatRoomViewModel @Inject constructor(
     private val galleryHelper: GalleryHelper,
     private val chatroomCreate: ChatroomCreate
-) : BaseViewModel<CreateChatRoomState, CreateChatRoomEvent>() {
+) : BaseViewModel<CreateChatRoomState, CreateChatRoomEvent, CreateChatEffect>() {
     private val chatroomName = MutableStateFlow(EMPTY_STRING)
     private val chatroomDescription = MutableStateFlow(EMPTY_STRING)
     private var _uri: Uri? = null
-
-    init {
-        launchCPU { setLoading(false) }
-    }
 
     override fun action(event: CreateChatRoomEvent) {
         when (event) {
@@ -38,7 +34,7 @@ class CreateChatRoomViewModel @Inject constructor(
             listFiles?.let { response ->
                 response.firstOrNull()?.getPath()?.let { uri ->
                     _uri = uri
-                    launchCPU { emitState(CreateChatRoomState.Img(uri)) }
+                    emitState(CreateChatRoomState.Img(uri))
                 }
             }
         }
@@ -53,21 +49,15 @@ class CreateChatRoomViewModel @Inject constructor(
     }
 
     private fun createChatroom() = launchIO {
-        setLoading(true)
+        sendEffect(CreateChatEffect.Loading)
         if (chatroomName.value.isEmpty()) {
-            setLoading(false)
             emitState(CreateChatRoomState.EmptyNameError)
         } else {
             chatroomCreate(
                 chatroomName.value,
                 chatroomDescription.value,
                 _uri
-            ).also { if (it) emitState(CreateChatRoomState.Success) }
-            setLoading(false)
+            ).also { if (it) sendEffect(CreateChatEffect.Success) }
         }
-    }
-
-    private suspend fun setLoading(state: Boolean) {
-        emitState(CreateChatRoomState.Loading(state))
     }
 }

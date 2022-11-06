@@ -2,7 +2,6 @@ package com.pavellukyanov.rocketchat.presentation.feature.chatroom.chat
 
 import android.os.Bundle
 import android.view.View
-import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.pavellukyanov.rocketchat.R
@@ -17,7 +16,7 @@ import com.pavellukyanov.rocketchat.presentation.helper.ext.setOnTextChangeListe
 import com.pavellukyanov.rocketchat.utils.Constants.INT_ONE
 import timber.log.Timber
 
-class ChatFragment : BaseFragment<ChatState, ChatEvent, ChatViewModel>(
+class ChatFragment : BaseFragment<ChatState, ChatEvent, ChatEffect, ChatViewModel>(
     ChatViewModel::class.java,
     R.layout.fragment_chat
 ), ChatAdapter.ChatListener {
@@ -25,16 +24,11 @@ class ChatFragment : BaseFragment<ChatState, ChatEvent, ChatViewModel>(
     private val chatAdapter by lazy(LazyThreadSafetyMode.NONE) { ChatAdapter(this) }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
         setShimmer(binding.phMessageList)
+        super.onViewCreated(view, savedInstanceState)
         bind()
         (requireArguments().getParcelable(CHAT_ROOM_ID_ARG) as? Chatroom)?.let {
             handleChatroomValue(it)
-        }
-        lifecycleScope.launchWhenCreated {
-            vm.effect.collect {
-                if (it is ChatEffect.Back) navigator.back()
-            }
         }
     }
 
@@ -64,8 +58,11 @@ class ChatFragment : BaseFragment<ChatState, ChatEvent, ChatViewModel>(
             is ChatState.Messages -> handleMessagesList(state.messages)
             is ChatState.ChatValue -> handleChatroomValue(state.chatRoom)
             is ChatState.ButtonState -> handleButtonSendState(state.state)
-//            is ChatState.Back -> navigator.back()
         }
+    }
+
+    override fun effect(effect: ChatEffect) {
+        if (effect is ChatEffect.Back) navigator.back()
     }
 
     private fun handleMessagesList(messages: List<ChatItem>) {

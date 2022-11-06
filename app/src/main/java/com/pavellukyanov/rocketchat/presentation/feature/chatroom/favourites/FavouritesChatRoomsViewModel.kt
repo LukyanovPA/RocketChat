@@ -5,6 +5,7 @@ import com.pavellukyanov.rocketchat.domain.usecase.chatroom.ChangeFavouritesStat
 import com.pavellukyanov.rocketchat.domain.usecase.chatroom.GetFavourites
 import com.pavellukyanov.rocketchat.domain.utils.ObjectStorage
 import com.pavellukyanov.rocketchat.presentation.base.BaseViewModel
+import com.pavellukyanov.rocketchat.presentation.feature.chatroom.chatrooms.ChatRoomEffect
 import com.pavellukyanov.rocketchat.presentation.feature.chatroom.chatrooms.ChatRoomsState
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.flatMapMerge
@@ -14,7 +15,7 @@ class FavouritesChatRoomsViewModel @Inject constructor(
     private val getFavourites: GetFavourites,
     private val changeFavouritesState: ChangeFavouritesState,
     @HomeSearchQ private val searchStorage: ObjectStorage<String>
-) : BaseViewModel<ChatRoomsState, Any>() {
+) : BaseViewModel<ChatRoomsState, Any, ChatRoomEffect>() {
     init {
         fetchChatrooms()
     }
@@ -24,6 +25,7 @@ class FavouritesChatRoomsViewModel @Inject constructor(
 
     @OptIn(FlowPreview::class)
     private fun fetchChatrooms() = launchIO {
+        emitLoading()
         searchStorage.observ
             .flatMapMerge { query ->
                 getFavourites(query)

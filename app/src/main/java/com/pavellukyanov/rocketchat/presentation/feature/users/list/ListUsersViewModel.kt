@@ -7,7 +7,7 @@ import javax.inject.Inject
 
 class ListUsersViewModel @Inject constructor(
     private val getAllUsers: GetAllUsers
-) : BaseViewModel<List<User>, Any>() {
+) : BaseViewModel<List<User>, Any, Any>() {
 
     init {
         fetchUsers()

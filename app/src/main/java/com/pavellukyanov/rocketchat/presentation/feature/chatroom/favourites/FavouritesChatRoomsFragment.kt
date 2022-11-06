@@ -9,11 +9,12 @@ import com.pavellukyanov.rocketchat.databinding.FragmentFavouritesChatroomsBindi
 import com.pavellukyanov.rocketchat.domain.entity.chatroom.Chatroom
 import com.pavellukyanov.rocketchat.presentation.base.BaseFragment
 import com.pavellukyanov.rocketchat.presentation.feature.chatroom.chat.ChatFragment
+import com.pavellukyanov.rocketchat.presentation.feature.chatroom.chatrooms.ChatRoomEffect
 import com.pavellukyanov.rocketchat.presentation.feature.chatroom.chatrooms.ChatRoomsAdapter
 import com.pavellukyanov.rocketchat.presentation.feature.chatroom.chatrooms.ChatRoomsState
 
 class FavouritesChatRoomsFragment : ChatRoomsAdapter.ChatRoomListener,
-    BaseFragment<ChatRoomsState, Any, FavouritesChatRoomsViewModel>(
+    BaseFragment<ChatRoomsState, Any, ChatRoomEffect, FavouritesChatRoomsViewModel>(
         FavouritesChatRoomsViewModel::class.java,
         R.layout.fragment_favourites_chatrooms
     ) {
@@ -21,8 +22,8 @@ class FavouritesChatRoomsFragment : ChatRoomsAdapter.ChatRoomListener,
     private val chatroomAdapter by lazy(LazyThreadSafetyMode.NONE) { ChatRoomsAdapter(this) }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
         setShimmer(binding.phFavouritesList)
+        super.onViewCreated(view, savedInstanceState)
         bind()
     }
 
@@ -39,7 +40,6 @@ class FavouritesChatRoomsFragment : ChatRoomsAdapter.ChatRoomListener,
             is ChatRoomsState.EmptyList -> {
                 //TODO: - добавить заглушку для пустого списка
             }
-            is ChatRoomsState.ForwardToChatRoomOptions -> {} //TODO временно
         }
     }
 

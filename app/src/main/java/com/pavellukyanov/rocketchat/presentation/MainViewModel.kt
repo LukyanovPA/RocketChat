@@ -6,7 +6,7 @@ import javax.inject.Inject
 
 class MainViewModel @Inject constructor(
     private val userInfo: UserInfo
-) : BaseViewModel<MainState, MainEvent>() {
+) : BaseViewModel<Any, MainEvent, MainEffect>() {
 
     override fun action(event: MainEvent) {
         when (event) {
@@ -16,9 +16,9 @@ class MainViewModel @Inject constructor(
 
     private fun checkAuth() = launchCPU {
         if (userInfo.tokens?.token != null && userInfo.tokens?.refreshToken != null) {
-            emitState(MainState.Home)
+            sendEffect(MainEffect.Home)
         } else {
-            emitState(MainState.SignIn)
+            sendEffect(MainEffect.SignIn)
         }
     }
 }

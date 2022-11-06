@@ -7,9 +7,10 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.pavellukyanov.rocketchat.databinding.FragmentChatroomOptionsBinding
 import com.pavellukyanov.rocketchat.presentation.base.BaseBottomSheetDialogFragment
+import com.pavellukyanov.rocketchat.presentation.widget.SuccessEffect
 
 class ChatRoomOptionsFragment :
-    BaseBottomSheetDialogFragment<OptionsState, OptionsEvent, FragmentChatroomOptionsBinding, ChatRoomOptionsViewModel>(
+    BaseBottomSheetDialogFragment<OptionsState, OptionsEvent, SuccessEffect, FragmentChatroomOptionsBinding, ChatRoomOptionsViewModel>(
         ChatRoomOptionsViewModel::class.java
     ), ChatRoomOptionsAdapter.ChatRoomOptionsListener {
     private val optionsAdapter by lazy(LazyThreadSafetyMode.NONE) { ChatRoomOptionsAdapter(this) }
@@ -34,8 +35,11 @@ class ChatRoomOptionsFragment :
     override fun render(state: OptionsState) {
         when (state) {
             is OptionsState.OptionsList -> optionsAdapter.data = state.list
-            is OptionsState.Back -> navigator.back()
         }
+    }
+
+    override fun effect(effect: SuccessEffect) {
+        navigator.back()
     }
 
     override fun onItemClicked(item: OptionItem) {

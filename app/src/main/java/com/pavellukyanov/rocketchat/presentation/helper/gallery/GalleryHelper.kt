@@ -42,7 +42,7 @@ class GalleryHelper @Inject constructor(
     ) {
         fragmentManager.findFragment(tag)?.let { fragment ->
 
-            (fragment as? BaseFragment<*, *, *>)?.imageLauncher?.launch(pickFlag) {
+            (fragment as? BaseFragment<*, *, *, *>)?.imageLauncher?.launch(pickFlag) {
                 val localList: ArrayList<FileLocal> = ArrayList(it)
                 if (weightLimit != null) {
                     it.forEach {
