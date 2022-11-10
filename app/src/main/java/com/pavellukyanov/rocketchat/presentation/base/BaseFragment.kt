@@ -3,6 +3,7 @@ package com.pavellukyanov.rocketchat.presentation.base
 import android.content.Context
 import android.os.Bundle
 import android.view.View
+import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
@@ -71,12 +72,14 @@ abstract class BaseFragment<STATE : Any, EVENT : Any, EFFECT : Any, VM : BaseVie
     private fun onError(error: Throwable) {
         when (error) {
             is ApiException.UnauthorizedException -> navigator.replace(SignInFragment.newInstance(), SignInFragment.TAG)
+            //TODO временно, пока база будет меняться по сто раз
             is java.lang.IllegalStateException -> {
                 if (error.message?.contains("Room cannot verify the data integrity.", ignoreCase = true) == true) {
                     requireActivity().applicationContext.deleteDatabase("RocketChatDatabase.db")
+                    Toast.makeText(requireContext(), "Local database schema has been updated. Repeat action!", Toast.LENGTH_LONG).show()
                 }
-
-            }else -> error.message?.let(navigator::showGlobalErrorDialog)
+            }
+            else -> error.message?.let(navigator::showGlobalErrorDialog)
         }
     }
 
