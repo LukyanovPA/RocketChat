@@ -42,7 +42,7 @@ class SignUpFragment : BaseFragment<AuthState, SignUpEvent, SuccessEffect, SignU
     }
 
     override fun effect(effect: SuccessEffect) {
-        navigator.forward(HomeFragment.newInstance(), HomeFragment.TAG)
+        navigator.replace(HomeFragment.newInstance(), HomeFragment.TAG)
     }
 
     companion object {

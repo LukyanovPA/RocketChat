@@ -41,7 +41,7 @@ class SignInFragment : BaseFragment<AuthState, SignInEvent, SuccessEffect, SignI
     }
 
     override fun effect(effect: SuccessEffect) {
-        navigator.forward(HomeFragment.newInstance(), HomeFragment.TAG)
+        navigator.replace(HomeFragment.newInstance(), HomeFragment.TAG)
     }
 
     companion object {

@@ -19,6 +19,7 @@ class AuthRepository @Inject constructor(
 ) : IAuth {
     override suspend fun login(email: String, password: String): ResponseState<TokenResponse> =
         api.signIn(SignInRequest(email, password)).asResponseState().also {
+            cache.myAccount().delete()
             if (it is ResponseState.Success) userStorage.tokens = it.data
         }
 
@@ -42,7 +43,6 @@ class AuthRepository @Inject constructor(
         api.logout().asResponseState().also { state ->
             if (state is ResponseState.Success) {
                 clearData()
-                cache.myAccount().delete()
             }
         }
 }
