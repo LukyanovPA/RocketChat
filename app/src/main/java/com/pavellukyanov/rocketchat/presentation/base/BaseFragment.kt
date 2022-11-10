@@ -71,7 +71,12 @@ abstract class BaseFragment<STATE : Any, EVENT : Any, EFFECT : Any, VM : BaseVie
     private fun onError(error: Throwable) {
         when (error) {
             is ApiException.UnauthorizedException -> navigator.replace(SignInFragment.newInstance(), SignInFragment.TAG)
-            else -> error.message?.let(navigator::showGlobalErrorDialog)
+            is java.lang.IllegalStateException -> {
+                if (error.message?.contains("Room cannot verify the data integrity.", ignoreCase = true) == true) {
+                    requireActivity().applicationContext.deleteDatabase("RocketChatDatabase.db")
+                }
+
+            }else -> error.message?.let(navigator::showGlobalErrorDialog)
         }
     }
 
