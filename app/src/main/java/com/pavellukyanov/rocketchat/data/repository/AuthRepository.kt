@@ -41,8 +41,6 @@ class AuthRepository @Inject constructor(
 
     override suspend fun logout(): ResponseState<Boolean> =
         api.logout().asResponseState().also { state ->
-            if (state is ResponseState.Success) {
-                clearData()
-            }
+            if (state is ResponseState.Success) clearData()
         }
 }

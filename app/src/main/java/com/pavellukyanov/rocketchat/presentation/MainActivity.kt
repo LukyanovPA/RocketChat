@@ -65,7 +65,7 @@ class MainActivity : AppCompatActivity(), HasAndroidInjector {
 
     private fun onError(error: Throwable) {
         when (error) {
-            is ApiException.UnauthorizedException -> navigator.replace(SignInFragment.newInstance(), SignInFragment.TAG)
+            is ApiException.UnauthorizedException -> navigator.add(SignInFragment.newInstance(), SignInFragment.TAG)
             else -> error.message?.let(navigator::showGlobalErrorDialog)
         }
     }
