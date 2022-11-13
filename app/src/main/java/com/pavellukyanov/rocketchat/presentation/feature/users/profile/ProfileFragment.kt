@@ -53,7 +53,7 @@ class ProfileFragment : ChatRoomsAdapter.ChatRoomListener,
             is ProfileState.UserChatRooms -> chatroomAdapter.data = state.chatRooms
             is ProfileState.AvatarChanging -> {
                 profileAvatarProgress.isVisible = state.isChanging
-                profileAvatar.alpha = if (state.isChanging) 0.4f else 1.0f
+                profileAvatar.alpha = if (state.isChanging) AVATAR_LOADED else AVATAR_LOAD
             }
         }
     }
@@ -85,5 +85,7 @@ class ProfileFragment : ChatRoomsAdapter.ChatRoomListener,
 
         val TAG = ProfileFragment::class.java.simpleName
         const val PROFILE_USER_UUID_ARG = "PROFILE_USER_UUID_ARG"
+        private const val AVATAR_LOADED = 0.4f
+        private const val AVATAR_LOAD = 1.0f
     }
 }
