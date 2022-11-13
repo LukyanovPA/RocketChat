@@ -30,6 +30,10 @@ class HomeFragment : BaseFragment<HomeState, HomeEvent, HomeEffect, HomeViewMode
         super.onViewCreated(view, savedInstanceState)
         action(HomeEvent.GetMyAccount)
         bind()
+    }
+
+    override fun onPause() {
+        super.onPause()
         action(HomeEvent.RefreshCache)
     }
 

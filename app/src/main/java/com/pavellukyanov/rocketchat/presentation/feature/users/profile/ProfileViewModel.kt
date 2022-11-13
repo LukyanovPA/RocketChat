@@ -108,7 +108,7 @@ class ProfileViewModel @Inject constructor(
     private fun fetchUserData() = launchIO {
         emitState(ProfileState.IsMyProfile(userUuid == null))
         if (userUuid != null) {
-            getAllUsers()
+            getAllUsers("")
                 .map { list ->
                     list.find { it.uuid == userUuid }
                 }

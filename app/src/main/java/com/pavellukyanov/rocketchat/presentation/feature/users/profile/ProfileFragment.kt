@@ -55,7 +55,6 @@ class ProfileFragment : ChatRoomsAdapter.ChatRoomListener,
     }
 
     override fun effect(effect: ProfileEffect) {
-        super.effect(effect)
         when (effect) {
             is ProfileEffect.LogOut -> navigator.replace(SignInFragment.newInstance(), SignInFragment.TAG)
             is ProfileEffect.ForwardToChatRoomOptions -> navigator.showDialog(
