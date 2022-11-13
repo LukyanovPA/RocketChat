@@ -106,7 +106,7 @@ class ProfileViewModel @Inject constructor(
 
     //TODO временно, потом сделать отдельный эндпоинт на бэке
     private fun fetchUserData() = launchIO {
-        emitState(ProfileState.IsMyProfile(userUuid == null))
+        emitState(ProfileState.IsMyProfile(userUuid == null || userInfo.user?.uuid == userUuid))
         if (userUuid != null) {
             getAllUsers("")
                 .map { list ->
