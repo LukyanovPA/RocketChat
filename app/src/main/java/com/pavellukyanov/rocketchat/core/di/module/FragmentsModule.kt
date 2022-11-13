@@ -10,6 +10,8 @@ import com.pavellukyanov.rocketchat.presentation.feature.chatroom.favourites.Fav
 import com.pavellukyanov.rocketchat.presentation.feature.chatroom.options.ChatRoomOptionsFragment
 import com.pavellukyanov.rocketchat.presentation.feature.home.HomeFragment
 import com.pavellukyanov.rocketchat.presentation.feature.users.list.ListUsersFragment
+import com.pavellukyanov.rocketchat.presentation.feature.users.profile.ProfileFragment
+import com.pavellukyanov.rocketchat.presentation.feature.users.profile.ProfileModule
 import dagger.Module
 import dagger.android.ContributesAndroidInjector
 
@@ -41,4 +43,7 @@ abstract class FragmentsModule {
 
     @ContributesAndroidInjector
     abstract fun listUsersFragment(): ListUsersFragment
+
+    @ContributesAndroidInjector(modules = [ProfileModule::class])
+    abstract fun profileFragment(): ProfileFragment
 }

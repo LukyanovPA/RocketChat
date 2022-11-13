@@ -39,4 +39,5 @@
 
     //Chat
     <string name="chat_send_hint">Message…</string>
+    <string name="profile_title">Profile</string>
 </resources>

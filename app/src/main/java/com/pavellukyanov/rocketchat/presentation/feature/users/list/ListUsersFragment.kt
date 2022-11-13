@@ -8,6 +8,7 @@ import com.pavellukyanov.rocketchat.R
 import com.pavellukyanov.rocketchat.databinding.FragmentListUsersBinding
 import com.pavellukyanov.rocketchat.domain.entity.users.User
 import com.pavellukyanov.rocketchat.presentation.base.BaseFragment
+import com.pavellukyanov.rocketchat.presentation.feature.users.profile.ProfileFragment
 import timber.log.Timber
 
 class ListUsersFragment : ListUsersAdapter.ListUsersListener, BaseFragment<List<User>, Any, Any, ListUsersViewModel>(
@@ -34,7 +35,7 @@ class ListUsersFragment : ListUsersAdapter.ListUsersListener, BaseFragment<List<
     }
 
     override fun onItemClicked(item: User) {
-        Timber.d(item.username)
+        navigator.forward(ProfileFragment.newInstance(userUuid = item.uuid), ProfileFragment.TAG)
     }
 
     companion object {

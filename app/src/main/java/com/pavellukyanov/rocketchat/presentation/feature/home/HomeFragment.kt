@@ -16,6 +16,7 @@ import com.pavellukyanov.rocketchat.presentation.feature.chatroom.chatrooms.Chat
 import com.pavellukyanov.rocketchat.presentation.feature.chatroom.create.CreateChatRoomFragment
 import com.pavellukyanov.rocketchat.presentation.feature.chatroom.favourites.FavouritesChatRoomsFragment
 import com.pavellukyanov.rocketchat.presentation.feature.users.list.ListUsersFragment
+import com.pavellukyanov.rocketchat.presentation.feature.users.profile.ProfileFragment
 import com.pavellukyanov.rocketchat.presentation.helper.ext.load
 import com.pavellukyanov.rocketchat.presentation.helper.ext.onTableSelected
 import com.pavellukyanov.rocketchat.presentation.helper.ext.setOnTextChangeListener
@@ -40,7 +41,10 @@ class HomeFragment : BaseFragment<HomeState, HomeEvent, HomeEffect, HomeViewMode
 
     private fun bind() = with(binding) {
         createChatroomContainer.setOnClickListener { forwardToCreateChatroom() }
-        mainAvatar.setOnClickListener { action(HomeEvent.ChangeAvatar) }
+        mainAvatar.setOnClickListener {
+//            action(HomeEvent.ChangeAvatar)
+            navigator.forward(ProfileFragment.newInstance(), ProfileFragment.TAG)
+        }
         mainSearch.setOnTextChangeListener { action(HomeEvent.Search(it)) }
         mainLogout.setOnClickListener { action(HomeEvent.LogOut) }
 
