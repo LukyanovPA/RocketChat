@@ -27,16 +27,6 @@
         app:layout_constraintTop_toTopOf="@+id/main_avatar"
         tools:text="Hi, luidgy" />
 
-    <androidx.appcompat.widget.AppCompatImageView
-        android:id="@+id/main_logout"
-        android:layout_width="@dimen/margin_30"
-        android:layout_height="@dimen/margin_30"
-        app:layout_constraintBottom_toBottomOf="@+id/main_avatar"
-        app:layout_constraintEnd_toEndOf="@+id/create_chatroom_container"
-        app:layout_constraintStart_toStartOf="@+id/create_chatroom_container"
-        app:layout_constraintTop_toTopOf="@+id/main_avatar"
-        app:srcCompat="@drawable/ic_logout" />
-
     <androidx.cardview.widget.CardView
         android:layout_width="@dimen/margin_0"
         android:layout_height="wrap_content"
@@ -93,16 +83,16 @@
         android:layout_marginTop="@dimen/margin_16"
         android:background="@android:color/transparent"
         android:clipToPadding="true"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/create_chatroom_container"
         app:tabGravity="center"
         app:tabIndicatorColor="@color/white"
         app:tabIndicatorFullWidth="false"
         app:tabIndicatorHeight="@dimen/margin_0"
         app:tabMode="scrollable"
         app:tabPaddingEnd="@dimen/margin_0"
-        app:tabPaddingStart="@dimen/margin_0"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/create_chatroom_container" />
+        app:tabPaddingStart="@dimen/margin_0" />
 
     <androidx.viewpager2.widget.ViewPager2
         android:id="@+id/home_pager"

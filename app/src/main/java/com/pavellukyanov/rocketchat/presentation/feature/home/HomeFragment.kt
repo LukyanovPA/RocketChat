@@ -8,10 +8,9 @@ import com.google.android.material.tabs.TabLayoutMediator
 import com.pavellukyanov.rocketchat.R
 import com.pavellukyanov.rocketchat.databinding.FragmentHomeBinding
 import com.pavellukyanov.rocketchat.databinding.TabHomePagerBinding
-import com.pavellukyanov.rocketchat.domain.entity.home.MyAccount
+import com.pavellukyanov.rocketchat.domain.entity.users.User
 import com.pavellukyanov.rocketchat.presentation.base.BaseFragment
 import com.pavellukyanov.rocketchat.presentation.base.PagerFragmentAdapter
-import com.pavellukyanov.rocketchat.presentation.feature.auth.signin.SignInFragment
 import com.pavellukyanov.rocketchat.presentation.feature.chatroom.chatrooms.ChatRoomsFragment
 import com.pavellukyanov.rocketchat.presentation.feature.chatroom.create.CreateChatRoomFragment
 import com.pavellukyanov.rocketchat.presentation.feature.chatroom.favourites.FavouritesChatRoomsFragment
@@ -29,6 +28,7 @@ class HomeFragment : BaseFragment<HomeState, HomeEvent, HomeEffect, HomeViewMode
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        action(HomeEvent.GetMyAccount)
         bind()
         action(HomeEvent.RefreshCache)
     }
@@ -40,13 +40,9 @@ class HomeFragment : BaseFragment<HomeState, HomeEvent, HomeEffect, HomeViewMode
     }
 
     private fun bind() = with(binding) {
-        createChatroomContainer.setOnClickListener { forwardToCreateChatroom() }
-        mainAvatar.setOnClickListener {
-//            action(HomeEvent.ChangeAvatar)
-            navigator.forward(ProfileFragment.newInstance(), ProfileFragment.TAG)
-        }
+        createChatroomContainer.setOnClickListener { action(HomeEvent.CreateChat) }
+        mainAvatar.setOnClickListener { action(HomeEvent.GoToMyProfile) }
         mainSearch.setOnTextChangeListener { action(HomeEvent.Search(it)) }
-        mainLogout.setOnClickListener { action(HomeEvent.LogOut) }
 
         val frags = listOf(
             ChatRoomsFragment.newInstance(),
@@ -87,17 +83,16 @@ class HomeFragment : BaseFragment<HomeState, HomeEvent, HomeEffect, HomeViewMode
         }
     }
 
-    private fun setMyAccountData(myAccount: MyAccount) = with(binding) {
+    private fun setMyAccountData(myAccount: User) = with(binding) {
         mainAvatar.load(myAccount.avatar, circleCrop = true)
         mainHeader.text = getString(R.string.home_header, myAccount.username)
     }
 
-    private fun forwardToCreateChatroom() {
-        navigator.forward(CreateChatRoomFragment.newInstance(), CreateChatRoomFragment.TAG)
-    }
-
     override fun effect(effect: HomeEffect) {
-        if (effect is HomeEffect.Logout) navigator.replace(SignInFragment.newInstance(), SignInFragment.TAG)
+        when (effect) {
+            is HomeEffect.GoToProfile -> navigator.forward(ProfileFragment.newInstance(), ProfileFragment.TAG)
+            is HomeEffect.CreateChat -> navigator.forward(CreateChatRoomFragment.newInstance(), CreateChatRoomFragment.TAG)
+        }
     }
 
     companion object {

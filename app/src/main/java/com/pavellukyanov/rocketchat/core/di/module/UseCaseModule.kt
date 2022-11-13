@@ -5,10 +5,10 @@ import com.pavellukyanov.rocketchat.domain.usecase.chatroom.*
 import com.pavellukyanov.rocketchat.domain.usecase.chatroom.chat.*
 import com.pavellukyanov.rocketchat.domain.usecase.home.RefreshChatroomsCache
 import com.pavellukyanov.rocketchat.domain.usecase.home.RefreshChatroomsCacheImpl
+import com.pavellukyanov.rocketchat.domain.usecase.home.UpdateCurrentUser
+import com.pavellukyanov.rocketchat.domain.usecase.home.UpdateCurrentUserImpl
 import com.pavellukyanov.rocketchat.domain.usecase.profile.ChangeAvatar
 import com.pavellukyanov.rocketchat.domain.usecase.profile.ChangeAvatarImpl
-import com.pavellukyanov.rocketchat.domain.usecase.profile.GetMyAccount
-import com.pavellukyanov.rocketchat.domain.usecase.profile.GetMyAccountImpl
 import com.pavellukyanov.rocketchat.domain.usecase.users.GetAllUsers
 import com.pavellukyanov.rocketchat.domain.usecase.users.GetAllUsersImpl
 import dagger.Binds
@@ -26,7 +26,7 @@ abstract class UseCaseModule {
     abstract fun bindChangeAvatar(impl: ChangeAvatarImpl): ChangeAvatar
 
     @Binds
-    abstract fun bindGetMyAccount(impl: GetMyAccountImpl): GetMyAccount
+    abstract fun bindGetMyAccount(impl: UpdateCurrentUserImpl): UpdateCurrentUser
 
     @Binds
     abstract fun bindChatroomCreate(impl: ChatroomCreateImpl): ChatroomCreate

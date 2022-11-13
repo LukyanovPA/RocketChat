@@ -5,7 +5,6 @@ import androidx.room.Room
 import com.pavellukyanov.rocketchat.data.cache.LocalDatabase
 import com.pavellukyanov.rocketchat.data.cache.dao.ChatroomsDao
 import com.pavellukyanov.rocketchat.data.cache.dao.MessagesDao
-import com.pavellukyanov.rocketchat.data.cache.dao.MyAccountDao
 import com.pavellukyanov.rocketchat.data.cache.dao.UsersDao
 import dagger.Module
 import dagger.Provides
@@ -30,11 +29,6 @@ class LocalBaseModule {
     @Singleton
     fun provideChatroomsDao(database: LocalDatabase): ChatroomsDao =
         database.chatrooms()
-
-    @Provides
-    @Singleton
-    fun provideMyAccountDao(database: LocalDatabase): MyAccountDao =
-        database.myAccount()
 
     @Provides
     @Singleton

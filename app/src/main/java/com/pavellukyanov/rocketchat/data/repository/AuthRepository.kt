@@ -1,7 +1,6 @@
 package com.pavellukyanov.rocketchat.data.repository
 
 import com.pavellukyanov.rocketchat.data.api.AuthApi
-import com.pavellukyanov.rocketchat.data.cache.LocalDatabase
 import com.pavellukyanov.rocketchat.data.utils.ResponseState
 import com.pavellukyanov.rocketchat.data.utils.asData
 import com.pavellukyanov.rocketchat.data.utils.asResponseState
@@ -13,13 +12,11 @@ import com.pavellukyanov.rocketchat.domain.utils.UserInfo
 import javax.inject.Inject
 
 class AuthRepository @Inject constructor(
-    private val cache: LocalDatabase,
     private val api: AuthApi,
     private val userStorage: UserInfo
 ) : IAuth {
     override suspend fun login(email: String, password: String): ResponseState<TokenResponse> =
         api.signIn(SignInRequest(email, password)).asResponseState().also {
-            cache.myAccount().delete()
             if (it is ResponseState.Success) userStorage.tokens = it.data
         }
 
