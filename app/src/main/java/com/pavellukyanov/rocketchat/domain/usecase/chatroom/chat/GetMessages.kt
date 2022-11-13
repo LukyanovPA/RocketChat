@@ -37,6 +37,6 @@ class GetMessagesImpl @Inject constructor(
     private fun getChatDateItem(beforeDate: Long, currentDate: Long): ChatItem.ChatDateItem? {
         val before = DateUtil.longToLocalDate(beforeDate)
         val current = DateUtil.longToLocalDate(currentDate)
-        return if (current.isAfter(before)) ChatItem.ChatDateItem(DateUtil.dateCompareWithToday(before)) else null
+        return if (current.isAfter(before)) ChatItem.ChatDateItem(DateUtil.dateCompareWithToday(current)) else null
     }
 }
