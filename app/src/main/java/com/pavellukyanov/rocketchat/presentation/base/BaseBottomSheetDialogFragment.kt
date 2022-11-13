@@ -30,7 +30,7 @@ abstract class BaseBottomSheetDialogFragment<STATE : Any, EVENT : Any, EFFECT : 
 
     private lateinit var blurEngine: BlurDialogEngine
 
-    protected val navigator = BaseNavigator(childFragmentManager)
+    protected val navigator by lazy(LazyThreadSafetyMode.NONE) { BaseNavigator(requireActivity().supportFragmentManager) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

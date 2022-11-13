@@ -3,10 +3,13 @@ package com.pavellukyanov.rocketchat.presentation
 import android.os.Bundle
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.isVisible
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
+import by.kirich1409.viewbindingdelegate.viewBinding
 import com.pavellukyanov.rocketchat.R
 import com.pavellukyanov.rocketchat.data.utils.errors.ApiException
+import com.pavellukyanov.rocketchat.databinding.ActivityMainBinding
 import com.pavellukyanov.rocketchat.presentation.base.BaseNavigator
 import com.pavellukyanov.rocketchat.presentation.base.State
 import com.pavellukyanov.rocketchat.presentation.base.ViewModelFactory
@@ -22,6 +25,7 @@ import javax.inject.Inject
 
 class MainActivity : AppCompatActivity(), HasAndroidInjector {
     private val navigator by lazy(LazyThreadSafetyMode.NONE) { BaseNavigator(supportFragmentManager) }
+    private val binding by viewBinding(ActivityMainBinding::bind)
 
     @Inject
     lateinit var androidInjector: DispatchingAndroidInjector<Any>
@@ -42,22 +46,21 @@ class MainActivity : AppCompatActivity(), HasAndroidInjector {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         vm = ViewModelProvider(this, activityViewModelFactory)[MainViewModel::class.java]
-        lifecycleScope.launch {
-            vm.state.collect(::handleViewState)
-        }
-        lifecycleScope.launch {
-            vm.effect.collect(::effect)
-        }
 
         if (savedInstanceState == null) {
-            vm.action(MainEvent.CheckAuth)
+            lifecycleScope.launch {
+                vm.state.collect(::handleViewState)
+            }
         }
     }
 
-    private fun handleViewState(state: State<Any>) {
+    private fun handleViewState(state: State<Boolean>) {
         when (state) {
-            is State.Loading -> {}
-            is State.Success -> {}
+            is State.Loading -> binding.progressBar.isVisible = true
+            is State.Success -> {
+                handleAuth(state.state)
+                binding.progressBar.isVisible = false
+            }
             is State.Error -> onError(state.error)
             is State.ErrorMessage -> navigator.showGlobalErrorDialog(state.errorMessage)
         }
@@ -70,11 +73,11 @@ class MainActivity : AppCompatActivity(), HasAndroidInjector {
         }
     }
 
-    private fun effect(effect: MainEffect) {
-        when (effect) {
-            is MainEffect.Home -> navigator.add(HomeFragment.newInstance(), HomeFragment.TAG)
-            is MainEffect.SignIn -> navigator.add(SignInFragment.newInstance(), SignInFragment.TAG)
-        }
+    private fun handleAuth(state: Boolean) {
+        if (state) navigator.add(HomeFragment.newInstance(), HomeFragment.TAG) else navigator.add(
+            SignInFragment.newInstance(),
+            SignInFragment.TAG
+        )
     }
 
     override fun androidInjector(): AndroidInjector<Any> = androidInjector
