@@ -1,8 +1,7 @@
 package com.pavellukyanov.rocketchat.data.utils
 
+import com.pavellukyanov.rocketchat.utils.Constants.TIMEOUT
 import okhttp3.OkHttpClient
-import okhttp3.Request
-import okhttp3.WebSocketListener
 import okhttp3.logging.HttpLoggingInterceptor
 import timber.log.Timber
 import java.util.concurrent.TimeUnit
@@ -19,9 +18,9 @@ class RetrofitClient @Inject constructor(
         return OkHttpClient()
             .newBuilder()
             .apply {
-                connectTimeout(30, TimeUnit.SECONDS)
-                readTimeout(30, TimeUnit.SECONDS)
-                writeTimeout(30, TimeUnit.SECONDS)
+                connectTimeout(TIMEOUT, TimeUnit.SECONDS)
+                readTimeout(TIMEOUT, TimeUnit.SECONDS)
+                writeTimeout(TIMEOUT, TimeUnit.SECONDS)
             }
             .addInterceptor(httpInterceptor)
             .addInterceptor(httpLoggingInterceptor)

@@ -13,6 +13,7 @@ object Constants {
     //Long
     const val LONG_FIFTY = 50L
     const val SPLASH_SCREEN_DELAY = 2000L
+    const val TIMEOUT = 30L
 
     //String
     const val EMPTY_STRING = ""
