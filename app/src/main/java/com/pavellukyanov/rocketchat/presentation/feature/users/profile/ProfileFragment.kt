@@ -51,6 +51,10 @@ class ProfileFragment : ChatRoomsAdapter.ChatRoomListener,
                 profileUsername.text = state.user.username
             }
             is ProfileState.UserChatRooms -> chatroomAdapter.data = state.chatRooms
+            is ProfileState.AvatarChanging -> {
+                profileAvatarProgress.isVisible = state.isChanging
+                profileAvatar.alpha = if (state.isChanging) 0.4f else 1.0f
+            }
         }
     }
 

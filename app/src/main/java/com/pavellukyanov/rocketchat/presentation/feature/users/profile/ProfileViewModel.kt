@@ -24,7 +24,7 @@ class ProfileViewModel @Inject constructor(
     private val fragmentResultHelper: FragmentResultHelper,
     private val userInfo: UserInfo,
     private val changeAvatar: ChangeAvatar,
-    private val getChatrooms: GetChatRooms,
+    private val getChatRooms: GetChatRooms,
     private val getAllUsers: GetAllUsers
 ) : BaseViewModel<ProfileState, ProfileEvent, ProfileEffect>() {
 
@@ -56,8 +56,10 @@ class ProfileViewModel @Inject constructor(
     }
 
     private fun setAvatar(uri: Uri) = launchIO {
+        emitState(ProfileState.AvatarChanging(true))
         changeAvatar(uri)
         emitState(ProfileState.UserData(userInfo.user!!))
+        emitState(ProfileState.AvatarChanging(false))
     }
 
     private fun onClickLogOut() = launchIO {
@@ -91,7 +93,7 @@ class ProfileViewModel @Inject constructor(
     //TODO временно, потом сделать отдельный эндпоинт на бэке
     private fun fetchChatRooms() = launchIO {
         emitLoading()
-        getChatrooms("")
+        getChatRooms("")
             .map { list ->
                 list.filter { room ->
                     if (userUuid != null) {

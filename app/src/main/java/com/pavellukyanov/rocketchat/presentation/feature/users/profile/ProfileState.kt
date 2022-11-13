@@ -7,4 +7,5 @@ sealed class ProfileState {
     data class IsMyProfile(val state: Boolean) : ProfileState()
     data class UserData(val user: User) : ProfileState()
     data class UserChatRooms(val chatRooms: List<Chatroom>) : ProfileState()
+    data class AvatarChanging(val isChanging: Boolean) : ProfileState()
 }
