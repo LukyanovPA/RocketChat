@@ -14,7 +14,7 @@ interface GetAllUsers : suspend (String) -> Flow<List<User>>
 class GetAllUsersImpl @Inject constructor(
     private val iUsers: IUsers
 ) : GetAllUsers {
-    override suspend fun invoke(query: String): Flow<List<User>> =
+    override suspend operator fun invoke(query: String): Flow<List<User>> =
         iUsers.getAllUsers()
             .debounce(300L)
             .map { list ->

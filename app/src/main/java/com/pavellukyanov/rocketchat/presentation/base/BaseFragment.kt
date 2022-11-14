@@ -51,10 +51,10 @@ abstract class BaseFragment<STATE : Any, EVENT : Any, EFFECT : Any, VM : BaseVie
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        lifecycleScope.launch {
+        viewLifecycleOwner.lifecycleScope.launch {
             vm.state.collect(::handleViewState)
         }
-        lifecycleScope.launch {
+        viewLifecycleOwner.lifecycleScope.launch {
             vm.effect.collect(::effect)
         }
     }
@@ -76,7 +76,8 @@ abstract class BaseFragment<STATE : Any, EVENT : Any, EFFECT : Any, VM : BaseVie
             is java.lang.IllegalStateException -> {
                 if (error.message?.contains("Room cannot verify the data integrity.", ignoreCase = true) == true) {
                     requireActivity().applicationContext.deleteDatabase("RocketChatDatabase.db")
-                    Toast.makeText(requireContext(), "Local database schema has been updated. Repeat action!", Toast.LENGTH_LONG).show()
+                    Toast.makeText(requireContext(), "Local database schema has been updated. Repeat action!", Toast.LENGTH_LONG)
+                        .show()
                 }
             }
             else -> error.message?.let(navigator::showGlobalErrorDialog)

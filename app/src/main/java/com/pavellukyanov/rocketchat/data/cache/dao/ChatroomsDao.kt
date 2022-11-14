@@ -15,6 +15,9 @@ interface ChatroomsDao {
     @Query("SELECT * FROM chatrooms WHERE chatroomId = :chatRoomId")
     suspend fun getChatRoom(chatRoomId: String): ChatroomLocal?
 
+    @Query("SELECT * FROM chatrooms WHERE ownerId = :userUuid")
+    fun getUserChatRooms(userUuid: String): Flow<List<ChatroomLocal>>
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(newList: List<ChatroomLocal>)
 

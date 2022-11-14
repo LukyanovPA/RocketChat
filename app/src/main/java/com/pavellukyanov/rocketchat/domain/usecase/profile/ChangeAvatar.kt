@@ -9,6 +9,5 @@ interface ChangeAvatar : suspend (Uri) -> Unit
 class ChangeAvatarImpl @Inject constructor(
     private val auth: IUsers
 ) : ChangeAvatar {
-    override suspend operator fun invoke(uri: Uri) =
-        auth.changeAvatar(uri)
+    override suspend operator fun invoke(uri: Uri) = auth.changeAvatar(uri)
 }

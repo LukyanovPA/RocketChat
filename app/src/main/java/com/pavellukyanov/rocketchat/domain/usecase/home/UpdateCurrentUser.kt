@@ -8,6 +8,5 @@ interface UpdateCurrentUser : suspend () -> Unit
 class UpdateCurrentUserImpl @Inject constructor(
     private val home: IHome
 ) : UpdateCurrentUser {
-    override suspend operator fun invoke() =
-        home.refreshCache()
+    override suspend operator fun invoke() = home.refreshCache()
 }

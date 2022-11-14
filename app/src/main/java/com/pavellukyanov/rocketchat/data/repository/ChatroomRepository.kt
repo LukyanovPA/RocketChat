@@ -3,12 +3,12 @@ package com.pavellukyanov.rocketchat.data.repository
 import android.net.Uri
 import com.pavellukyanov.rocketchat.data.api.ChatroomApi
 import com.pavellukyanov.rocketchat.data.cache.LocalDatabase
-import com.pavellukyanov.rocketchat.data.cache.entity.ChatroomLocal
 import com.pavellukyanov.rocketchat.data.utils.ApiParams
 import com.pavellukyanov.rocketchat.data.utils.asData
 import com.pavellukyanov.rocketchat.data.utils.file.FileInfoHelper
 import com.pavellukyanov.rocketchat.data.utils.file.RequestHelper
 import com.pavellukyanov.rocketchat.data.utils.map
+import com.pavellukyanov.rocketchat.data.utils.mapByFavourites
 import com.pavellukyanov.rocketchat.domain.entity.chatroom.Chatroom
 import com.pavellukyanov.rocketchat.domain.repository.IChatroom
 import com.pavellukyanov.rocketchat.presentation.helper.NetworkMonitor
@@ -51,34 +51,20 @@ class ChatroomRepository @Inject constructor(
 
     override suspend fun getChatrooms(): Flow<List<Chatroom>> =
         cache.chatrooms().getChatroomsStream()
-            .map { localCache -> localCache.map { it.map() } }
+            .map { localCache -> localCache.map { it.map() }.sortedByDescending { it.lastMessageTimeStamp } }
 
     override suspend fun updateCache(): Flow<Unit> =
         networkMonitor.handleInternetConnection()
             .flatMapMerge {
                 flowOf(api.getAllChatRooms().asData())
                     .combine(flowOf(cache.chatrooms().getChatrooms())) { network, local ->
-                        mapChatRooms(local, network)
+                        local.mapByFavourites(network)
                     }
                     .flatMapMerge { local ->
-                        cache.chatrooms().delete()
                         cache.chatrooms().insert(local)
                         flowOf(Unit)
                     }
             }
-
-    private fun mapChatRooms(local: List<ChatroomLocal>, network: List<Chatroom>): List<ChatroomLocal> =
-        network.map { networkRoom ->
-            val localRoom = local.find { it.chatroomId == networkRoom.id }
-            if (localRoom != null) {
-                val new = networkRoom.copy(
-                    isFavourites = localRoom.isFavourites
-                )
-                new.map()
-            } else {
-                networkRoom.map()
-            }
-        }
 
     override suspend fun deleteChatRoom(chatroomId: String) {
         val state = api.deleteChatRoom(chatroomId).asData()
@@ -101,6 +87,19 @@ class ChatroomRepository @Inject constructor(
     override suspend fun getChatRoom(chatroomId: String): Flow<Chatroom?> =
         cache.chatrooms().getChatroomsStream()
             .map { rooms -> rooms.find { it.chatroomId == chatroomId }?.map() }
+
+    override suspend fun getUserChatRooms(userUuid: String): Flow<List<Chatroom>> =
+        networkMonitor.handleInternetConnection()
+            .flatMapMerge {
+                flowOf(api.getUserChatRooms(userUuid).asData())
+                    .combine(cache.chatrooms().getUserChatRooms(userUuid)) { network, local ->
+                        local.mapByFavourites(network)
+                    }
+                    .flatMapMerge { local ->
+                        cache.chatrooms().insert(local)
+                        flowOf(local.map { it.map() }.sortedByDescending { it.lastMessageTimeStamp })
+                    }
+            }
 
     companion object {
         private const val PART_NAME = "chatImg"

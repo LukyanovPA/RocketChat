@@ -12,4 +12,5 @@ interface IChatroom {
     suspend fun changeFavouritesState(chatroom: Chatroom)
     suspend fun getFavourites(): Flow<List<Chatroom>>
     suspend fun getChatRoom(chatroomId: String): Flow<Chatroom?>
+    suspend fun getUserChatRooms(userUuid: String): Flow<List<Chatroom>>
 }

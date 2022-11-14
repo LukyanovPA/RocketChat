@@ -10,6 +10,6 @@ interface GetChatRoom : suspend (String) -> Flow<Chatroom?>
 class GetChatRoomImpl @Inject constructor(
     private val iChatroom: IChatroom
 ) : GetChatRoom {
-    override suspend fun invoke(chatroomId: String): Flow<Chatroom?> =
+    override suspend operator fun invoke(chatroomId: String): Flow<Chatroom?> =
         iChatroom.getChatRoom(chatroomId)
 }

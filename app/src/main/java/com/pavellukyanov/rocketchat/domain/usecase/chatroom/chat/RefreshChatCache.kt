@@ -8,6 +8,6 @@ interface RefreshChatCache : suspend (String) -> Unit
 class RefreshChatCacheImpl @Inject constructor(
     private val repo: IChat
 ) : RefreshChatCache {
-    override suspend fun invoke(chatroomId: String) =
+    override suspend operator fun invoke(chatroomId: String) =
         repo.updateCache(chatroomId)
 }

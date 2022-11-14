@@ -7,8 +7,7 @@ import com.pavellukyanov.rocketchat.domain.usecase.home.RefreshChatroomsCache
 import com.pavellukyanov.rocketchat.domain.usecase.home.RefreshChatroomsCacheImpl
 import com.pavellukyanov.rocketchat.domain.usecase.home.UpdateCurrentUser
 import com.pavellukyanov.rocketchat.domain.usecase.home.UpdateCurrentUserImpl
-import com.pavellukyanov.rocketchat.domain.usecase.profile.ChangeAvatar
-import com.pavellukyanov.rocketchat.domain.usecase.profile.ChangeAvatarImpl
+import com.pavellukyanov.rocketchat.domain.usecase.profile.*
 import com.pavellukyanov.rocketchat.domain.usecase.users.GetAllUsers
 import com.pavellukyanov.rocketchat.domain.usecase.users.GetAllUsersImpl
 import dagger.Binds
@@ -63,4 +62,10 @@ abstract class UseCaseModule {
 
     @Binds
     abstract fun bindGetChatRoom(impl: GetChatRoomImpl): GetChatRoom
+
+    @Binds
+    abstract fun bindGetUser(impl: GetUserImpl): GetUser
+
+    @Binds
+    abstract fun bindGetUserChatRooms(impl: GetUserChatRoomsImpl): GetUserChatRooms
 }

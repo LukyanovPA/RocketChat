@@ -16,7 +16,7 @@ class GetMessagesImpl @Inject constructor(
     private val repo: IChat,
     private val userInfo: UserInfo
 ) : GetMessages {
-    override suspend fun invoke(chatroomId: String): Flow<List<ChatItem>> =
+    override suspend operator fun invoke(chatroomId: String): Flow<List<ChatItem>> =
         repo.getMessages(chatroomId)
             .map { messages ->
                 val list = mutableListOf<ChatItem>()

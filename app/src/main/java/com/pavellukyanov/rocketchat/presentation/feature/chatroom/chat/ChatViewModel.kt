@@ -24,7 +24,6 @@ class ChatViewModel @Inject constructor(
     private val message = MutableStateFlow(EMPTY_STRING)
 
     init {
-        initSession()
         refreshCache()
         fetchMessages()
         handleButtonState()
@@ -32,6 +31,8 @@ class ChatViewModel @Inject constructor(
 
     override fun action(event: ChatEvent) {
         when (event) {
+            is ChatEvent.Init -> initSession()
+            is ChatEvent.Close -> closeSession()
             is ChatEvent.GoBack -> goBack()
             is ChatEvent.Message -> writeMessage(event.message)
             is ChatEvent.SendMessage -> sendMes()
@@ -40,7 +41,7 @@ class ChatViewModel @Inject constructor(
     }
 
     private fun goBack() = launchIO {
-        chatInteractor.closeSession()
+        closeSession()
         sendEffect(ChatEffect.Back)
     }
 
@@ -62,6 +63,10 @@ class ChatViewModel @Inject constructor(
 
     private fun initSession() = launchIO {
         chatInteractor.initSession()
+    }
+
+    private fun closeSession() = launchIO {
+        chatInteractor.closeSession()
     }
 
     private fun handleButtonState() = launchCPU {
@@ -91,7 +96,7 @@ class ChatViewModel @Inject constructor(
     }
 
     override fun onCleared() {
-        launchIO { chatInteractor.closeSession() }
+        closeSession()
         super.onCleared()
     }
 }

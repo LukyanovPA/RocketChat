@@ -14,7 +14,7 @@ interface GetFavourites : suspend (String) -> Flow<List<Chatroom>>
 class GetFavouritesImpl @Inject constructor(
     private val iChatroom: IChatroom
 ) : GetFavourites {
-    override suspend fun invoke(query: String): Flow<List<Chatroom>> =
+    override suspend operator fun invoke(query: String): Flow<List<Chatroom>> =
         iChatroom.getFavourites()
             .debounce(300L)
             .map { list ->

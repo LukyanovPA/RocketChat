@@ -21,6 +21,7 @@ class ListUsersFragment : ListUsersAdapter.ListUsersListener,
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         bind()
+        action(UsersEvent.FetchUsers)
     }
 
     private fun bind() = with(binding) {

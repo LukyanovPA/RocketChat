@@ -9,6 +9,6 @@ interface ChangeFavouritesState : suspend (Chatroom) -> Unit
 class ChangeFavouritesStateImpl @Inject constructor(
     private val iChatroom: IChatroom
 ) : ChangeFavouritesState {
-    override suspend fun invoke(chatroom: Chatroom) =
+    override suspend operator fun invoke(chatroom: Chatroom) =
         iChatroom.changeFavouritesState(chatroom)
 }

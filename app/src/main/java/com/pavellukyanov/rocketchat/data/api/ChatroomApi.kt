@@ -23,4 +23,7 @@ interface ChatroomApi {
     suspend fun deleteChatRoom(
         @Path(ApiParams.CHAT_ROOM_ID) chatroomId: String
     ): NetworkResponse<BaseResponse<Boolean>>
+
+    @GET("chatrooms/getUserChatRooms")
+    suspend fun getUserChatRooms(@Query(ApiParams.USER_ID) userId: String): NetworkResponse<BaseResponse<List<Chatroom>>>
 }

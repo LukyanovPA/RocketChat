@@ -14,13 +14,10 @@ class ListUsersViewModel @Inject constructor(
     @HomeSearchQ private val searchStorage: ObjectStorage<String>
 ) : BaseViewModel<List<User>, UsersEvent, UsersEffect>() {
 
-    init {
-        fetchUsers()
-    }
-
     override fun action(event: UsersEvent) {
         when (event) {
             is UsersEvent.UserOnClick -> sendEffect(UsersEffect.ForwardToUserProfile(event.user.uuid))
+            is UsersEvent.FetchUsers -> fetchUsers()
         }
     }
 

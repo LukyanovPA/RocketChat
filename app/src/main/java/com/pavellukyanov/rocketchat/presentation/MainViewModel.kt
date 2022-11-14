@@ -6,7 +6,7 @@ import javax.inject.Inject
 
 class MainViewModel @Inject constructor(
     private val userInfo: UserInfo
-) : BaseViewModel<Boolean, Any, Any>() {
+) : BaseViewModel<Any, Any, Boolean>() {
 
     init {
         checkAuth()
@@ -16,6 +16,7 @@ class MainViewModel @Inject constructor(
 
     private fun checkAuth() = launchCPU {
         emitLoading()
-        emitState(userInfo.tokens?.token != null && userInfo.tokens?.refreshToken != null)
+        sendEffect(userInfo.tokens?.token != null && userInfo.tokens?.refreshToken != null)
+        emitState(Any())
     }
 }

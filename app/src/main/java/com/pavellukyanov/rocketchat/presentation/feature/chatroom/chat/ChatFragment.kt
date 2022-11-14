@@ -26,6 +26,7 @@ class ChatFragment : BaseFragment<ChatState, ChatEvent, ChatEffect, ChatViewMode
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         setShimmer(binding.phMessageList)
         super.onViewCreated(view, savedInstanceState)
+        action(ChatEvent.Init)
         bind()
         (requireArguments().getParcelable(CHAT_ROOM_ID_ARG) as? Chatroom)?.let {
             handleChatroomValue(it)
@@ -82,6 +83,11 @@ class ChatFragment : BaseFragment<ChatState, ChatEvent, ChatEffect, ChatViewMode
         chatName.text = chatroom.name
         chatDescription.text = chatroom.description
         chatroomIsFavourites.setImageResource(if (chatroom.isFavourites) R.drawable.ic_is_favourites else R.drawable.ic_is_not_favourites)
+    }
+
+    override fun onDestroy() {
+        action(ChatEvent.Close)
+        super.onDestroy()
     }
 
     companion object {

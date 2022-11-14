@@ -10,6 +10,7 @@ object ApiParams {
     const val IMG = "img"
     const val CHAT_ROOM_ID = "chatroomId"
     const val MESSAGE = "message"
+    const val USER_ID = "userId"
 
     //Common
     val multiPartMediaType = "multipart/form-data".toMediaType()

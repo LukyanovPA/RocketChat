@@ -45,11 +45,17 @@ class UsersRepository @Inject constructor(
         val fileName = fileInfoHelper.getFileName(uri)
         val body: MultipartBody.Part? =
             fileRequestBody?.let {
-                MultipartBody.Part.createFormData("avatar", fileName, it)
+                MultipartBody.Part.createFormData(AVATAR, fileName, it)
             }
 
         api.changeAvatar(body).asData().also {
             userStorage.user = it
         }
+    }
+
+    override suspend fun getUser(userId: String): User = api.getUser(userId).asData()
+
+    companion object {
+        private const val AVATAR = "avatar"
     }
 }

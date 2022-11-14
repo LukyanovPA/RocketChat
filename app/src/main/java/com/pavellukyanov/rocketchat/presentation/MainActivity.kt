@@ -47,22 +47,20 @@ class MainActivity : AppCompatActivity(), HasAndroidInjector {
         setContentView(R.layout.activity_main)
         vm = ViewModelProvider(this, activityViewModelFactory)[MainViewModel::class.java]
 
-        if (savedInstanceState == null) {
-            lifecycleScope.launch {
-                vm.state.collect(::handleViewState)
-            }
+        lifecycleScope.launch {
+            vm.state.collect(::handleViewState)
+        }
+        lifecycleScope.launch {
+            vm.effect.collect(::handleAuth)
         }
     }
 
-    private fun handleViewState(state: State<Boolean>) {
+    private fun handleViewState(state: State<Any>) {
+        binding.progressBar.isVisible = state is State.Loading
         when (state) {
-            is State.Loading -> binding.progressBar.isVisible = true
-            is State.Success -> {
-                handleAuth(state.state)
-                binding.progressBar.isVisible = false
-            }
             is State.Error -> onError(state.error)
             is State.ErrorMessage -> navigator.showGlobalErrorDialog(state.errorMessage)
+            else -> {}
         }
     }
 

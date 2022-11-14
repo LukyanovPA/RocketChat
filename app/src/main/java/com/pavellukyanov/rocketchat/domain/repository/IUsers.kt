@@ -8,4 +8,5 @@ interface IUsers {
     suspend fun getAllUsers(): Flow<List<User>>
     suspend fun updateCache(): Flow<Unit>
     suspend fun changeAvatar(uri: Uri)
+    suspend fun getUser(userId: String): User
 }

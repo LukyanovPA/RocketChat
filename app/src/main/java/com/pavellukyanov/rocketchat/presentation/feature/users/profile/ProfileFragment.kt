@@ -10,6 +10,7 @@ import com.pavellukyanov.rocketchat.databinding.FragmentProfileBinding
 import com.pavellukyanov.rocketchat.domain.entity.chatroom.Chatroom
 import com.pavellukyanov.rocketchat.presentation.base.BaseFragment
 import com.pavellukyanov.rocketchat.presentation.feature.auth.signin.SignInFragment
+import com.pavellukyanov.rocketchat.presentation.feature.chatroom.chat.ChatFragment
 import com.pavellukyanov.rocketchat.presentation.feature.chatroom.chatrooms.ChatRoomsAdapter
 import com.pavellukyanov.rocketchat.presentation.feature.chatroom.options.ChatRoomOptionsFragment
 import com.pavellukyanov.rocketchat.presentation.helper.ext.load
@@ -66,6 +67,10 @@ class ProfileFragment : ChatRoomsAdapter.ChatRoomListener,
                 ChatRoomOptionsFragment.TAG
             )
             is ProfileEffect.Back -> navigator.back()
+            is ProfileEffect.ForwardToChatRoom -> navigator.forward(
+                ChatFragment.newInstance(chatroom = effect.chatRoom),
+                ChatFragment.TAG
+            )
         }
     }
 
