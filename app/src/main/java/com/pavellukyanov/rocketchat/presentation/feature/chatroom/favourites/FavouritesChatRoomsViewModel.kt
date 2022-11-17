@@ -9,6 +9,7 @@ import com.pavellukyanov.rocketchat.presentation.feature.chatroom.chatrooms.Chat
 import com.pavellukyanov.rocketchat.presentation.feature.chatroom.chatrooms.ChatRoomsState
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.flatMapMerge
+import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
 class FavouritesChatRoomsViewModel @Inject constructor(
@@ -16,6 +17,10 @@ class FavouritesChatRoomsViewModel @Inject constructor(
     private val changeFavouritesState: ChangeFavouritesState,
     @HomeSearchQ private val searchStorage: ObjectStorage<String>
 ) : BaseViewModel<ChatRoomsState, Any, ChatRoomEffect>() {
+    override val initialCurrentSuccessState: ChatRoomsState = ChatRoomsState(chatRooms = emptyList())
+
+    override var curState: ChatRoomsState = ChatRoomsState(chatRooms = emptyList())
+
     init {
         fetchChatrooms()
     }
@@ -30,12 +35,12 @@ class FavouritesChatRoomsViewModel @Inject constructor(
             .flatMapMerge { query ->
                 getFavourites(query)
             }
-            .collect { list ->
-                if (list.isEmpty()) {
-                    emitState(ChatRoomsState.EmptyList)
-                } else {
-                    emitState(ChatRoomsState.Success(list))
-                }
+            .map { list ->
+                val newState = currentSuccessState.value.copy(
+                    chatRooms = list
+                )
+                newState
             }
+            .collect(::reduce)
     }
 }

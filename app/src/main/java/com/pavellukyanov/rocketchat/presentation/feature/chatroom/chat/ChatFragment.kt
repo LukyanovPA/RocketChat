@@ -55,10 +55,10 @@ class ChatFragment : BaseFragment<ChatState, ChatEvent, ChatEffect, ChatViewMode
     }
 
     override fun render(state: ChatState) {
-        when (state) {
-            is ChatState.Messages -> handleMessagesList(state.messages)
-            is ChatState.ChatValue -> handleChatroomValue(state.chatRoom)
-            is ChatState.ButtonState -> handleButtonSendState(state.state)
+        with(state) {
+            messages?.let { handleMessagesList(it) }
+            chatRoom?.let { handleChatroomValue(it) }
+            handleButtonSendState(buttonState)
         }
     }
 

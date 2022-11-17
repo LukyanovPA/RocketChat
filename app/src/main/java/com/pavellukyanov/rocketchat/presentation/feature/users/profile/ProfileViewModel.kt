@@ -13,6 +13,7 @@ import com.pavellukyanov.rocketchat.presentation.feature.chatroom.options.ChatRo
 import com.pavellukyanov.rocketchat.presentation.feature.chatroom.options.OptionsType
 import com.pavellukyanov.rocketchat.presentation.helper.FragmentResultHelper
 import com.pavellukyanov.rocketchat.presentation.helper.gallery.GalleryHelper
+import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
 class ProfileViewModel @Inject constructor(
@@ -26,6 +27,9 @@ class ProfileViewModel @Inject constructor(
     private val getUser: GetUser,
     private val getUserChatRooms: GetUserChatRooms
 ) : BaseViewModel<ProfileState, ProfileEvent, ProfileEffect>() {
+    override val initialCurrentSuccessState: ProfileState = ProfileState()
+
+    override var curState: ProfileState = ProfileState()
 
     init {
         fetchChatRooms()
@@ -55,10 +59,22 @@ class ProfileViewModel @Inject constructor(
     }
 
     private fun setAvatar(uri: Uri) = launchIO {
-        emitState(ProfileState.AvatarChanging(true))
+        val avatarChangingState = currentSuccessState.value.copy(
+            isAvatarChanging = true
+        )
+        reduce(avatarChangingState)
+
         changeAvatar(uri)
-        emitState(ProfileState.UserData(userInfo.user!!))
-        emitState(ProfileState.AvatarChanging(false))
+
+        val newUserDataState = currentSuccessState.value.copy(
+            userData = userInfo.user
+        )
+        reduce(newUserDataState)
+
+        val avatarChangedState = currentSuccessState.value.copy(
+            isAvatarChanging = false
+        )
+        reduce(avatarChangedState)
     }
 
     private fun onClickLogOut() = launchIO {
@@ -93,12 +109,25 @@ class ProfileViewModel @Inject constructor(
     private fun fetchChatRooms() = launchIO {
         emitLoading()
         getUserChatRooms(userUuid ?: userInfo.user?.uuid!!)
-            .collect { list -> emitState(ProfileState.UserChatRooms(list)) }
+            .map { list ->
+                val newUserChatRoomsState = currentSuccessState.value.copy(
+                    userChatRooms = list
+                )
+                newUserChatRoomsState
+            }
+            .collect(::reduce)
     }
 
     private fun fetchUserData() = launchIO {
-        emitState(ProfileState.IsMyProfile(userUuid == null || userInfo.user?.uuid == userUuid))
-        val user = getUser(userUuid ?: userInfo.user?.uuid!!)
-        emitState(ProfileState.UserData(user))
+        val newIsMyProfileState = currentSuccessState.value.copy(
+            isMyProfile = userUuid == null || userInfo.user?.uuid == userUuid
+        )
+        reduce(newIsMyProfileState)
+
+        val userData = getUser(userUuid ?: userInfo.user?.uuid!!)
+        val newUserDataState = currentSuccessState.value.copy(
+            userData = userData
+        )
+        reduce(newUserDataState)
     }
 }

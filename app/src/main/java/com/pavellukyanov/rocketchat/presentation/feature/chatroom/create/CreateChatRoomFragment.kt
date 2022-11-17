@@ -1,6 +1,5 @@
 package com.pavellukyanov.rocketchat.presentation.feature.chatroom.create
 
-import android.net.Uri
 import android.os.Bundle
 import android.view.View
 import androidx.core.view.isVisible
@@ -32,19 +31,13 @@ class CreateChatRoomFragment : BaseFragment<CreateChatRoomState, CreateChatRoomE
     }
 
     override fun render(state: CreateChatRoomState) {
-        when (state) {
-            is CreateChatRoomState.Img -> handleChatroomImg(state.uri)
-            is CreateChatRoomState.EmptyNameError -> showEmptyChatroomNameErrorDialog()
-        }
+        state.uri?.let { binding.addChatroomImage.load(it, circleCrop = true) }
+        if (state.isEmptyName) showEmptyChatroomNameErrorDialog()
     }
 
     override fun effect(effect: CreateChatEffect) {
         binding.createChatRoomLoading.isVisible = effect is CreateChatEffect.Loading
         if (effect is CreateChatEffect.Success) navigator.back()
-    }
-
-    private fun handleChatroomImg(uri: Uri) {
-        binding.addChatroomImage.load(uri, circleCrop = true)
     }
 
     private fun showEmptyChatroomNameErrorDialog() {

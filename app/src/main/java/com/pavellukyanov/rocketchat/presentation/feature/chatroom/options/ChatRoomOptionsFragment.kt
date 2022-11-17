@@ -21,9 +21,8 @@ class ChatRoomOptionsFragment :
         bind()
     }
 
-    override fun inflateViewBinding(inflater: LayoutInflater, container: ViewGroup?): FragmentChatroomOptionsBinding {
-        return FragmentChatroomOptionsBinding.inflate(inflater, container, false)
-    }
+    override fun inflateViewBinding(inflater: LayoutInflater, container: ViewGroup?): FragmentChatroomOptionsBinding =
+        FragmentChatroomOptionsBinding.inflate(inflater, container, false)
 
     private fun bind() = with(binding) {
         chatroomOptionsList.apply {
@@ -33,9 +32,7 @@ class ChatRoomOptionsFragment :
     }
 
     override fun render(state: OptionsState) {
-        when (state) {
-            is OptionsState.OptionsList -> optionsAdapter.data = state.list
-        }
+        optionsAdapter.data = state.list
     }
 
     override fun effect(effect: SuccessEffect) {

@@ -13,6 +13,7 @@ import com.pavellukyanov.rocketchat.presentation.feature.home.HomeFragment
 import com.pavellukyanov.rocketchat.presentation.helper.FragmentResultHelper
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.flatMapMerge
+import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
 class ChatRoomsViewModel @Inject constructor(
@@ -22,6 +23,10 @@ class ChatRoomsViewModel @Inject constructor(
     private val getChatrooms: GetChatRooms,
     @HomeSearchQ private val searchStorage: ObjectStorage<String>
 ) : BaseViewModel<ChatRoomsState, ChatRoomsEvent, ChatRoomEffect>() {
+    override val initialCurrentSuccessState: ChatRoomsState = ChatRoomsState(chatRooms = emptyList())
+
+    override var curState: ChatRoomsState =  ChatRoomsState(chatRooms = emptyList())
+
     init {
         fetchChatRooms()
     }
@@ -61,12 +66,12 @@ class ChatRoomsViewModel @Inject constructor(
             .flatMapMerge { query ->
                 getChatrooms(query)
             }
-            .collect { list ->
-                if (list.isEmpty()) {
-                    emitState(ChatRoomsState.EmptyList)
-                } else {
-                    emitState(ChatRoomsState.Success(list))
-                }
+            .map { list ->
+                val newState = currentSuccessState.value.copy(
+                    chatRooms = list
+                )
+                newState
             }
+            .collect(::reduce)
     }
 }

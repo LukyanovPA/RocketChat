@@ -36,9 +36,7 @@ class SignUpFragment : BaseFragment<AuthState, SignUpEvent, SuccessEffect, SignU
     }
 
     override fun render(state: AuthState) {
-        when (state) {
-            is AuthState.ButtonState -> binding.regButton.isEnabled = state.state
-        }
+        binding.regButton.isEnabled = state.state
     }
 
     override fun effect(effect: SuccessEffect) {

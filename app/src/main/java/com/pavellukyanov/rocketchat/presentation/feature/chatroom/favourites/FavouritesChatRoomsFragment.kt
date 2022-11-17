@@ -35,12 +35,8 @@ class FavouritesChatRoomsFragment : ChatRoomsAdapter.ChatRoomListener,
     }
 
     override fun render(state: ChatRoomsState) {
-        when (state) {
-            is ChatRoomsState.Success -> handleChatroomList(state.chatRooms)
-            is ChatRoomsState.EmptyList -> {
-                //TODO: - добавить заглушку для пустого списка
-            }
-        }
+        state.chatRooms?.let { handleChatroomList(it) }
+        //TODO: - добавить заглушку для пустого списка
     }
 
     private fun handleChatroomList(listChatroom: List<Chatroom>) {

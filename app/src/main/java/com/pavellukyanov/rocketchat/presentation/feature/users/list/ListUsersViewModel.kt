@@ -13,6 +13,9 @@ class ListUsersViewModel @Inject constructor(
     private val getAllUsers: GetAllUsers,
     @HomeSearchQ private val searchStorage: ObjectStorage<String>
 ) : BaseViewModel<List<User>, UsersEvent, UsersEffect>() {
+    override val initialCurrentSuccessState: List<User> = emptyList()
+
+    override var curState: List<User> = emptyList()
 
     override fun action(event: UsersEvent) {
         when (event) {
@@ -27,6 +30,6 @@ class ListUsersViewModel @Inject constructor(
             .flatMapMerge { query ->
                 getAllUsers(query)
             }
-            .collect(::emitState)
+            .collect(::reduce)
     }
 }

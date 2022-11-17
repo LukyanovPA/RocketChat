@@ -15,6 +15,13 @@ import kotlinx.coroutines.launch
 import timber.log.Timber
 
 abstract class BaseViewModel<STATE : Any, EVENT : Any, EFFECT : Any> : ViewModel() {
+    abstract var curState: STATE
+    abstract val initialCurrentSuccessState: STATE
+    protected val currentSuccessState: MutableStateFlow<STATE> by lazy(LazyThreadSafetyMode.NONE) {
+        MutableStateFlow(
+            initialCurrentSuccessState
+        )
+    }
     private val _state = MutableSharedFlow<State<STATE>>(
         replay = INT_ONE,
         extraBufferCapacity = INT_TWO,
@@ -24,6 +31,20 @@ abstract class BaseViewModel<STATE : Any, EVENT : Any, EFFECT : Any> : ViewModel
     private val _effect = Channel<EFFECT>(Channel.BUFFERED)
     val effect: Flow<EFFECT> = _effect.receiveAsFlow()
 
+    init {
+        subscribeCurrentSuccessState()
+    }
+
+    private fun subscribeCurrentSuccessState() = launchCPU {
+        currentSuccessState
+            .map { state -> State.Success(state) }
+            .collect(_state::emit)
+    }
+
+    protected open fun reduce(newState: STATE) = launchCPU {
+        currentSuccessState.compareAndSet(currentSuccessState.value, newState)
+    }
+
     abstract fun action(event: EVENT)
 
     protected fun sendEffect(effect: EFFECT) = launchCPU {
@@ -32,10 +53,6 @@ abstract class BaseViewModel<STATE : Any, EVENT : Any, EFFECT : Any> : ViewModel
 
     protected fun emitLoading() = launchCPU {
         _state.emit(State.Loading)
-    }
-
-    protected fun emitState(state: STATE) = launchCPU {
-        _state.emit(State.Success(state))
     }
 
     private fun emitErrorMessageState(message: String) = launchCPU {

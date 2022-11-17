@@ -7,6 +7,7 @@ import com.pavellukyanov.rocketchat.presentation.widget.SuccessEffect
 import com.pavellukyanov.rocketchat.utils.Constants.EMPTY_STRING
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
 class SignUpViewModel @Inject constructor(
@@ -15,6 +16,9 @@ class SignUpViewModel @Inject constructor(
     private val email = MutableStateFlow(EMPTY_STRING)
     private val password = MutableStateFlow(EMPTY_STRING)
     private val nickname = MutableStateFlow(EMPTY_STRING)
+    override val initialCurrentSuccessState: AuthState = AuthState(false)
+
+    override var curState: AuthState = AuthState(false)
 
     init {
         handleButtonState()
@@ -36,7 +40,13 @@ class SignUpViewModel @Inject constructor(
             .combine(nickname) { state, nick ->
                 nick.isNotEmpty() && state
             }
-            .collect { state -> emitState(AuthState.ButtonState(state)) }
+            .map { state ->
+                val newState = currentSuccessState.value.copy(
+                    state = state
+                )
+                newState
+            }
+            .collect(::reduce)
     }
 
     private fun setEmail(value: String) = launchCPU {

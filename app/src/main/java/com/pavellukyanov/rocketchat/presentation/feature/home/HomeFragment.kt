@@ -34,9 +34,7 @@ class HomeFragment : BaseFragment<HomeState, HomeEvent, HomeEffect, HomeViewMode
     }
 
     override fun render(state: HomeState) {
-        when (state) {
-            is HomeState.Account -> setMyAccountData(state.myAccount)
-        }
+        state.myAccount?.let { setMyAccountData(it) }
     }
 
     private fun bind() = with(binding) {

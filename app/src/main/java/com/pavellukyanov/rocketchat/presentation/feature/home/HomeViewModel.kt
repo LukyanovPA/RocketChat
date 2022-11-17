@@ -14,6 +14,9 @@ class HomeViewModel @Inject constructor(
     @HomeSearchQ private val searchStorage: ObjectStorage<String>,
     private val updateCurrentUser: UpdateCurrentUser
 ) : BaseViewModel<HomeState, HomeEvent, HomeEffect>() {
+    override val initialCurrentSuccessState: HomeState = HomeState()
+
+    override var curState: HomeState = HomeState()
 
     override fun action(event: HomeEvent) {
         when (event) {
@@ -29,9 +32,12 @@ class HomeViewModel @Inject constructor(
         searchStorage.setObject(query)
     }
 
-    private fun fetchMyAccount() = launchCPU {
+    private fun fetchMyAccount() = launchIO {
         updateCurrentUser.invoke()
-        emitState(HomeState.Account(userInfo.user!!))
+        val newState = currentSuccessState.value.copy(
+            myAccount = userInfo.user
+        )
+        newState.myAccount?.let { reduce(newState) }
     }
 
     private fun refreshCache() = launchIO {

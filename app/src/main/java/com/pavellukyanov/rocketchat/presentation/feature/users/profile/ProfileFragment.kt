@@ -42,20 +42,19 @@ class ProfileFragment : ChatRoomsAdapter.ChatRoomListener,
     }
 
     override fun render(state: ProfileState) = with(binding) {
-        when (state) {
-            is ProfileState.IsMyProfile -> {
-                profileLogout.isVisible = state.state
-                profileChangeAvatarIcon.isVisible = state.state
+        with(state) {
+            profileLogout.isVisible = isMyProfile
+            profileChangeAvatarIcon.isVisible = isMyProfile
+
+            userData?.let { user ->
+                profileAvatar.load(user.avatar, circleCrop = true)
+                profileUsername.text = user.username
             }
-            is ProfileState.UserData -> {
-                profileAvatar.load(state.user.avatar, circleCrop = true)
-                profileUsername.text = state.user.username
-            }
-            is ProfileState.UserChatRooms -> chatroomAdapter.data = state.chatRooms
-            is ProfileState.AvatarChanging -> {
-                profileAvatarProgress.isVisible = state.isChanging
-                profileAvatar.alpha = if (state.isChanging) AVATAR_LOADED else AVATAR_LOAD
-            }
+
+            userChatRooms?.let { chatroomAdapter.data = it }
+
+            profileAvatarProgress.isVisible = isAvatarChanging
+            profileAvatar.alpha = if (isAvatarChanging) AVATAR_LOADED else AVATAR_LOAD
         }
     }
 

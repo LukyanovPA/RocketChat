@@ -9,6 +9,9 @@ import javax.inject.Inject
 class ChatRoomOptionsViewModel @Inject constructor(
     private val fragmentResultHelper: FragmentResultHelper,
 ) : BaseViewModel<OptionsState, OptionsEvent, SuccessEffect>() {
+    override val initialCurrentSuccessState: OptionsState = OptionsState()
+
+    override var curState: OptionsState = OptionsState()
 
     override fun action(event: OptionsEvent) {
         when (event) {
@@ -18,9 +21,10 @@ class ChatRoomOptionsViewModel @Inject constructor(
     }
 
     private fun start() = launchCPU {
-        emitState(
-            OptionsState.OptionsList(listOf(OptionItem(OptionsType.EDIT), OptionItem(OptionsType.REMOVE)))
+        val newState = currentSuccessState.value.copy(
+            list = listOf(OptionItem(OptionsType.EDIT), OptionItem(OptionsType.REMOVE))
         )
+        reduce(newState)
     }
 
     private fun onOptionClicked(item: OptionItem) {

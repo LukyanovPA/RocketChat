@@ -11,6 +11,7 @@ import com.pavellukyanov.rocketchat.presentation.base.BaseViewModel
 import com.pavellukyanov.rocketchat.utils.Constants.EMPTY_STRING
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
 class ChatViewModel @Inject constructor(
@@ -22,6 +23,8 @@ class ChatViewModel @Inject constructor(
     private val getChatRoom: GetChatRoom
 ) : BaseViewModel<ChatState, ChatEvent, ChatEffect>() {
     private val message = MutableStateFlow(EMPTY_STRING)
+    override val initialCurrentSuccessState: ChatState = ChatState()
+    override var curState: ChatState = ChatState()
 
     init {
         refreshCache()
@@ -70,25 +73,37 @@ class ChatViewModel @Inject constructor(
     }
 
     private fun handleButtonState() = launchCPU {
-        message.collect { mess ->
-            emitState(ChatState.ButtonState(mess.isNotBlank() && mess.isNotEmpty()))
-        }
+        message
+            .map { mess ->
+                val newButtonState = curState.copy(
+                    buttonState = mess.isNotBlank() && mess.isNotEmpty()
+                )
+                newButtonState
+            }
+            .collect(::reduce)
     }
 
     private fun fetchMessages() = launchIO {
+        emitLoading()
         getMessages(chatroom?.id!!)
             .combine(getChatRoom(chatroom?.id!!)) { messages, room ->
                 chatroom = room
-                if (room != null) emitState(ChatState.ChatValue(room))
+                if (room != null) {
+                    val newChatroomState = curState.copy(
+                        chatRoom = room
+                    )
+                    reduce(newChatroomState)
+                }
                 messages
             }
-            .collect { list ->
-                if (list.isEmpty()) {
-                    emitLoading()
-                } else {
-                    emitState(ChatState.Messages(list))
-                }
+            .map { list ->
+                val newMessagesState = curState.copy(
+                    messages = list
+                )
+                if (list.isEmpty()) emitLoading()
+                newMessagesState
             }
+            .collect(::reduce)
     }
 
     private fun refreshCache() = launchIO {
