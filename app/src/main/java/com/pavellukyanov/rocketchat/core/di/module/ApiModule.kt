@@ -1,13 +1,13 @@
 package com.pavellukyanov.rocketchat.core.di.module
 
 import com.google.gson.GsonBuilder
-import com.pavellukyanov.rocketchat.BuildConfig
 import com.pavellukyanov.rocketchat.data.api.AuthApi
 import com.pavellukyanov.rocketchat.data.api.ChatApi
 import com.pavellukyanov.rocketchat.data.api.ChatroomApi
 import com.pavellukyanov.rocketchat.data.api.UsersApi
 import com.pavellukyanov.rocketchat.data.utils.RetrofitClient
 import com.pavellukyanov.rocketchat.data.utils.networkadapter.NetworkResponseAdapterFactory
+import com.pavellukyanov.rocketchat.utils.Constants.API_URL
 import dagger.Module
 import dagger.Provides
 import retrofit2.Retrofit
@@ -17,7 +17,7 @@ import javax.inject.Singleton
 @Module
 class ApiModule {
     companion object {
-        private const val BASE_URL = "http://${BuildConfig.BASE_URL}"
+        private const val BASE_URL = "http://$API_URL"
     }
 
     @Singleton
@@ -40,7 +40,8 @@ class ApiModule {
 
     @Singleton
     @Provides
-    fun provideChatroomApi(retrofit: Retrofit): ChatroomApi = retrofit.create(ChatroomApi::class.java)
+    fun provideChatroomApi(retrofit: Retrofit): ChatroomApi =
+        retrofit.create(ChatroomApi::class.java)
 
     @Singleton
     @Provides
